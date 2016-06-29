@@ -1,10 +1,11 @@
 package com.pierfrancescosoffritti.slidingdrawer;
 
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.annotation.IdRes;
+import android.support.annotation.IntDef;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -14,29 +15,45 @@ import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class SlidingDrawer extends LinearLayout {
+
+    private static final byte UP = 0;
+    private static final byte DOWN = 1;
+    private static final byte NONE = 2;
+    @IntDef({UP, DOWN, NONE})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface SlidingDirection {}
+
+    private static final byte EXPANDED = 0;
+    private static final byte COLLAPSED = 1;
+    private static final byte SLIDING = 2;
+    @IntDef({EXPANDED, COLLAPSED, SLIDING})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface State {}
+
+    private @State byte state = COLLAPSED;
 
     private final ViewConfiguration viewConfiguration = ViewConfiguration.get(getContext());
     private final int touchSlop = viewConfiguration.getScaledTouchSlop();
 
     private View slidingView;
 
-    private float maxSlide;
+    private int maxY;
+    private final int minY = 0;
+
     private boolean isSliding;
     private boolean canSlide = false;
     private float currentSlide;
 
     private float dY;
 
-    private @IdRes int draggableViewID;
     private View draggableView;
 
     public void setDraggableView(View draggableView) {
         this.draggableView = draggableView;
-    }
-
-    public void setDraggableViewID(@IdRes int draggableViewID) {
-        this.draggableViewID = draggableViewID;
     }
 
     public SlidingDrawer(Context context) {
@@ -49,17 +66,6 @@ public class SlidingDrawer extends LinearLayout {
 
     public SlidingDrawer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-
-//        if(draggableView == null)
-//            draggableView = findViewById(draggableViewID);
-
-//        System.out.println(draggableView);
-//        System.out.println(draggableViewID);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -76,10 +82,6 @@ public class SlidingDrawer extends LinearLayout {
 
         // stop sliding and let the child handle the touch event
         if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
-
-//            if (!isSliding && canSlide)
-//                completeSlide(currentSlide == 0 ? 1 : 0, 0);
-
             isSliding = false;
             canSlide = false;
 
@@ -143,8 +145,8 @@ public class SlidingDrawer extends LinearLayout {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
-                if(isSliding)
-                    completeSlide(currentSlide, eventY > yDown ? 1 : -1);
+                if(isSliding && state != EXPANDED && state != COLLAPSED)
+                    completeSlide(currentSlide, eventY > yDown ? DOWN : UP);
 
                 isSliding = false;
 
@@ -154,56 +156,73 @@ public class SlidingDrawer extends LinearLayout {
                 if(!isSliding || !canSlide)
                     return false;
 
-                if(eventY + dY > maxSlide)
-                    dY = maxSlide - eventY;
+                if(eventY + dY > maxY)
+                    dY = maxY - eventY;
                 else if(eventY + dY < 0)
                     dY = -eventY;
 
-                // currentSlideNormalized : x = 1 : maxSliding
-                currentSlide = Math.abs(eventY + dY - maxSlide);
-                currentSlide = currentSlide / maxSlide;
-
-                slidingView.setY(eventY + dY);
-
+                updateSliding(normalizeSlide(eventY + dY));
                 break;
         }
 
         return true;
     }
 
-    private void completeSlide(float currentSlide, int direction) {
+    private void completeSlide(float currentSlide, @SlidingDirection int direction) {
         int finalY = -1;
 
-        if(direction == -1 && currentSlide > 0.15) {
-            finalY = 0;
-            this.currentSlide = 1;
-        } else if(direction == -1) {
-            finalY = (int) maxSlide;
-            this.currentSlide = 0;
-        }
+        if(direction == UP && currentSlide > 0.1)
+            finalY = minY;
+        else if(direction == UP)
+            finalY = maxY;
 
-        if(direction == 1 && currentSlide < 0.85) {
-            finalY = (int) maxSlide;
-            this.currentSlide = 0;
-        } else if(direction == 1) {
-            finalY = 0;
-            this.currentSlide = 1;
-        }
+        if(direction == DOWN && currentSlide < 0.9)
+            finalY = maxY;
+        else if(direction == DOWN)
+            finalY = minY;
 
-        if(direction == 0 && currentSlide == 1) {
-            finalY = 0;
-            this.currentSlide = 1;
-        } else if(direction == 0 && currentSlide == 0) {
-            finalY = (int) maxSlide;
-            this.currentSlide = 0;
-        }
+        // handle the single touch scenario
+        if(direction == NONE && currentSlide == 1)
+            finalY = minY;
+        else if(direction == NONE && currentSlide == 0)
+            finalY = maxY;
 
-        if(finalY != -1)
-            slidingView.animate()
-                    .y(finalY)
-                    .setInterpolator(new DecelerateInterpolator(1.5f))
-                    .setDuration(300)
-                    .start();
+        if(finalY == -1)
+            return;
+
+        slideTo(normalizeSlide(finalY));
+    }
+
+    public void slideTo(float finalYNormalized) {
+        ValueAnimator va = ValueAnimator.ofFloat(currentSlide, finalYNormalized);
+        va.setInterpolator(new DecelerateInterpolator(1.5f));
+        va.setDuration(300);
+        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                updateSliding((Float) animation.getAnimatedValue());
+            }
+        });
+        va.start();
+    }
+
+    private float normalizeSlide(float currentY) {
+        // currentSlide_Normalized : x = 1 : maxSliding
+        float res = Math.abs(currentY - maxY) / maxY;
+        return res < 0 ? 0 : res;
+    }
+
+    private void updateSliding(float newPositionNormalized) {
+
+        newPositionNormalized = newPositionNormalized < 0 ? 0 : newPositionNormalized;
+        currentSlide = newPositionNormalized;
+
+        state = currentSlide == 1 ? EXPANDED : currentSlide == 0 ? COLLAPSED : SLIDING;
+
+        float slideY = Math.abs((currentSlide * maxY) - maxY);
+
+        slidingView.setY(slideY);
     }
 
     /**
@@ -256,7 +275,7 @@ public class SlidingDrawer extends LinearLayout {
         slidingView = getChildAt(1);
         slidingView.setClickable(true);
 
-        maxSlide = getChildAt(0).getHeight();
+        maxY = getChildAt(0).getHeight();
     }
 
     Rect mTmpContainerRect = new Rect();
