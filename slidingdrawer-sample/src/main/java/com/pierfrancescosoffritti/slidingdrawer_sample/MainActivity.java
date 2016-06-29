@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
-import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawerContainer;
 import com.pierfrancescosoffritti.utils.FragmentsUtils;
 
 public class MainActivity extends AppCompatActivity implements SlidingDrawerContainer {
@@ -17,6 +16,8 @@ public class MainActivity extends AppCompatActivity implements SlidingDrawerCont
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindow().setBackgroundDrawable(null);
 
         View target = findViewById(R.id.sample_view);
         slidingDrawer = (SlidingDrawer) findViewById(R.id.sliding_drawer);
@@ -33,12 +34,16 @@ public class MainActivity extends AppCompatActivity implements SlidingDrawerCont
                 else
                     getSupportActionBar().show();
 
+                slidingDrawer.setState(slidingDrawer.getState() == SlidingDrawer.EXPANDED ? SlidingDrawer.COLLAPSED : SlidingDrawer.EXPANDED);
+
                 show = !show;
             }
         });
 
         RootFragment fragment = RootFragment.newInstance(this);
         FragmentsUtils.swapFragments(getSupportFragmentManager(), R.id.root, fragment);
+
+        slidingDrawer.addSlideListener(fragment);
     }
 
 

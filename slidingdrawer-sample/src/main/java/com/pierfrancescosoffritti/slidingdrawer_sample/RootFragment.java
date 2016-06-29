@@ -2,6 +2,8 @@ package com.pierfrancescosoffritti.slidingdrawer_sample;
 
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,13 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawerContainer;
+import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
 import com.pierfrancescosoffritti.utils.FragmentsUtils;
 
-public class RootFragment extends Fragment {
+public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListener {
+
+    private CoordinatorLayout coordinator;
 
     private TabLayout tabs;
-    private ViewPagerAdapter mPagerAdapter;
+    private ViewPager viewPager;
+    private FloatingActionButton fab;
 
     public RootFragment() {
         // Required empty public constructor
@@ -38,6 +43,9 @@ public class RootFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_root, container, false);
 
+        coordinator = (CoordinatorLayout) view.findViewById(R.id.coordinator);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+
         tabs = (TabLayout) view.findViewById(R.id.tab_layout);
 
         ListFragment listFragment1 = (ListFragment) FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(1), "TAG1");
@@ -56,10 +64,26 @@ public class RootFragment extends Fragment {
     }
 
     private void setupViewPager(View view, TabLayout tabs, Pair<Fragment, String>... fragments) {
-        mPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), fragments);
-        ViewPager mViewPager = (ViewPager) view.findViewById(R.id.pager);
-        mViewPager.setAdapter(mPagerAdapter);
+        ViewPagerAdapter mPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), fragments);
+        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager.setAdapter(mPagerAdapter);
 
-        tabs.setupWithViewPager(mViewPager);
+        tabs.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public void onSlide(SlidingDrawer slidingDrawer, float currentSlide) {
+        tabs.setAlpha(currentSlide);
+        viewPager.setAlpha(currentSlide);
+
+        //coordinator.setAlpha(Math.abs(currentSlide-1));
+
+        if(currentSlide == 0) {
+            slidingDrawer.setDraggableView(coordinator);
+            fab.show();
+        } else {
+            slidingDrawer.setDraggableView(tabs);
+            fab.hide();
+        }
     }
 }

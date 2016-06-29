@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
@@ -19,6 +20,8 @@ import android.widget.LinearLayout;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SlidingDrawer extends LinearLayout {
 
@@ -29,26 +32,29 @@ public class SlidingDrawer extends LinearLayout {
     @Retention(RetentionPolicy.SOURCE)
     private @interface SlidingDirection {}
 
-    public static final byte EXPANDED = 0;
-    public static final byte COLLAPSED = 1;
-    public static final byte SLIDING = 2;
+    public static final int EXPANDED = 0;
+    public static final int COLLAPSED = 1;
+    public static final int SLIDING = 2;
     @IntDef({EXPANDED, COLLAPSED, SLIDING})
     @Retention(RetentionPolicy.SOURCE)
     private @interface State {}
 
-    private @State byte state = COLLAPSED;
+    private @State int state = COLLAPSED;
 
     private final ViewConfiguration viewConfiguration = ViewConfiguration.get(getContext());
     private final int touchSlop = viewConfiguration.getScaledTouchSlop();
 
     // view that will slide
-    private View slidingView;
+    private View slidableView;
 
     // current slide value, between 1.0 and 0.0 (1.0 = EXPANDED, 0.0 = COLLAPSED)
     private float currentSlide;
 
     // only view sensible to vertical dragging
     private View draggableView;
+
+    // The fade color used for the panel covered by the slider.
+    private final static int mCoveredFadeColor = 0x99000000;
 
     // max value by which sliding view can slide.
     private int maxSlide;
@@ -65,6 +71,8 @@ public class SlidingDrawer extends LinearLayout {
 
     private int shadowLength;
 
+    private final Set<OnSlideListener> listeners;
+
     public SlidingDrawer(Context context) {
         this(context, null);
     }
@@ -78,8 +86,9 @@ public class SlidingDrawer extends LinearLayout {
 
         applyAttributes(attrs);
 
-        shadowDrawable = ContextCompat.getDrawable(getContext(), R.drawable.above_shadow);
+        listeners = new HashSet<>();
 
+        shadowDrawable = ContextCompat.getDrawable(getContext(), R.drawable.above_shadow);
         setWillNotDraw(false);
     }
 
@@ -95,6 +104,8 @@ public class SlidingDrawer extends LinearLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        if(draggableView == null)
+            throw new IllegalStateException("draggableView == null");
 
         final int action = MotionEventCompat.getActionMasked(event);
 
@@ -120,7 +131,7 @@ public class SlidingDrawer extends LinearLayout {
                 final float viewY = viewCoordinates[1];
                 final float viewHeight = draggableView.getHeight();
 
-                // slidingView can slide only if the ACTION_DOWN event is within draggableView bounds
+                // slidableView can slide only if the ACTION_DOWN event is within draggableView bounds
                 canSlide = !(xDown < viewX || xDown > viewX + viewWidth || yDown < viewY || yDown > viewY + viewHeight);
 
                 if(!canSlide)
@@ -128,7 +139,7 @@ public class SlidingDrawer extends LinearLayout {
 
                 yDown = event.getY();
 
-                dY = slidingView.getY() - yDown;
+                dY = slidableView.getY() - yDown;
 
                 // intercept only if sliding
                 return isSliding;
@@ -231,8 +242,10 @@ public class SlidingDrawer extends LinearLayout {
 
         float slideY = Math.abs((currentSlide * maxSlide) - maxSlide);
 
-        slidingView.setY(slideY);
+        slidableView.setY(slideY);
         invalidate();
+
+        notifyListeners(currentSlide);
     }
 
     /**
@@ -282,14 +295,14 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     private void initSlidingChild() {
-        slidingView = getChildAt(1);
-        slidingView.setClickable(true);
+        slidableView = getChildAt(1);
+        slidableView.setClickable(true);
 
         maxSlide = getChildAt(0).getHeight();
     }
 
-    Rect mTmpContainerRect = new Rect();
-    Rect mTmpChildRect = new Rect();
+    private final Rect tmpContainerRect = new Rect();
+    private final Rect tmpChildRect = new Rect();
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -312,22 +325,22 @@ public class SlidingDrawer extends LinearLayout {
             final int width = child.getMeasuredWidth();
             final int height = child.getMeasuredHeight();
 
-            mTmpContainerRect.left = parentLeft + lp.leftMargin;
-            mTmpContainerRect.right = width - lp.rightMargin - parentRight;
+            tmpContainerRect.left = parentLeft + lp.leftMargin;
+            tmpContainerRect.right = width - lp.rightMargin - parentRight;
 
-            mTmpContainerRect.top = parentTop + lp.topMargin;
-            mTmpContainerRect.bottom = parentTop + height - lp.bottomMargin - parentBottom;
+            tmpContainerRect.top = parentTop + lp.topMargin;
+            tmpContainerRect.bottom = parentTop + height - lp.bottomMargin - parentBottom;
 
             if(i==0)
                 firstChildHeight = child.getMeasuredHeight();
             else if(i==1)
-                mTmpContainerRect.bottom += firstChildHeight;
+                tmpContainerRect.bottom += firstChildHeight;
 
-            parentTop = mTmpContainerRect.bottom;
+            parentTop = tmpContainerRect.bottom;
 
-            Gravity.apply(lp.gravity, width, height, mTmpContainerRect, mTmpChildRect);
+            Gravity.apply(lp.gravity, width, height, tmpContainerRect, tmpChildRect);
 
-            child.layout(mTmpChildRect.left, mTmpChildRect.top, mTmpChildRect.right, mTmpChildRect.bottom);
+            child.layout(tmpChildRect.left, tmpChildRect.top, tmpChildRect.right, tmpChildRect.bottom);
         }
     }
 
@@ -337,14 +350,46 @@ public class SlidingDrawer extends LinearLayout {
 
         // draw the shadow
         if (shadowDrawable != null) {
-            final int right = slidingView.getRight();
-            final int top = (int) (slidingView.getY() - shadowLength);
-            final int bottom = (int) slidingView.getY();
-            final int left = slidingView.getLeft();
+            final int right = slidableView.getRight();
+            final int top = (int) (slidableView.getY() - shadowLength);
+            final int bottom = (int) slidableView.getY();
+            final int left = slidableView.getLeft();
 
             shadowDrawable.setBounds(left, top, right, bottom);
             shadowDrawable.draw(c);
         }
+    }
+
+    private final Rect tmpRect = new Rect();
+    private final Paint coveredFadePaint = new Paint();
+
+    @Override
+    protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
+        boolean result;
+        final int save = canvas.save(Canvas.CLIP_SAVE_FLAG);
+
+        if (slidableView != child) { // if main view
+            // Clip against the slider; no sense drawing what will immediately be covered,
+            // Unless the panel is set to overlay content
+            canvas.getClipBounds(tmpRect);
+            tmpRect.bottom = Math.min(tmpRect.bottom, slidableView.getTop());
+
+            result = super.drawChild(canvas, child, drawingTime);
+
+            if (currentSlide > 0) {
+                final int baseAlpha = (mCoveredFadeColor & 0xff000000) >>> 24;
+                final int imag = (int) (baseAlpha * currentSlide);
+                final int color = imag << 24;
+                coveredFadePaint.setColor(color);
+                canvas.drawRect(tmpRect, coveredFadePaint);
+            }
+        } else {
+            result = super.drawChild(canvas, child, drawingTime);
+        }
+
+        canvas.restoreToCount(save);
+
+        return result;
     }
 
     /**
@@ -383,9 +428,37 @@ public class SlidingDrawer extends LinearLayout {
         this.shadowLength = shadowLength;
     }
 
-    public interface onSlideListener {
-        void onExpanded();
-        void onCollapsed();
-        void onSliding();
+    public int getState() {
+        return state;
+    }
+
+    public void setState(@State int state) {
+        switch (state) {
+            case EXPANDED:
+                slideTo(1);
+                break;
+            case COLLAPSED:
+                slideTo(0);
+                break;
+            case SLIDING:
+                break;
+        }
+    }
+
+    public void addSlideListener(OnSlideListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(OnSlideListener listener) {
+        listeners.remove(listener);
+    }
+
+    private void notifyListeners(float currentSlide) {
+        for(OnSlideListener listener : listeners)
+            listener.onSlide(this, currentSlide);
+    }
+
+    public interface OnSlideListener {
+        void onSlide(SlidingDrawer slidingDrawer, float currentSlide);
     }
 }

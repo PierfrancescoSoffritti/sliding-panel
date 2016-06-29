@@ -36,6 +36,9 @@
             android:src="@drawable/ic_info_outline_black_24dp"
             android:tint="@android:color/white"
 
+            android:clickable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+
             android:padding="@dimen/vertical_margin"
 
             android:layout_centerVertical="true"
@@ -58,6 +61,7 @@
             android:src="@drawable/ic_thumb_up_border_black_36dp"
             android:tint="@android:color/white"
 
+            android:clickable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
 
             android:paddingTop="@dimen/horizontal_margin"
@@ -71,6 +75,9 @@
             android:src="@drawable/ic_thumb_down_border_black_36dp"
             android:tint="@android:color/white"
 
+            android:clickable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+
             android:paddingTop="@dimen/horizontal_margin"
             android:paddingBottom="@dimen/horizontal_margin" />
 
@@ -82,6 +89,9 @@
             android:src="@drawable/ic_favorite_border_black_36dp"
             android:tint="@android:color/white"
 
+            android:clickable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+
             android:paddingTop="@dimen/horizontal_margin"
             android:paddingBottom="@dimen/horizontal_margin" />
 
@@ -92,6 +102,9 @@
 
             android:src="@drawable/ic_share_black_36dp"
             android:tint="@android:color/white"
+
+            android:clickable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
 
             android:paddingTop="@dimen/horizontal_margin"
             android:paddingBottom="@dimen/horizontal_margin" />

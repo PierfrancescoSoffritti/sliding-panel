@@ -1,4 +1,4 @@
-package com.pierfrancescosoffritti.slidingdrawer;
+package com.pierfrancescosoffritti.slidingdrawer_sample;
 
 import android.view.View;
 
