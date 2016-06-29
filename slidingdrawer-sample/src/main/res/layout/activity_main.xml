@@ -1,39 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/sample_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="186dp"
-        android:gravity="center"
-        android:text="Hello World!"
-        android:clickable="true"
-        android:elevation="2dp"
-        android:outlineProvider="bounds"
-
-        android:background="@android:color/white" />
-
-    <com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer
-        android:id="@+id/sliding_drawer"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:shadow_length="4dp" >
+        android:orientation="vertical" >
 
-        <include
-            layout="@layout/video_controls" />
-
-        <FrameLayout
-            android:id="@+id/root"
+        <TextView
+            android:id="@+id/sample_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:paddingTop="186dp"
+            android:gravity="center"
+            android:text="Hello World!"
+            android:clickable="true"
+            android:elevation="2dp"
+            android:outlineProvider="bounds"
+
+            android:background="@android:color/white" />
+
+        <com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer
+            android:id="@+id/sliding_drawer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:shadow_length="4dp" >
+
+            <include
+                layout="@layout/video_controls" />
+
+            <FrameLayout
+                android:id="@+id/root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
 
-    </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>
+        </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_shuffle_black_24dp"
+        android:tint="@android:color/white"
+        android:clickable="true"
+        android:layout_gravity="bottom" />
+
+</android.support.design.widget.CoordinatorLayout>

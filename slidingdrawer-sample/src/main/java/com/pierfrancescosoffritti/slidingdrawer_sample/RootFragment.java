@@ -2,8 +2,6 @@ package com.pierfrancescosoffritti.slidingdrawer_sample;
 
 
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -17,11 +15,11 @@ import com.pierfrancescosoffritti.utils.FragmentsUtils;
 
 public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListener {
 
-    private CoordinatorLayout coordinator;
+    private View collapsedContent;
+    private View expandedContent;
 
     private TabLayout tabs;
     private ViewPager viewPager;
-    private FloatingActionButton fab;
 
     public RootFragment() {
         // Required empty public constructor
@@ -43,8 +41,8 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_root, container, false);
 
-        coordinator = (CoordinatorLayout) view.findViewById(R.id.coordinator);
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        collapsedContent = view.findViewById(R.id.relative);
+        expandedContent = view.findViewById(R.id.expanded_content);
 
         tabs = (TabLayout) view.findViewById(R.id.tab_layout);
 
@@ -58,7 +56,7 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
                 new Pair(listFragment2, "list2")
         );
 
-        mSlidingDrawerContainer.setDragView(tabs);
+        mSlidingDrawerContainer.setDragView(collapsedContent);
 
         return view;
     }
@@ -76,14 +74,17 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
         tabs.setAlpha(currentSlide);
         viewPager.setAlpha(currentSlide);
 
-        //coordinator.setAlpha(Math.abs(currentSlide-1));
-
         if(currentSlide == 0) {
-            slidingDrawer.setDraggableView(coordinator);
-            fab.show();
-        } else {
+            collapsedContent.setVisibility(View.VISIBLE);
+            expandedContent.setVisibility(View.GONE);
+            slidingDrawer.setDraggableView(collapsedContent);
+        }else if (currentSlide == 1) {
+            collapsedContent.setVisibility(View.GONE);
+            expandedContent.setVisibility(View.VISIBLE);
             slidingDrawer.setDraggableView(tabs);
-            fab.hide();
+        } else {
+            collapsedContent.setVisibility(View.VISIBLE);
+            expandedContent.setVisibility(View.VISIBLE);
         }
     }
 }

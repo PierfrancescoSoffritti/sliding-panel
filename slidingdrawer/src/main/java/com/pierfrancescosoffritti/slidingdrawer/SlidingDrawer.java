@@ -10,11 +10,13 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
@@ -296,9 +298,76 @@ public class SlidingDrawer extends LinearLayout {
 
     private void initSlidingChild() {
         slidableView = getChildAt(1);
-        slidableView.setClickable(true);
 
         maxSlide = getChildAt(0).getHeight();
+
+        //checkPadding(slidableView);
+        checkPadding2(slidableView);
+    }
+
+    private void checkPadding2(View slidableView) {
+        String tag = (String) slidableView.getTag();
+        System.out.println(tag);
+
+        if(tag != null && tag.equals("relative"))
+            addPadding(slidableView);
+
+        if(!(slidableView instanceof ViewGroup))
+            return;
+
+        ViewGroup root = (ViewGroup) slidableView;
+
+        for (int i=0; i<root.getChildCount(); i++) {
+            View child = root.getChildAt(i);
+            checkPadding2(child);
+        }
+    }
+
+    private void checkPadding(View slidableView) {
+        if(!(slidableView instanceof ViewGroup)) {
+            addPadding(slidableView);
+            return;
+        }
+
+        ViewGroup root = (ViewGroup) slidableView;
+
+        if(isLastRoot(root)) {
+            for (int i = 0; i < root.getChildCount(); i++) {
+                View child = root.getChildAt(i);
+                if (child instanceof RecyclerView) // && i == root.getChildCount()-1
+                    return;
+            }
+            addPadding(root);
+        } else {
+            for (int i = 0; i < root.getChildCount(); i++) {
+                checkPadding(root.getChildAt(i));
+            }
+        }
+    }
+
+    private void addPadding(View root) {
+        System.out.println("paddig");
+        int top = root.getPaddingTop();
+        int left = root.getPaddingLeft();
+        int right = root.getPaddingRight();
+        int bottom = root.getPaddingBottom();
+
+        bottom = maxSlide;
+        root.setPadding(left, top, right, bottom);
+    }
+
+    private boolean isLastRoot(ViewGroup root) {
+        boolean result = true;
+        for (int i = 0; i < root.getChildCount(); i++) {
+            if (root.getChildAt(i) instanceof ViewGroup && ((ViewGroup) root.getChildAt(i)).getChildCount() > 0)
+                result = false;
+
+            if(root.getChildAt(i) instanceof RecyclerView)
+                result = true;
+        }
+
+
+        return result;
     }
 
     private final Rect tmpContainerRect = new Rect();

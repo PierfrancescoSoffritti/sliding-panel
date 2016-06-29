@@ -1,28 +1,35 @@
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
+    <RelativeLayout
+        android:id="@+id/relative"
+        android:tag="relative"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white" >
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:layout_above="@+id/button"
+            android:background="?attr/selectableItemBackground" />
+
+        <Button
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_shuffle_black_24dp"
-            android:tint="@android:color/white"
-            android:layout_gravity="center" />
-
-    </android.support.design.widget.CoordinatorLayout>
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/expanded_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:orientation="vertical" >
 
         <android.support.design.widget.TabLayout
@@ -45,4 +52,5 @@
             android:alpha="0"/>
 
     </LinearLayout>
-</FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>
