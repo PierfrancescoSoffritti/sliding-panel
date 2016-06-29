@@ -2,6 +2,7 @@ package com.pierfrancescosoffritti.slidingdrawer;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -62,7 +63,7 @@ public class SlidingDrawer extends LinearLayout {
 
     private final Drawable shadowDrawable;
 
-    private int shadowHeight = 10;
+    private int shadowLength;
 
     public SlidingDrawer(Context context) {
         this(context, null);
@@ -75,9 +76,21 @@ public class SlidingDrawer extends LinearLayout {
     public SlidingDrawer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        applyAttributes(attrs);
+
         shadowDrawable = ContextCompat.getDrawable(getContext(), R.drawable.above_shadow);
 
         setWillNotDraw(false);
+    }
+
+    private void applyAttributes(AttributeSet attrs) {
+        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.SlidingDrawer, 0, 0);
+
+        try {
+            shadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingDrawer_shadow_length, 10);
+        } finally {
+            typedArray.recycle();
+        }
     }
 
     @Override
@@ -321,11 +334,11 @@ public class SlidingDrawer extends LinearLayout {
     @Override
     public void draw(Canvas c) {
         super.draw(c);
-System.out.println("invalidate");
+
         // draw the shadow
         if (shadowDrawable != null) {
             final int right = slidingView.getRight();
-            final int top = (int) (slidingView.getY() - shadowHeight);
+            final int top = (int) (slidingView.getY() - shadowLength);
             final int bottom = (int) slidingView.getY();
             final int left = slidingView.getLeft();
 
@@ -359,15 +372,15 @@ System.out.println("invalidate");
     /**
      * @return shadow height in pixels
      */
-    public int getShadowHeight() {
-        return shadowHeight;
+    public int getShadowLength() {
+        return shadowLength;
     }
 
     /**
-     * @param shadowHeight shadow height in pixels
+     * @param shadowLength shadow height in pixels
      */
-    public void setShadowHeight(int shadowHeight) {
-        this.shadowHeight = shadowHeight;
+    public void setShadowLength(int shadowLength) {
+        this.shadowLength = shadowLength;
     }
 
     public interface onSlideListener {
