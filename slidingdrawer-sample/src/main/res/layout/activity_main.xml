@@ -3,7 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/sample_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="190dp"
+        android:gravity="center"
+        android:text="Hello World!"
+        android:clickable="true"
+        android:elevation="2dp"
+        android:outlineProvider="bounds"
+
+        android:background="?attr/selectableItemBackground" />
 
     <com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer
         android:id="@+id/sliding_drawer"
@@ -12,20 +25,13 @@
         android:orientation="vertical"
         app:shadow_length="4dp" >
 
-        <TextView
-            android:id="@+id/sample_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="128dp"
-            android:text="Hello World!"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground" />
+        <include
+            layout="@layout/video_controls" />
 
         <FrameLayout
             android:id="@+id/root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary" />
+            android:layout_height="match_parent" />
 
 
     </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>

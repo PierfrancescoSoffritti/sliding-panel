@@ -9,6 +9,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:background="@android:color/white"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.pierfrancescosoffritti.slidingdrawer_sample.ListFragment"
     tools:listitem="@layout/sampleitem" />
