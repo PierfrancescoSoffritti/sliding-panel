@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.IdRes;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -27,15 +28,16 @@ public class SlidingDrawer extends LinearLayout {
 
     private float dY;
 
-    public void setmScrollableView(View mScrollableView) {
-        this.mScrollableView = mScrollableView;
+    private @IdRes int draggableViewID;
+    private View draggableView;
+
+    public void setDraggableView(View draggableView) {
+        this.draggableView = draggableView;
     }
 
-    /**
-     * If provided, the panel will transfer the scroll from this view to itself when needed.
-     */
-    private View mScrollableView;
-    private ScrollableViewHelper mScrollableViewHelper = new ScrollableViewHelper();
+    public void setDraggableViewID(@IdRes int draggableViewID) {
+        this.draggableViewID = draggableViewID;
+    }
 
     public SlidingDrawer(Context context) {
         super(context);
@@ -47,6 +49,17 @@ public class SlidingDrawer extends LinearLayout {
 
     public SlidingDrawer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+
+//        if(draggableView == null)
+//            draggableView = findViewById(draggableViewID);
+
+//        System.out.println(draggableView);
+//        System.out.println(draggableViewID);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -76,13 +89,16 @@ public class SlidingDrawer extends LinearLayout {
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 // save touch coordinates
-                float xDown = event.getX();
-                yDown = event.getY();
+                float xDown = event.getRawX();
+                yDown = event.getRawY();
 
-                final float viewX = slidingView.getX();
-                final float viewWidth = slidingView.getWidth();
-                final float viewY = slidingView.getY();
-                final float viewHeight = slidingView.getHeight();
+                int[] coords = new int[2];
+                draggableView.getLocationInWindow(coords);
+
+                final float viewX = coords[0];
+                final float viewWidth = draggableView.getWidth();
+                final float viewY = coords[1];
+                final float viewHeight = draggableView.getHeight();
 
                 // slidingView can slide only if the ACTION_DOWN event is within its bounds
                 canSlide = !(xDown < viewX || xDown > viewX + viewWidth || yDown < viewY || yDown > viewY + viewHeight);
@@ -90,7 +106,9 @@ public class SlidingDrawer extends LinearLayout {
                 if(!canSlide)
                     return false;
 
-                dY = viewY - yDown;
+                yDown = event.getY();
+
+                dY = slidingView.getY() - yDown;
 
                 // intercept only if sliding
                 return isSliding;
@@ -104,7 +122,7 @@ public class SlidingDrawer extends LinearLayout {
                 // start sliding only if the user dragged for more than touchSlop
                 final float diff = Math.abs(event.getY() - yDown);
 
-                if (diff > touchSlop) {
+                if (diff > touchSlop/2) {
                     // Start sliding
                     isSliding = true;
                     return true;

@@ -6,9 +6,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
+import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawerContainer;
 import com.pierfrancescosoffritti.utils.FragmentsUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SlidingDrawerContainer {
+
+    SlidingDrawer slidingDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         View target = findViewById(R.id.sample_view);
-        SlidingDrawer slidingDrawer = (SlidingDrawer) findViewById(R.id.sliding_drawer);
+        slidingDrawer = (SlidingDrawer) findViewById(R.id.sliding_drawer);
 
         target.setOnClickListener(new View.OnClickListener() {
             private boolean show = false;
@@ -34,9 +37,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ListFragment listFragment = ListFragment.newInstance(1);
-        FragmentsUtils.swapFragments(getSupportFragmentManager(), R.id.root, listFragment);
+        RootFragment fragment = RootFragment.newInstance(this);
+        FragmentsUtils.swapFragments(getSupportFragmentManager(), R.id.root, fragment);
+    }
 
-        slidingDrawer.setmScrollableView(listFragment.getScrollableView());
+
+    @Override
+    public void setDragView(View view) {
+        slidingDrawer.setDraggableView(view);
     }
 }
