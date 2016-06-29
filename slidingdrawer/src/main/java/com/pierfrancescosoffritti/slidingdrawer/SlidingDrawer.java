@@ -1,11 +1,12 @@
 package com.pierfrancescosoffritti.slidingdrawer;
 
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -27,9 +28,9 @@ public class SlidingDrawer extends LinearLayout {
     @Retention(RetentionPolicy.SOURCE)
     private @interface SlidingDirection {}
 
-    private static final byte EXPANDED = 0;
-    private static final byte COLLAPSED = 1;
-    private static final byte SLIDING = 2;
+    public static final byte EXPANDED = 0;
+    public static final byte COLLAPSED = 1;
+    public static final byte SLIDING = 2;
     @IntDef({EXPANDED, COLLAPSED, SLIDING})
     @Retention(RetentionPolicy.SOURCE)
     private @interface State {}
@@ -39,41 +40,45 @@ public class SlidingDrawer extends LinearLayout {
     private final ViewConfiguration viewConfiguration = ViewConfiguration.get(getContext());
     private final int touchSlop = viewConfiguration.getScaledTouchSlop();
 
+    // view that will slide
     private View slidingView;
 
-    private int maxY;
-    private final int minY = 0;
+    // current slide value, between 1.0 and 0.0 (1.0 = EXPANDED, 0.0 = COLLAPSED)
+    private float currentSlide;
+
+    // only view sensible to vertical dragging
+    private View draggableView;
+
+    // max value by which sliding view can slide.
+    private int maxSlide;
+    private final int minSlide = 0;
 
     private boolean isSliding;
     private boolean canSlide = false;
-    private float currentSlide;
 
+    // distance between the view's edge and the yDown coordinate
     private float dY;
+    private float yDown;
 
-    private View draggableView;
+    private final Drawable shadowDrawable;
 
-    public void setDraggableView(View draggableView) {
-        this.draggableView = draggableView;
-    }
+    private int shadowHeight = 10;
 
     public SlidingDrawer(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public SlidingDrawer(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public SlidingDrawer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public SlidingDrawer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
+        shadowDrawable = ContextCompat.getDrawable(getContext(), R.drawable.above_shadow);
 
-    private float yDown;
+        setWillNotDraw(false);
+    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
@@ -94,15 +99,15 @@ public class SlidingDrawer extends LinearLayout {
                 float xDown = event.getRawX();
                 yDown = event.getRawY();
 
-                int[] coords = new int[2];
-                draggableView.getLocationInWindow(coords);
+                final int[] viewCoordinates = new int[2];
+                draggableView.getLocationInWindow(viewCoordinates);
 
-                final float viewX = coords[0];
+                final float viewX = viewCoordinates[0];
                 final float viewWidth = draggableView.getWidth();
-                final float viewY = coords[1];
+                final float viewY = viewCoordinates[1];
                 final float viewHeight = draggableView.getHeight();
 
-                // slidingView can slide only if the ACTION_DOWN event is within its bounds
+                // slidingView can slide only if the ACTION_DOWN event is within draggableView bounds
                 canSlide = !(xDown < viewX || xDown > viewX + viewWidth || yDown < viewY || yDown > viewY + viewHeight);
 
                 if(!canSlide)
@@ -137,8 +142,6 @@ public class SlidingDrawer extends LinearLayout {
         return false;
     }
 
-    
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float eventY = event.getY();
@@ -148,44 +151,50 @@ public class SlidingDrawer extends LinearLayout {
                 if(isSliding && state != EXPANDED && state != COLLAPSED)
                     completeSlide(currentSlide, eventY > yDown ? DOWN : UP);
 
+                canSlide = false;
                 isSliding = false;
-
                 break;
             case MotionEvent.ACTION_MOVE:
 
                 if(!isSliding || !canSlide)
                     return false;
 
-                if(eventY + dY > maxY)
-                    dY = maxY - eventY;
-                else if(eventY + dY < 0)
+                // stay within the bounds (maxSlide and 0)
+                if(eventY + dY > maxSlide)
+                    dY = maxSlide - eventY;
+                else if(eventY + dY < minSlide)
                     dY = -eventY;
 
                 updateSliding(normalizeSlide(eventY + dY));
                 break;
         }
-
         return true;
     }
 
     private void completeSlide(float currentSlide, @SlidingDirection int direction) {
-        int finalY = -1;
+        float finalY = -1;
 
-        if(direction == UP && currentSlide > 0.1)
-            finalY = minY;
-        else if(direction == UP)
-            finalY = maxY;
-
-        if(direction == DOWN && currentSlide < 0.9)
-            finalY = maxY;
-        else if(direction == DOWN)
-            finalY = minY;
-
-        // handle the single touch scenario
-        if(direction == NONE && currentSlide == 1)
-            finalY = minY;
-        else if(direction == NONE && currentSlide == 0)
-            finalY = maxY;
+        switch (direction) {
+            case UP:
+                if(currentSlide > 0.1)
+                    finalY = minSlide;
+                else
+                    finalY = maxSlide;
+                break;
+            case DOWN:
+                if(currentSlide < 0.9)
+                    finalY = maxSlide;
+                else
+                    finalY = minSlide;
+                break;
+            // handle the single touch scenario
+            case NONE:
+                if(currentSlide == 1)
+                    finalY = minSlide;
+                else if(currentSlide == 0)
+                    finalY = maxSlide;
+                break;
+        }
 
         if(finalY == -1)
             return;
@@ -193,36 +202,24 @@ public class SlidingDrawer extends LinearLayout {
         slideTo(normalizeSlide(finalY));
     }
 
-    public void slideTo(float finalYNormalized) {
-        ValueAnimator va = ValueAnimator.ofFloat(currentSlide, finalYNormalized);
-        va.setInterpolator(new DecelerateInterpolator(1.5f));
-        va.setDuration(300);
-        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                updateSliding((Float) animation.getAnimatedValue());
-            }
-        });
-        va.start();
-    }
-
     private float normalizeSlide(float currentY) {
         // currentSlide_Normalized : x = 1 : maxSliding
-        float res = Math.abs(currentY - maxY) / maxY;
-        return res < 0 ? 0 : res;
+        return Math.abs(currentY - maxSlide) / maxSlide;
     }
 
+    /**
+     * always use this method to update the position of the sliding view.
+     * @param newPositionNormalized new view position, normalized
+     */
     private void updateSliding(float newPositionNormalized) {
-
-        newPositionNormalized = newPositionNormalized < 0 ? 0 : newPositionNormalized;
         currentSlide = newPositionNormalized;
 
         state = currentSlide == 1 ? EXPANDED : currentSlide == 0 ? COLLAPSED : SLIDING;
 
-        float slideY = Math.abs((currentSlide * maxY) - maxY);
+        float slideY = Math.abs((currentSlide * maxSlide) - maxSlide);
 
         slidingView.setY(slideY);
+        invalidate();
     }
 
     /**
@@ -275,7 +272,7 @@ public class SlidingDrawer extends LinearLayout {
         slidingView = getChildAt(1);
         slidingView.setClickable(true);
 
-        maxY = getChildAt(0).getHeight();
+        maxSlide = getChildAt(0).getHeight();
     }
 
     Rect mTmpContainerRect = new Rect();
@@ -319,6 +316,58 @@ public class SlidingDrawer extends LinearLayout {
 
             child.layout(mTmpChildRect.left, mTmpChildRect.top, mTmpChildRect.right, mTmpChildRect.bottom);
         }
+    }
+
+    @Override
+    public void draw(Canvas c) {
+        super.draw(c);
+System.out.println("invalidate");
+        // draw the shadow
+        if (shadowDrawable != null) {
+            final int right = slidingView.getRight();
+            final int top = (int) (slidingView.getY() - shadowHeight);
+            final int bottom = (int) slidingView.getY();
+            final int left = slidingView.getLeft();
+
+            shadowDrawable.setBounds(left, top, right, bottom);
+            shadowDrawable.draw(c);
+        }
+    }
+
+    /**
+     * Use this method in order to slide at a specific position
+     * @param finalYNormalized Normalized value (between 0.0 and 1.0) representing the final slide position
+     */
+    public void slideTo(float finalYNormalized) {
+        ValueAnimator va = ValueAnimator.ofFloat(currentSlide, finalYNormalized);
+        va.setInterpolator(new DecelerateInterpolator(1.5f));
+        va.setDuration(300);
+        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                updateSliding((Float) animation.getAnimatedValue());
+            }
+        });
+        va.start();
+    }
+
+    public void setDraggableView(View draggableView) {
+        this.draggableView = draggableView;
+    }
+
+    /**
+     * @return shadow height in pixels
+     */
+    public int getShadowHeight() {
+        return shadowHeight;
+    }
+
+    /**
+     * @param shadowHeight shadow height in pixels
+     */
+    public void setShadowHeight(int shadowHeight) {
+        this.shadowHeight = shadowHeight;
     }
 
     public interface onSlideListener {
