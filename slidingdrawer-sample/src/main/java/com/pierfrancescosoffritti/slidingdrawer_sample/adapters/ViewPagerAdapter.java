@@ -9,6 +9,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private Pair<Fragment, String>[] mFragments;
 
+    @SafeVarargs
     public ViewPagerAdapter(FragmentManager fm, Pair<Fragment, String>... fragments) {
         super(fm);
         mFragments = fragments;

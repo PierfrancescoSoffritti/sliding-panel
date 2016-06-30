@@ -8,7 +8,7 @@ import android.view.View;
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
 import com.pierfrancescosoffritti.utils.FragmentsUtils;
 
-public class MainActivity extends AppCompatActivity implements SlidingDrawerContainer, SlidingDrawer.OnSlideListener {
+public class MainActivity extends AppCompatActivity implements RootFragment.SlidingDrawerContainer, SlidingDrawer.OnSlideListener {
 
     private SlidingDrawer slidingDrawer;
     private FloatingActionButton fab;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements SlidingDrawerCont
             }
         });
 
-        RootFragment fragment = RootFragment.newInstance(this);
+        RootFragment fragment = RootFragment.newInstance();
         FragmentsUtils.swapFragments(getSupportFragmentManager(), R.id.root, fragment);
 
         slidingDrawer.addSlideListener(fragment);

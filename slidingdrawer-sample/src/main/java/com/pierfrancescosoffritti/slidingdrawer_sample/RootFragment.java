@@ -1,7 +1,9 @@
 package com.pierfrancescosoffritti.slidingdrawer_sample;
 
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -15,23 +17,17 @@ import com.pierfrancescosoffritti.slidingdrawer_sample.adapters.ViewPagerAdapter
 import com.pierfrancescosoffritti.utils.FragmentsUtils;
 
 public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListener {
+    private View collapsedView;
+    private View expandedView;
 
-    private final static String TAG1 = "TAG1";
-    private final static String TAG2 = "TAG2";
+    private TabLayout tabLayout;
 
-    private View collapsedContent;
-    private View expandedContent;
-
-    private TabLayout tabs;
-    private ViewPager viewPager;
+    @Nullable private SlidingDrawerContainer slidingDrawerContainer;
 
     public RootFragment() {
     }
 
-    private static SlidingDrawerContainer mSlidingDrawerContainer;
-
-    public static RootFragment newInstance(SlidingDrawerContainer slidingDrawerContainer) {
-        mSlidingDrawerContainer = slidingDrawerContainer;
+    public static RootFragment newInstance() {
         return new RootFragment();
     }
 
@@ -44,51 +40,68 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_root, container, false);
 
-        collapsedContent = view.findViewById(R.id.sliding_drawer_collapsed_view);
-        expandedContent = view.findViewById(R.id.expanded_content);
+        collapsedView = view.findViewById(R.id.sliding_drawer_collapsed_view);
+        expandedView = view.findViewById(R.id.expanded_view);
 
-        tabs = (TabLayout) view.findViewById(R.id.tab_layout);
+        tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
 
-        ListFragment listFragment1 = (ListFragment) FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(1), TAG1);
-        ListFragment listFragment2 = (ListFragment) FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(2), TAG2);
+        // i'm not handling a lot of stuff, teaching to use Fragments it's not the purpose of this sample :)
+        Fragment listFragment1 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(1), null);
+        Fragment listFragment2 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(2), null);
 
         setupViewPager(
                 view,
-                tabs,
-                new Pair(listFragment1, "list1"),
-                new Pair(listFragment2, "list2")
+                tabLayout,
+                new Pair<>(listFragment1, "name1"),
+                new Pair<>(listFragment2, "name2")
         );
 
-        mSlidingDrawerContainer.setDragView(collapsedContent);
+        assert slidingDrawerContainer != null;
+        slidingDrawerContainer.setDragView(collapsedView);
 
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SlidingDrawerContainer) {
+            slidingDrawerContainer = (SlidingDrawerContainer) context;
+        } else {
+            throw new RuntimeException(context.getClass().getSimpleName() +" must implement " +SlidingDrawerContainer.class.getSimpleName());
+        }
+    }
+
     @SafeVarargs
     private final void setupViewPager(View view, TabLayout tabs, Pair<Fragment, String>... fragments) {
-        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), fragments);
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
-        viewPager.setAdapter(pagerAdapter);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), fragments);
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
+        viewPager.setAdapter(viewPagerAdapter);
 
         tabs.setupWithViewPager(viewPager);
     }
 
     @Override
     public void onSlide(SlidingDrawer slidingDrawer, float currentSlide) {
-        tabs.setAlpha(currentSlide);
-        viewPager.setAlpha(currentSlide);
+        expandedView.setAlpha(currentSlide);
 
         if(currentSlide == 0) {
-            collapsedContent.setVisibility(View.VISIBLE);
-            expandedContent.setVisibility(View.INVISIBLE);
-            slidingDrawer.setDragView(collapsedContent);
+            collapsedView.setVisibility(View.VISIBLE);
+            expandedView.setVisibility(View.INVISIBLE);
+
+            slidingDrawer.setDragView(collapsedView);
         }else if (currentSlide == 1) {
-            collapsedContent.setVisibility(View.INVISIBLE);
-            expandedContent.setVisibility(View.VISIBLE);
-            slidingDrawer.setDragView(tabs);
+            collapsedView.setVisibility(View.INVISIBLE);
+            expandedView.setVisibility(View.VISIBLE);
+
+            slidingDrawer.setDragView(tabLayout);
         } else {
-            collapsedContent.setVisibility(View.VISIBLE);
-            expandedContent.setVisibility(View.VISIBLE);
+            collapsedView.setVisibility(View.VISIBLE);
+            expandedView.setVisibility(View.VISIBLE);
         }
+    }
+
+    public interface SlidingDrawerContainer {
+        void setDragView(View view);
     }
 }

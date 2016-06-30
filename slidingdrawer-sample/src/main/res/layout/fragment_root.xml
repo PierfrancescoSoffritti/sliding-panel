@@ -1,4 +1,4 @@
-<android.support.design.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -26,7 +26,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/expanded_content"
+        android:id="@+id/expanded_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
@@ -40,17 +40,14 @@
             android:background="@color/colorPrimary"
             android:elevation="2dp"
 
-            android:alpha="0"
-
             app:tabTextColor="@android:color/white"
             app:tabSelectedTextColor="@android:color/white" />
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>
