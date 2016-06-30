@@ -1,10 +1,32 @@
 # SlidingDrawer
 
+[![](https://jitpack.io/v/PierfrancescoSoffritti/SlidingDrawer.svg)](https://jitpack.io/#PierfrancescoSoffritti/SlidingDrawer)
+
 A custom View implementing the <a href="https://material.google.com/components/bottom-sheets.html?authuser=0">bottom sheet pattern.</a><br/>
 This ViewGroup can have only 2 children. The 1st one is the <b>non slidable view</b> ; the 2nd is the <b>slidable view</b>, which can slide over the <b>non slidable view</b>.<br/><br/>
 The substantial difference from all other implementations is that in this case is easy to position the <b>collapsed slidable view</b> relative to the <b>non slidable view</b>.<br/>
 In other implementation the only way to control the <b>position</b> of the <b>collapsed slidable view</b> is by using a <b>peek</b> factor.<br/>
 Here instead the <b>collapsed slidable view</b> is placed exactly below the <b>non slidable view</b>, just like in a vertical LinearLayout. The <b>slidable view</b> is conceptually part of the hierarchy and it's not above it.
+<br/><br/>
+<img height="450" src="https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/pics/SlidingView.gif" />
+<br/>
+
+## Download
+Add this to you project-level `build.gradle`:
+```
+allprojects {
+  repositories {
+    ...
+    maven { url "https://jitpack.io" }
+  }
+}
+```
+Add this to your module-level `build.gradle`:
+```
+dependencies {
+  compile 'com.github.PierfrancescoSoffritti:SlidingDrawer:v0.1'
+}
+```
 
 ## Usage
 
