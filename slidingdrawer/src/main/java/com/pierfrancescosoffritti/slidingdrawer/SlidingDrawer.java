@@ -465,6 +465,10 @@ public class SlidingDrawer extends LinearLayout {
         return state;
     }
 
+    /**
+     * Use this method to change the state of the slidableView.
+     * @param state a value from {@link State}
+     */
     public void setState(@State int state) {
         switch (state) {
             case EXPANDED:
@@ -491,6 +495,9 @@ public class SlidingDrawer extends LinearLayout {
             listener.onSlide(this, currentSlide);
     }
 
+    /**
+     * Implement this interface if you want to observe slide changes
+     */
     public interface OnSlideListener {
         void onSlide(SlidingDrawer slidingDrawer, float currentSlide);
     }
