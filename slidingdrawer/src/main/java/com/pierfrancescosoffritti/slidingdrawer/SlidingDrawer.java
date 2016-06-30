@@ -10,13 +10,11 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
@@ -25,6 +23,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A custom View implementing the bottom sheet pattern.
+ * <br/>
+ * This ViewGroup can have only 2 children. The 1st one is the <i>non sliding view</i> ; the 2nd is the <i>sliding view</i>, which can slide over the <i>non sliding view</i>.
+ * <br/><br/>
+ * The substantial difference from all other implementation is that in this case is easy to position the <i>sliding view</i> relatively to the <i>non sliding view</i>.
+ * <br/>
+ * In other implementation the only way to control the <i>position</i> of the <i>collapsed sliding view</i> is by using a <i>peek</i> factor.
+ * <br/>
+ * Here instead the <i>collapsed sliding view</i> is placed exactly below the <i>non sliding view</i>, just like in a vertical LinearLayout. The <i>sliding view</i> is conceptually part of the hierarchy and not above it.
+ */
+
+// TODO this class should extend from ViewGroup. But at the moment I don't have much time to spend on this View so the current solution is good enough, for now.
+// TODO A LOT of uses cases are not yet taken in consideration.
 public class SlidingDrawer extends LinearLayout {
 
     private static final byte UP = 0;
@@ -70,7 +82,6 @@ public class SlidingDrawer extends LinearLayout {
     private float yDown;
 
     private final Drawable shadowDrawable;
-
     private int shadowLength;
 
     private final Set<OnSlideListener> listeners;
@@ -174,6 +185,7 @@ public class SlidingDrawer extends LinearLayout {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
+                // complete the slide if it's not completed yet.
                 if(isSliding && state != EXPANDED && state != COLLAPSED)
                     completeSlide(currentSlide, eventY > yDown ? DOWN : UP);
 
@@ -301,73 +313,24 @@ public class SlidingDrawer extends LinearLayout {
 
         maxSlide = getChildAt(0).getHeight();
 
-        //checkPadding(slidableView);
-        checkPadding2(slidableView);
+        // the collapsed view is the view shown when the slidableView is collapsed.
+        // it's important to add padding to its bottom, otherwise some content will be offscreen-
+        View collapsedView = slidableView.findViewById(R.id.collapsed_view);
+        if(collapsedView != null)
+            addPadding(collapsedView);
     }
 
-    private void checkPadding2(View slidableView) {
-        String tag = (String) slidableView.getTag();
-        System.out.println(tag);
-
-        if(tag != null && tag.equals("relative"))
-            addPadding(slidableView);
-
-        if(!(slidableView instanceof ViewGroup))
-            return;
-
-        ViewGroup root = (ViewGroup) slidableView;
-
-        for (int i=0; i<root.getChildCount(); i++) {
-            View child = root.getChildAt(i);
-            checkPadding2(child);
-        }
-    }
-
-    private void checkPadding(View slidableView) {
-        if(!(slidableView instanceof ViewGroup)) {
-            addPadding(slidableView);
-            return;
-        }
-
-        ViewGroup root = (ViewGroup) slidableView;
-
-        if(isLastRoot(root)) {
-            for (int i = 0; i < root.getChildCount(); i++) {
-                View child = root.getChildAt(i);
-                if (child instanceof RecyclerView) // && i == root.getChildCount()-1
-                    return;
-            }
-            addPadding(root);
-        } else {
-            for (int i = 0; i < root.getChildCount(); i++) {
-                checkPadding(root.getChildAt(i));
-            }
-        }
-    }
-
+    /**
+     * Add maxSlide padding to the bottom of the target view.
+     * @param root the view that needs padding
+     */
     private void addPadding(View root) {
-        System.out.println("paddig");
         int top = root.getPaddingTop();
         int left = root.getPaddingLeft();
         int right = root.getPaddingRight();
-        int bottom = root.getPaddingBottom();
+        int bottom = maxSlide;
 
-        bottom = maxSlide;
         root.setPadding(left, top, right, bottom);
-    }
-
-    private boolean isLastRoot(ViewGroup root) {
-        boolean result = true;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            if (root.getChildAt(i) instanceof ViewGroup && ((ViewGroup) root.getChildAt(i)).getChildCount() > 0)
-                result = false;
-
-            if(root.getChildAt(i) instanceof RecyclerView)
-                result = true;
-        }
-
-
-        return result;
     }
 
     private final Rect tmpContainerRect = new Rect();
