@@ -66,7 +66,7 @@ public class SlidingDrawer extends LinearLayout {
     private float currentSlide;
 
     // only view sensible to vertical dragging
-    private View draggableView;
+    private View dragView;
 
     // The fade color used for the panel covered by the slider.
     private final static int mCoveredFadeColor = 0x99000000;
@@ -118,8 +118,8 @@ public class SlidingDrawer extends LinearLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if(draggableView == null)
-            throw new IllegalStateException("draggableView == null");
+        if(dragView == null)
+            throw new IllegalStateException("dragView == null");
 
         final int action = MotionEventCompat.getActionMasked(event);
 
@@ -138,14 +138,14 @@ public class SlidingDrawer extends LinearLayout {
                 yDown = event.getRawY();
 
                 final int[] viewCoordinates = new int[2];
-                draggableView.getLocationInWindow(viewCoordinates);
+                dragView.getLocationInWindow(viewCoordinates);
 
                 final float viewX = viewCoordinates[0];
-                final float viewWidth = draggableView.getWidth();
+                final float viewWidth = dragView.getWidth();
                 final float viewY = viewCoordinates[1];
-                final float viewHeight = draggableView.getHeight();
+                final float viewHeight = dragView.getHeight();
 
-                // slidableView can slide only if the ACTION_DOWN event is within draggableView bounds
+                // slidableView can slide only if the ACTION_DOWN event is within dragView bounds
                 canSlide = !(xDown < viewX || xDown > viewX + viewWidth || yDown < viewY || yDown > viewY + viewHeight);
 
                 if(!canSlide)
@@ -443,8 +443,8 @@ public class SlidingDrawer extends LinearLayout {
         va.start();
     }
 
-    public void setDraggableView(@NonNull View draggableView) {
-        this.draggableView = draggableView;
+    public void setDragView(@NonNull View dragView) {
+        this.dragView = dragView;
     }
 
     /**

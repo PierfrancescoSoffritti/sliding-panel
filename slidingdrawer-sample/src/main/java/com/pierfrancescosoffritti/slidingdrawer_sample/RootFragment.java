@@ -81,11 +81,11 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
         if(currentSlide == 0) {
             collapsedContent.setVisibility(View.VISIBLE);
             expandedContent.setVisibility(View.INVISIBLE);
-            slidingDrawer.setDraggableView(collapsedContent);
+            slidingDrawer.setDragView(collapsedContent);
         }else if (currentSlide == 1) {
             collapsedContent.setVisibility(View.INVISIBLE);
             expandedContent.setVisibility(View.VISIBLE);
-            slidingDrawer.setDraggableView(tabs);
+            slidingDrawer.setDragView(tabs);
         } else {
             collapsedContent.setVisibility(View.VISIBLE);
             expandedContent.setVisibility(View.VISIBLE);

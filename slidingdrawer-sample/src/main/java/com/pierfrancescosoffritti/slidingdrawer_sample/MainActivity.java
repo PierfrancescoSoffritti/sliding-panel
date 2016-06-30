@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements SlidingDrawerCont
 
     @Override
     public void setDragView(View view) {
-        slidingDrawer.setDraggableView(view);
+        slidingDrawer.setDragView(view);
     }
 
     @Override
