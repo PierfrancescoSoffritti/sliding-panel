@@ -37,7 +37,7 @@ import java.util.Set;
  */
 
 // TODO this class should extend from ViewGroup. At the moment I don't have much time to spend on this component so the current solution is good enough, for now.
-// TODO A LOT of uses cases are not yet taken into consideration.
+// TODO A LOT of uses cases have not been taken into consideration yet.
 public class SlidingDrawer extends LinearLayout {
 
     private static final byte UP = 0;
