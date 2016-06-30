@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
@@ -35,8 +36,8 @@ import java.util.Set;
  * Here instead the <i>collapsed sliding view</i> is placed exactly below the <i>non sliding view</i>, just like in a vertical LinearLayout. The <i>sliding view</i> is conceptually part of the hierarchy and not above it.
  */
 
-// TODO this class should extend from ViewGroup. But at the moment I don't have much time to spend on this View so the current solution is good enough, for now.
-// TODO A LOT of uses cases are not yet taken in consideration.
+// TODO this class should extend from ViewGroup. At the moment I don't have much time to spend on this component so the current solution is good enough, for now.
+// TODO A LOT of uses cases are not yet taken into consideration.
 public class SlidingDrawer extends LinearLayout {
 
     private static final byte UP = 0;
@@ -442,7 +443,7 @@ public class SlidingDrawer extends LinearLayout {
         va.start();
     }
 
-    public void setDraggableView(View draggableView) {
+    public void setDraggableView(@NonNull View draggableView) {
         this.draggableView = draggableView;
     }
 
@@ -477,11 +478,11 @@ public class SlidingDrawer extends LinearLayout {
         }
     }
 
-    public void addSlideListener(OnSlideListener listener) {
+    public void addSlideListener(@NonNull OnSlideListener listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(OnSlideListener listener) {
+    public void removeListener(@NonNull OnSlideListener listener) {
         listeners.remove(listener);
     }
 
