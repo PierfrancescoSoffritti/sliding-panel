@@ -46,7 +46,7 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_root, container, false);
 
-        collapsedContent = view.findViewById(R.id.collapsed_view);
+        collapsedContent = view.findViewById(R.id.sliding_drawer_collapsed_view);
         expandedContent = view.findViewById(R.id.expanded_content);
 
         tabs = (TabLayout) view.findViewById(R.id.tab_layout);

@@ -315,7 +315,7 @@ public class SlidingDrawer extends LinearLayout {
 
         // the collapsed view is the view shown when the slidableView is collapsed.
         // it's important to add padding to its bottom, otherwise some content will be offscreen-
-        View collapsedView = slidableView.findViewById(R.id.collapsed_view);
+        View collapsedView = slidableView.findViewById(R.id.sliding_drawer_collapsed_view);
         if(collapsedView != null)
             addPadding(collapsedView);
     }
