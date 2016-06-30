@@ -1,4 +1,4 @@
-package com.pierfrancescosoffritti.slidingdrawer_sample;
+package com.pierfrancescosoffritti.slidingdrawer_sample.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

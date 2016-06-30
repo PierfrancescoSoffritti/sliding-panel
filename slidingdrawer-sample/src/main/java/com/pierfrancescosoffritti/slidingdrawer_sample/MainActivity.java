@@ -3,7 +3,6 @@ package com.pierfrancescosoffritti.slidingdrawer_sample;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
@@ -11,9 +10,8 @@ import com.pierfrancescosoffritti.utils.FragmentsUtils;
 
 public class MainActivity extends AppCompatActivity implements SlidingDrawerContainer, SlidingDrawer.OnSlideListener {
 
-    SlidingDrawer slidingDrawer;
-
-    FloatingActionButton fab;
+    private SlidingDrawer slidingDrawer;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +30,6 @@ public class MainActivity extends AppCompatActivity implements SlidingDrawerCont
 
             @Override
             public void onClick(View view) {
-                Log.d(getClass().getSimpleName(), "click");
-
                 if(!show)
                     getSupportActionBar().hide();
                 else

@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pierfrancescosoffritti.slidingdrawer_sample.adapters.RecyclerViewAdapter;
 import com.pierfrancescosoffritti.slidingdrawer_sample.dummy.DummyContent;
 
 public class ListFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
 
     private RecyclerView recyclerView;
@@ -28,8 +27,6 @@ public class ListFragment extends Fragment {
     public ListFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static ListFragment newInstance(int columnCount) {
         ListFragment fragment = new ListFragment();
         Bundle args = new Bundle();
