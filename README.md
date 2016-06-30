@@ -1,6 +1,6 @@
 # SlidingDrawer
 
-[![](https://jitpack.io/v/PierfrancescoSoffritti/WebBasedOAuth.svg)](https://jitpack.io/#PierfrancescoSoffritti/SlidingDrawer)
+[![](https://jitpack.io/v/PierfrancescoSoffritti/SlidingDrawer.svg)](https://jitpack.io/#PierfrancescoSoffritti/SlidingDrawer)
 
 A custom View implementing the <a href="https://material.google.com/components/bottom-sheets.html?authuser=0">bottom sheet pattern.</a><br/>
 This ViewGroup can have only 2 children. The 1st one is the <b>non slidable view</b> ; the 2nd is the <b>slidable view</b>, which can slide over the <b>non slidable view</b>.<br/><br/>
