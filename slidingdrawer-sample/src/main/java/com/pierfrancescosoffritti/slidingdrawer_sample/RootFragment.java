@@ -17,6 +17,12 @@ import com.pierfrancescosoffritti.slidingdrawer_sample.adapters.ViewPagerAdapter
 import com.pierfrancescosoffritti.utils.FragmentsUtils;
 
 public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListener {
+
+    private final static String TAG_1 = "TAG_1";
+    private final static String TAG_2 = "TAG_2";
+
+    private ViewPagerAdapter viewPagerAdapter;
+
     private View collapsedView;
     private View expandedView;
 
@@ -45,9 +51,19 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
 
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
 
-        // i'm not handling a lot of stuff, teaching to use Fragments it's not the purpose of this sample :)
-        Fragment listFragment1 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(1), null);
-        Fragment listFragment2 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(2), null);
+        Fragment listFragment1;
+        Fragment listFragment2;
+
+        if(savedInstanceState == null) {
+            listFragment1 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(1), null);
+            listFragment2 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(2), null);
+        } else {
+            String tag0 = savedInstanceState.getString(TAG_1);
+            String tag1 = savedInstanceState.getString(TAG_2);
+
+            listFragment1 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(1), tag0);
+            listFragment2 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(2), tag1);
+        }
 
         setupViewPager(
                 view,
@@ -63,6 +79,19 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
     }
 
     @Override
+    public void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(viewPagerAdapter != null) {
+            outState.putString(TAG_1, viewPagerAdapter.getItem(0).getTag());
+            outState.putString(TAG_2, viewPagerAdapter.getItem(1).getTag());
+        } else {
+            outState.putString(TAG_1, TAG_1);
+            outState.putString(TAG_2, TAG_2);
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof SlidingDrawerContainer) {
@@ -74,7 +103,7 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
 
     @SafeVarargs
     private final void setupViewPager(View view, TabLayout tabs, Pair<Fragment, String>... fragments) {
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), fragments);
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), fragments);
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         viewPager.setAdapter(viewPagerAdapter);
 

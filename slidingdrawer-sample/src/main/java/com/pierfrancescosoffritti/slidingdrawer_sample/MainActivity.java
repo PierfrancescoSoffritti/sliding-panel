@@ -41,8 +41,11 @@ public class MainActivity extends AppCompatActivity implements RootFragment.Slid
             }
         });
 
-        RootFragment fragment = RootFragment.newInstance();
-        FragmentsUtils.swapFragments(getSupportFragmentManager(), R.id.root, fragment);
+        RootFragment fragment;
+        if(savedInstanceState == null)
+            fragment = (RootFragment) FragmentsUtils.swapFragments(getSupportFragmentManager(), R.id.root, RootFragment.newInstance());
+        else
+            fragment = (RootFragment) FragmentsUtils.findFragment(getSupportFragmentManager(), RootFragment.newInstance(), null);
 
         slidingDrawer.addSlideListener(fragment);
         slidingDrawer.addSlideListener(this);
