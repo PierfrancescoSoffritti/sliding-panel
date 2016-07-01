@@ -430,6 +430,11 @@ public class SlidingDrawer extends LinearLayout {
      * @param finalYNormalized Normalized value (between 0.0 and 1.0) representing the final slide position
      */
     public void slideTo(float finalYNormalized) {
+        if(finalYNormalized == Float.NaN)
+            throw new IllegalArgumentException("Bad value. Can't slide to NaN");
+        if(finalYNormalized < 0 || finalYNormalized > 1)
+            throw new IllegalArgumentException("Bad value. Can't slide to " +finalYNormalized +". Value must be between 0 and 1");
+
         ValueAnimator va = ValueAnimator.ofFloat(currentSlide, finalYNormalized);
         va.setInterpolator(new DecelerateInterpolator(1.5f));
         va.setDuration(300);
