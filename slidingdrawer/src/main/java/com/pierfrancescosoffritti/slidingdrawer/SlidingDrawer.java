@@ -40,9 +40,12 @@ import java.util.Set;
 // TODO A LOT of uses cases have not been taken into consideration yet.
 public class SlidingDrawer extends LinearLayout {
 
+    private static final int SLIDE_DURATION = 300;
+
     private static final byte UP = 0;
     private static final byte DOWN = 1;
     private static final byte NONE = 2;
+
     @IntDef({UP, DOWN, NONE})
     @Retention(RetentionPolicy.SOURCE)
     private @interface SlidingDirection {}
@@ -74,6 +77,9 @@ public class SlidingDrawer extends LinearLayout {
     // max value by which sliding view can slide.
     private int maxSlide;
     private final int minSlide = 0;
+
+    // duration of the slide in milliseconds, when executed automatically
+    private long slideDuration = SLIDE_DURATION;
 
     private boolean isSliding;
     private boolean canSlide = false;
@@ -437,7 +443,7 @@ public class SlidingDrawer extends LinearLayout {
 
         ValueAnimator va = ValueAnimator.ofFloat(currentSlide, finalYNormalized);
         va.setInterpolator(new DecelerateInterpolator(1.5f));
-        va.setDuration(300);
+        va.setDuration(slideDuration);
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
@@ -485,6 +491,18 @@ public class SlidingDrawer extends LinearLayout {
             case SLIDING:
                 break;
         }
+    }
+
+    public long getSlideDuration() {
+        return slideDuration;
+    }
+
+    /**
+     * Set the duration of the slide, when executed automatically
+     * @param slideDuration duration in milliseconds
+     */
+    public void setSlideDuration(long slideDuration) {
+        this.slideDuration = slideDuration;
     }
 
     public void addSlideListener(@NonNull OnSlideListener listener) {
