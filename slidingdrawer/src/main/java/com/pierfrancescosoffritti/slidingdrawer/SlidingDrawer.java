@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -316,9 +317,9 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     private void initSlidingChild() {
-        slidableView = getChildAt(1);
+        slidableView = findViewById(R.id.slidable_view);
 
-        maxSlide = getChildAt(0).getHeight();
+        maxSlide = findViewById(R.id.non_slidable_view).getHeight();
 
         // the collapsed view is the view shown when the slidableView is collapsed.
         // it's important to add padding to its bottom, otherwise some content will be offscreen-
@@ -381,6 +382,15 @@ public class SlidingDrawer extends LinearLayout {
 
             child.layout(tmpChildRect.left, tmpChildRect.top, tmpChildRect.right, tmpChildRect.bottom);
         }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        requestLayout();
+        invalidate();
+        Log.d(this.getClass().getSimpleName(), "size changed");
     }
 
     @Override

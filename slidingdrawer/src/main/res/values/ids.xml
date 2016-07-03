@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="non_slidable_view" type="id" />
+    <item name="slidable_view" type="id" />
+
     <item name="sliding_drawer_collapsed_view" type="id" />
 </resources>

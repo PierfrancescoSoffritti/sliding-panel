@@ -30,10 +30,11 @@
             app:shadow_length="4dp" >
 
             <include
+                android:id="@id/non_slidable_view"
                 layout="@layout/video_controls" />
 
             <FrameLayout
-                android:id="@+id/root"
+                android:id="@id/slidable_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
