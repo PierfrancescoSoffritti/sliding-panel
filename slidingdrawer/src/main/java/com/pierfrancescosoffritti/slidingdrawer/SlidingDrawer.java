@@ -63,10 +63,10 @@ public class SlidingDrawer extends LinearLayout {
     private final int touchSlop = viewConfiguration.getScaledTouchSlop();
 
     // view that will slide
-    private @NonNull View slidableView;
+    private View slidableView;
 
     // view that won't slide
-    private @NonNull View nonSlidableView;
+    private View nonSlidableView;
 
     // current slide value, between 1.0 and 0.0 (1.0 = EXPANDED, 0.0 = COLLAPSED)
     private float currentSlide;
@@ -78,7 +78,7 @@ public class SlidingDrawer extends LinearLayout {
     private final static int mCoveredFadeColor = 0x99000000;
 
     // max value by which sliding view can slide.
-//    private int maxSlide;
+    private int maxSlide;
     private final int minSlide = 0;
 
     // duration of the slide in milliseconds, when executed automatically
@@ -193,7 +193,7 @@ public class SlidingDrawer extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
         float eventY = event.getY();
 
-        final float maxSlide = nonSlidableView.getHeight();
+         maxSlide = nonSlidableView.getHeight();
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
@@ -222,8 +222,6 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     private void completeSlide(float currentSlide, @SlidingDirection int direction) {
-        final float maxSlide = nonSlidableView.getHeight();
-
         float finalY = -1;
 
         switch (direction) {
@@ -255,8 +253,6 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     private float normalizeSlide(float currentY) {
-        final float maxSlide = nonSlidableView.getHeight();
-
         // currentSlide_Normalized : x = 1 : maxSliding
         return Math.abs(currentY - maxSlide) / maxSlide;
     }
@@ -266,8 +262,6 @@ public class SlidingDrawer extends LinearLayout {
      * @param newPositionNormalized new view position, normalized
      */
     private void updateSliding(float newPositionNormalized) {
-        final float maxSlide = nonSlidableView.getHeight();
-
         currentSlide = newPositionNormalized;
 
         state = currentSlide == 1 ? EXPANDED : currentSlide == 0 ? COLLAPSED : SLIDING;
@@ -328,8 +322,9 @@ public class SlidingDrawer extends LinearLayout {
 
     private void initSlidingChild() {
         slidableView = findViewById(R.id.slidable_view);
-
         nonSlidableView = findViewById(R.id.non_slidable_view);
+
+        maxSlide = nonSlidableView.getHeight();
 
         // the collapsed view is the view shown when the slidableView is collapsed.
         // it's important to add padding to its bottom, otherwise some content will be offscreen-
@@ -343,12 +338,10 @@ public class SlidingDrawer extends LinearLayout {
      * @param root the view that needs padding
      */
     private void addPadding(View root) {
-        final float maxSlide = nonSlidableView.getHeight();
-
         int top = root.getPaddingTop();
         int left = root.getPaddingLeft();
         int right = root.getPaddingRight();
-        int bottom = (int) maxSlide;
+        int bottom = maxSlide;
 
         root.setPadding(left, top, right, bottom);
     }
