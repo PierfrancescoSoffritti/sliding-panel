@@ -16,7 +16,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
@@ -126,26 +125,6 @@ public class SlidingDrawer extends LinearLayout {
         }
     }
 
-    // this method has some problems if one of the child is added with <include>
-    @Override
-    public void addView(View child, ViewGroup.LayoutParams layoutParams) {
-        super.addView(child, layoutParams);
-
-        if (child.getId() == R.id.slidable_view) {
-            slidableView = child;
-
-            // the collapsed view is the view shown when the slidableView is collapsed.
-            // it's important to add padding to its bottom, otherwise some content will be offscreen-
-            View collapsedView = slidableView.findViewById(R.id.sliding_drawer_collapsed_view);
-            if(collapsedView != null)
-                addPadding(collapsedView);
-        }
-        else if(child.getId() == R.id.non_slidable_view) {
-            nonSlidableView = child;
-            maxSlide = nonSlidableView.getHeight();
-        }
-    }
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         if(dragView == null)
@@ -213,9 +192,6 @@ public class SlidingDrawer extends LinearLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float eventY = event.getY();
-
-        if(nonSlidableView == null)
-            nonSlidableView = findViewById(R.id.non_slidable_view);
 
          maxSlide = nonSlidableView.getHeight();
 
@@ -309,6 +285,8 @@ public class SlidingDrawer extends LinearLayout {
         if (count != 2)
             throw new IllegalStateException("SlidingDrawer must have exactly 2 children.");
 
+        initSlidingChild();
+
         // Measurement will ultimately be computing these values.
         int maxHeight = 0;
         int maxWidth = 0;
@@ -340,6 +318,19 @@ public class SlidingDrawer extends LinearLayout {
         // Report our final dimensions.
         setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState),
                 resolveSizeAndState(maxHeight, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT));
+    }
+
+    private void initSlidingChild() {
+        slidableView = findViewById(R.id.slidable_view);
+        nonSlidableView = findViewById(R.id.non_slidable_view);
+
+        maxSlide = nonSlidableView.getHeight();
+
+        // the collapsed view is the view shown when the slidableView is collapsed.
+        // it's important to add padding to its bottom, otherwise some content will be offscreen-
+        View collapsedView = slidableView.findViewById(R.id.sliding_drawer_collapsed_view);
+        if(collapsedView != null)
+            addPadding(collapsedView);
     }
 
     /**
