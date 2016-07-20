@@ -126,6 +126,14 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+
+        slidableView = findViewById(R.id.slidable_view);
+        nonSlidableView = findViewById(R.id.non_slidable_view);
+    }
+
+        @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         if(dragView == null)
             throw new IllegalStateException("dragView == null");
@@ -321,13 +329,13 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     private void initSlidingChild() {
-        slidableView = findViewById(R.id.slidable_view);
-        nonSlidableView = findViewById(R.id.non_slidable_view);
-
+//        slidableView = findViewById(R.id.slidable_view);
+//        nonSlidableView = findViewById(R.id.non_slidable_view);
+//
         maxSlide = nonSlidableView.getHeight();
-
-        // the collapsed view is the view shown when the slidableView is collapsed.
-        // it's important to add padding to its bottom, otherwise some content will be offscreen-
+//
+//        // the collapsed view is the view shown when the slidableView is collapsed.
+//        // it's important to add padding to its bottom, otherwise some content will be offscreen-
         View collapsedView = slidableView.findViewById(R.id.sliding_drawer_collapsed_view);
         if(collapsedView != null)
             addPadding(collapsedView);
