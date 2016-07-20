@@ -495,6 +495,9 @@ public class SlidingDrawer extends LinearLayout {
      * @param state a value from {@link State}
      */
     public void setState(@State int state) {
+        if(state == this.state)
+            return;
+
         switch (state) {
             case EXPANDED:
                 slideTo(1);
