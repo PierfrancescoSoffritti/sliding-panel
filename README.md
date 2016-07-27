@@ -24,7 +24,7 @@ allprojects {
 Add this to your module-level `build.gradle`:
 ```
 dependencies {
-  compile 'com.github.PierfrancescoSoffritti:SlidingDrawer:0.1'
+  compile 'com.github.PierfrancescoSoffritti:SlidingDrawer:0.9'
 }
 ```
 
@@ -41,17 +41,18 @@ dependencies {
   app:shadow_length="4dp" >
 
   <View
-    android:id="@+id/non_slidable_view"
+    android:id="@id/non_slidable_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
     
   <FrameLayout
-    android:id="@+id/slidable_view"
+    android:id="@id/slidable_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
 
 </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>
 ```
+It's important to set the id attribute to `android:id="@id/non_slidable_view"` for the <b>non slidable view</b> and to `android:id="@id/slidable_view"` for the <b>slidable view</b>.
 
 When you use this ViewGroup remember to always add a <b>drag view</b> `slidingDrawer.setDragView(view);` <br/>
 The <b>drag view</b> is the only surface from which the <b>slidable view</b> can be dragged.
