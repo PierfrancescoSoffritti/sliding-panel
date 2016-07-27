@@ -26,7 +26,7 @@ allprojects {
 Add this to your module-level `build.gradle`:
 ```
 dependencies {
-  compile 'com.github.PierfrancescoSoffritti:SlidingDrawer:0.9'
+  compile 'com.github.PierfrancescoSoffritti:SlidingDrawer:0.10'
 }
 ```
 
