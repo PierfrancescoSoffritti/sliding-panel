@@ -9,6 +9,8 @@ In other implementation the only way to control the <b>position</b> of the <b>co
 Here instead the <b>collapsed slidable view</b> is placed exactly below the <b>non slidable view</b>, just like in a vertical LinearLayout. The <b>slidable view</b> is conceptually part of the hierarchy and it's not above it.
 
 Download the sample app [here](https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/slidingdrawer-sample/slidingdrawer-sample-release.apk?raw=true)
+
+Apps using this library: [Shuffly](https://plus.google.com/u/0/communities/108043751914798315413)
 <br/><br/>
 <img height="450" src="https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/pics/SlidingView.gif" />
 <br/>
