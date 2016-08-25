@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="AndroidUtils-0.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../slidingdrawer-sample/build/intermediates/exploded-aar/com.github.PierfrancescoSoffritti/AndroidUtils/0.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../slidingdrawer-sample/build/intermediates/exploded-aar/com.github.PierfrancescoSoffritti/AndroidUtils/0.1/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
