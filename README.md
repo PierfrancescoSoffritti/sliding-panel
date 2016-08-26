@@ -10,7 +10,7 @@ Here instead the <b>collapsed slidable view</b> is placed exactly below the <b>n
 
 Download the sample app [here](https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/slidingdrawer-sample/slidingdrawer-sample-release.apk?raw=true)
 
-Apps using this library: [Shuffly](https://plus.google.com/u/0/communities/108043751914798315413)
+Apps using this library: [Shuffly](https://play.google.com/store/apps/details?id=com.pierfrancescosoffritti.shuffly)
 <br/><br/>
 <img height="450" src="https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/pics/SlidingView.gif" />
 <br/>
