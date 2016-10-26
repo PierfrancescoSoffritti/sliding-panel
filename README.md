@@ -61,4 +61,4 @@ It's important to set the id attribute to `android:id="@id/non_slidable_view"` f
 When you use this ViewGroup remember to always add a <b>drag view</b> `slidingDrawer.setDragView(view);` <br/>
 The <b>drag view</b> is the only surface from which the <b>slidable view</b> can be dragged.
 
-In case the <b>slidable view</b> has different views when collapsed (<b>collapsed view</b>) or expanded (<b>expanded view</b>), and the <b>collapsed view</b> isn't a List (or equivalent), it should have the id `android:id="@id/sliding_drawer_collapsed_view"`, so the `SlidingDrawer` can adjust the view's paddingBottom to prevent it's content from going offscreen.
+In case the <b>slidable view</b> has different views when collapsed (<b>collapsed view</b>) or expanded (<b>expanded view</b>), and the <b>collapsed view</b> isn't a List (or equivalent), it should have the id `android:id="@id/sliding_drawer_collapsed_view"`, so the `SlidingDrawer` can adjust the view's paddingBottom to prevent its content from going offscreen.
