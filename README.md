@@ -8,7 +8,7 @@ The substantial difference from all other implementations is that in this case i
 In other implementations the only way to control the position of the <b>slidable view</b>, when collapsed, is by using a peek factor.<br/>
 Here instead the <b>slidable view</b> is placed exactly below the <b>non slidable view</b>, just like in a vertical LinearLayout. The <b>slidable view</b> is conceptually part of the hierarchy and it's not above it.
 
-Download the sample app [here](https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/slidingdrawer-sample/slidingdrawer-sample-release.apk?raw=true)
+Download the sample app [here](https://github.com/PierfrancescoSoffritti/SlidingDrawer/tree/master/slidingdrawer-sample/apk)
 
 Apps using this library: [Shuffly](https://play.google.com/store/apps/details?id=com.pierfrancescosoffritti.shuffly)
 <br/><br/>
