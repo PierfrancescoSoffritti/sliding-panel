@@ -27,7 +27,7 @@
             android:id="@+id/sliding_drawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:shadow_length="4dp" >
+            app:elevation="4dp" >
 
             <include
                 android:id="@id/non_slidable_view"

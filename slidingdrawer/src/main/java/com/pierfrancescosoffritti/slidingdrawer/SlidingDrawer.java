@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -27,17 +26,15 @@ import java.util.Set;
 /**
  * A custom View implementing the bottom sheet pattern.
  * <br/>
- * This ViewGroup can have only 2 children. The 1st one is the <i>non sliding view</i> ; the 2nd is the <i>sliding view</i>, which can slide over the <i>non sliding view</i>.
+ * This ViewGroup can have only 2 children. The 1st one is the <i>non slidable view</i> ; the 2nd is the <i>slidable view</i>, which can slide over the <i>non slidable view</i>.
  * <br/><br/>
- * The substantial difference from all other implementation is that in this case is easy to position the <i>sliding view</i> relatively to the <i>non sliding view</i>.
+ * The substantial difference from all other implementations is that in this case it is easy to position the <i>slidable view</i> relatively to the <i>non slidable view</i>.
  * <br/>
- * In other implementation the only way to control the <i>position</i> of the <i>collapsed sliding view</i> is by using a <i>peek</i> factor.
+ * In other implementations the only way to control the <i>position</i> of the <i>slidable view</i>, when collapsed, is by using a <i>peek</i> factor.
  * <br/>
- * Here instead the <i>collapsed sliding view</i> is placed exactly below the <i>non sliding view</i>, just like in a vertical LinearLayout. The <i>sliding view</i> is conceptually part of the hierarchy and not above it.
+ * Here instead the <i>slidable view</i>, when collapsed, is placed exactly below the <i>non slidable view</i>, just like in a vertical LinearLayout. The <i>slidable view</i> is part of the view hierarchy and not above it.
  */
 
-// TODO this class should extend ViewGroup. At the moment I don't have much time to spend on this component, the current solution is good enough.
-// TODO some of uses cases have not been taken into consideration yet.
 public class SlidingDrawer extends LinearLayout {
 
     private static final int SLIDE_DURATION = 300;
@@ -45,7 +42,6 @@ public class SlidingDrawer extends LinearLayout {
     private static final byte UP = 0;
     private static final byte DOWN = 1;
     private static final byte NONE = 2;
-
     @IntDef({UP, DOWN, NONE})
     @Retention(RetentionPolicy.SOURCE)
     private @interface SlidingDirection {}
@@ -68,16 +64,18 @@ public class SlidingDrawer extends LinearLayout {
     // view that won't slide
     private View nonSlidableView;
 
-    // current slide value, between 1.0 and 0.0 (1.0 = EXPANDED, 0.0 = COLLAPSED)
-    private float currentSlide;
-
-    // only view sensible to vertical dragging
+    // the only view sensible to vertical dragging. Dragging this view will slide the slidableView
     private View dragView;
 
-    // The fade color used for the panel covered by the slider.
-    private final static int mCoveredFadeColor = 0x99000000;
+    // the color of the shade that fades over the non slidable panel when the slidable panel is moved
+    private static final int SHADE_COLOR_WITH_ALPHA = 0x99000000;
+    private static final int shadeMaxAlpha = SHADE_COLOR_WITH_ALPHA >>> 24;
+    private static final int shadeColor = SHADE_COLOR_WITH_ALPHA & 0x00FFFFFF;
 
-    // max value by which sliding view can slide.
+    // current slide value. Is a value between 1.0 and 0.0 (1.0 = EXPANDED, 0.0 = COLLAPSED)
+    private float currentSlide;
+
+    // max and min values of currentSlide
     private int maxSlide;
     private final int minSlide = 0;
 
@@ -91,8 +89,8 @@ public class SlidingDrawer extends LinearLayout {
     private float dY;
     private float yDown;
 
-    private final Drawable shadowDrawable;
-    private int shadowLength;
+    private final Drawable elevationShadowDrawable;
+    private int elevationShadowLength;
 
     private final Set<OnSlideListener> listeners;
 
@@ -111,7 +109,7 @@ public class SlidingDrawer extends LinearLayout {
 
         listeners = new HashSet<>();
 
-        shadowDrawable = ContextCompat.getDrawable(getContext(), R.drawable.above_shadow);
+        elevationShadowDrawable = ContextCompat.getDrawable(getContext(), R.drawable.elevation_shadow);
         setWillNotDraw(false);
     }
 
@@ -119,7 +117,7 @@ public class SlidingDrawer extends LinearLayout {
         TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.SlidingDrawer, 0, 0);
 
         try {
-            shadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingDrawer_shadow_length, 10);
+            elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingDrawer_elevation, 10);
         } finally {
             typedArray.recycle();
         }
@@ -138,10 +136,10 @@ public class SlidingDrawer extends LinearLayout {
         if(dragView == null)
             throw new IllegalStateException("dragView == null");
 
-        final int action = MotionEventCompat.getActionMasked(event);
+        final int action = event.getAction();
 
-        // stop sliding and let the child handle the touch event
         if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
+            // stop sliding and let the child handle the touch event
             isSliding = false;
             canSlide = false;
 
@@ -151,8 +149,8 @@ public class SlidingDrawer extends LinearLayout {
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 // save touch coordinates
-                float xDown = event.getRawX();
-                yDown = event.getRawY();
+                float rawXDown = event.getRawX();
+                float rawYDown = event.getRawY();
 
                 final int[] viewCoordinates = new int[2];
                 dragView.getLocationInWindow(viewCoordinates);
@@ -163,16 +161,15 @@ public class SlidingDrawer extends LinearLayout {
                 final float viewHeight = dragView.getHeight();
 
                 // slidableView can slide only if the ACTION_DOWN event is within dragView bounds
-                canSlide = !(xDown < viewX || xDown > viewX + viewWidth || yDown < viewY || yDown > viewY + viewHeight);
+                canSlide = !(rawXDown < viewX || rawXDown > viewX + viewWidth || rawYDown < viewY || rawYDown > viewY + viewHeight);
 
                 if(!canSlide)
                     return false;
 
                 yDown = event.getY();
-
                 dY = slidableView.getY() - yDown;
 
-                // intercept only if sliding
+                // intercept touch event only if sliding
                 return isSliding;
             }
             case MotionEvent.ACTION_MOVE: {
@@ -205,8 +202,8 @@ public class SlidingDrawer extends LinearLayout {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
-                // complete the slide if it's not completed yet.
                 if(isSliding && state != EXPANDED && state != COLLAPSED)
+                    // complete the slide if it's not completed yet.
                     completeSlide(currentSlide, eventY > yDown ? DOWN : UP);
 
                 canSlide = false;
@@ -223,7 +220,7 @@ public class SlidingDrawer extends LinearLayout {
                 else if(eventY + dY < minSlide)
                     dY = -eventY;
 
-                updateSliding(normalizeSlide(eventY + dY));
+                updateCurrentSlide(normalizeSlide(eventY + dY));
                 break;
         }
         return true;
@@ -245,8 +242,8 @@ public class SlidingDrawer extends LinearLayout {
                 else
                     finalY = minSlide;
                 break;
-            // handle the single touch scenario
             case NONE:
+                // handle the single touch scenario
                 if(currentSlide == 1)
                     finalY = minSlide;
                 else if(currentSlide == 0)
@@ -260,17 +257,17 @@ public class SlidingDrawer extends LinearLayout {
         slideTo(normalizeSlide(finalY));
     }
 
-    private float normalizeSlide(float currentY) {
-        // currentSlide_Normalized : x = 1 : maxSliding
-        return Math.abs(currentY - maxSlide) / maxSlide;
+    // reduce value in the interval [0, 1]
+    private float normalizeSlide(float slide) {
+        return Math.abs(slide - maxSlide) / maxSlide;
     }
 
     /**
      * always use this method to update the position of the sliding view.
-     * @param newPositionNormalized new view position, normalized
+     * @param newSlideNormalized new slide value, normalized between 0 and 1
      */
-    private void updateSliding(float newPositionNormalized) {
-        currentSlide = newPositionNormalized;
+    private void updateCurrentSlide(float newSlideNormalized) {
+        currentSlide = newSlideNormalized;
 
         state = currentSlide == 1 ? EXPANDED : currentSlide == 0 ? COLLAPSED : SLIDING;
 
@@ -283,8 +280,7 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     /**
-     * Ask all children to measure themselves and compute the measurement of this
-     * layout based on the children.
+     * Ask all children to measure themselves, then compute the measure of this layout based on its children.
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -295,13 +291,11 @@ public class SlidingDrawer extends LinearLayout {
 
         initSlidingChild();
 
-        // Measurement will ultimately be computing these values.
         int maxHeight = 0;
         int maxWidth = 0;
         int childState = 0;
 
-        // Iterate through all children, measuring them and computing our dimensions
-        // from their size.
+        // Iterate through all children, measuring them while computing the dimensions of this view from their size.
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
             if (child.getVisibility() == GONE)
@@ -310,8 +304,8 @@ public class SlidingDrawer extends LinearLayout {
             // Measure the child.
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
 
-            // Update our size information based on the layout params.  Children
-            // that asked to be positioned on the left or right go in those gutters.
+            // Update our size information based on the layout params.
+            // Children that asked to be positioned on the left or right go in those gutters.
             final LayoutParams lp = (LayoutParams) child.getLayoutParams();
             maxWidth = Math.max(maxWidth, child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
 
@@ -328,11 +322,11 @@ public class SlidingDrawer extends LinearLayout {
                 resolveSizeAndState(maxHeight, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT));
     }
 
-    private void initSlidingChild() {//
+    private void initSlidingChild() {
         maxSlide = nonSlidableView.getHeight();
 
-        // the collapsed view is the view shown when the slidableView is collapsed.
-        // it's important to add padding at the bottom, otherwise some content will be offscreen-
+        // the collapsed view is the view shown in the slidableView when collapsed.
+        // it's important to add padding at the bottom, otherwise some content will be offscreen
         View collapsedView = slidableView.findViewById(R.id.sliding_drawer_collapsed_view);
         if(collapsedView != null)
             addPadding(collapsedView);
@@ -398,15 +392,15 @@ public class SlidingDrawer extends LinearLayout {
     public void draw(Canvas c) {
         super.draw(c);
 
-        // draw the shadow
-        if (shadowDrawable != null) {
+        // draw the elevation shadow
+        if (elevationShadowDrawable != null) {
             final int right = slidableView.getRight();
-            final int top = (int) (slidableView.getY() - shadowLength);
+            final int top = (int) (slidableView.getY() - elevationShadowLength);
             final int bottom = (int) slidableView.getY();
             final int left = slidableView.getLeft();
 
-            shadowDrawable.setBounds(left, top, right, bottom);
-            shadowDrawable.draw(c);
+            elevationShadowDrawable.setBounds(left, top, right, bottom);
+            elevationShadowDrawable.draw(c);
         }
     }
 
@@ -427,9 +421,8 @@ public class SlidingDrawer extends LinearLayout {
             result = super.drawChild(canvas, child, drawingTime);
 
             if (currentSlide > 0) {
-                final int baseAlpha = (mCoveredFadeColor & 0xff000000) >>> 24;
-                final int imag = (int) (baseAlpha * currentSlide);
-                final int color = imag << 24;
+                final int currentAlpha = (int) (shadeMaxAlpha * currentSlide);
+                final int color = currentAlpha << 24 | shadeColor;
                 coveredFadePaint.setColor(color);
                 canvas.drawRect(tmpRect, coveredFadePaint);
             }
@@ -459,7 +452,7 @@ public class SlidingDrawer extends LinearLayout {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                updateSliding((Float) animation.getAnimatedValue());
+                updateCurrentSlide((Float) animation.getAnimatedValue());
             }
         });
         va.start();
@@ -472,15 +465,15 @@ public class SlidingDrawer extends LinearLayout {
     /**
      * @return shadow height in pixels
      */
-    public int getShadowLength() {
-        return shadowLength;
+    public int getElevationShadowLength() {
+        return elevationShadowLength;
     }
 
     /**
-     * @param shadowLength shadow height in pixels
+     * @param elevationShadowLength shadow height in pixels
      */
-    public void setShadowLength(int shadowLength) {
-        this.shadowLength = shadowLength;
+    public void setElevationShadowLength(int elevationShadowLength) {
+        this.elevationShadowLength = elevationShadowLength;
     }
 
     public int getState() {
@@ -512,7 +505,7 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     /**
-     * Set the duration of the slide, when executed automatically
+     * Set the duration of the automatic slide animation
      * @param slideDuration duration in milliseconds
      */
     public void setSlideDuration(long slideDuration) {
