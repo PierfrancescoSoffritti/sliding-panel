@@ -36,8 +36,8 @@ import java.util.Set;
  * Here instead the <i>collapsed sliding view</i> is placed exactly below the <i>non sliding view</i>, just like in a vertical LinearLayout. The <i>sliding view</i> is conceptually part of the hierarchy and not above it.
  */
 
-// TODO this class should extend from ViewGroup. At the moment I don't have much time to spend on this component so the current solution is good enough, for now.
-// TODO A LOT of uses cases have not been taken into consideration yet.
+// TODO this class should extend ViewGroup. At the moment I don't have much time to spend on this component, the current solution is good enough.
+// TODO some of uses cases have not been taken into consideration yet.
 public class SlidingDrawer extends LinearLayout {
 
     private static final int SLIDE_DURATION = 300;
@@ -328,14 +328,11 @@ public class SlidingDrawer extends LinearLayout {
                 resolveSizeAndState(maxHeight, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT));
     }
 
-    private void initSlidingChild() {
-//        slidableView = findViewById(R.id.slidable_view);
-//        nonSlidableView = findViewById(R.id.non_slidable_view);
-//
+    private void initSlidingChild() {//
         maxSlide = nonSlidableView.getHeight();
-//
-//        // the collapsed view is the view shown when the slidableView is collapsed.
-//        // it's important to add padding to its bottom, otherwise some content will be offscreen-
+
+        // the collapsed view is the view shown when the slidableView is collapsed.
+        // it's important to add padding at the bottom, otherwise some content will be offscreen-
         View collapsedView = slidableView.findViewById(R.id.sliding_drawer_collapsed_view);
         if(collapsedView != null)
             addPadding(collapsedView);
@@ -419,7 +416,7 @@ public class SlidingDrawer extends LinearLayout {
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         boolean result;
-        final int save = canvas.save(Canvas.CLIP_SAVE_FLAG);
+        final int save = canvas.save(Canvas.ALL_SAVE_FLAG);
 
         if (slidableView != child) { // if main view
             // Clip against the slider; no sense drawing what will immediately be covered,

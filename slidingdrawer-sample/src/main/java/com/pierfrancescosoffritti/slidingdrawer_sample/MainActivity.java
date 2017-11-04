@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
-import com.pierfrancescosoffritti.utils.FragmentsUtils;
+import com.pierfrancescosoffritti.slidingdrawer_sample.utils.FragmentsUtils;
 
 public class MainActivity extends AppCompatActivity implements RootFragment.SlidingDrawerContainer, SlidingDrawer.OnSlideListener {
 

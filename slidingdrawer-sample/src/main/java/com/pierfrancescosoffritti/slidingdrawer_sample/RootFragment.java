@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
 import com.pierfrancescosoffritti.slidingdrawer_sample.adapters.ViewPagerAdapter;
-import com.pierfrancescosoffritti.utils.FragmentsUtils;
+import com.pierfrancescosoffritti.slidingdrawer_sample.utils.FragmentsUtils;
 
 public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListener {
 

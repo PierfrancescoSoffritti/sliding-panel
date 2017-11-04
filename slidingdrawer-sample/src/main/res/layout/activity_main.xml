@@ -51,6 +51,6 @@
         android:src="@drawable/ic_shuffle_black_24dp"
         android:tint="@android:color/white"
         android:clickable="true"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="center | bottom" />
 
 </android.support.design.widget.CoordinatorLayout>
