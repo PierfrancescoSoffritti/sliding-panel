@@ -20,12 +20,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
 
-    compile project(':slidingdrawer')
-    compile 'com.android.support:appcompat-v7:27.0.0'
-    compile 'com.android.support:support-v4:27.0.0'
-    compile 'com.android.support:recyclerview-v7:27.0.0'
-    compile 'com.android.support:design:27.0.0'
+    implementation project(':slidingdrawer')
+    implementation 'com.android.support:appcompat-v7:27.0.0'
+    implementation 'com.android.support:support-v4:27.0.0'
+    implementation 'com.android.support:recyclerview-v7:27.0.0'
+    implementation 'com.android.support:design:27.0.0'
 }
