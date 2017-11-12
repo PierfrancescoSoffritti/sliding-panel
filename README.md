@@ -38,6 +38,9 @@ dependencies {
 <com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  app:elevation="4dp" >
   
   <LinearLayout
       android:id="@id/non_slidable_view"
