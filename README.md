@@ -57,12 +57,13 @@ dependencies {
   <FrameLayout
       android:id="@id/slidable_view"
       android:layout_width="match_parent"
-      android:layout_height="match_parent" >
+      android:layout_height="match_parent"
+      android:background="@android:color/white" >
       
       <TextView
           android:id="@+id/drag_view"
           android:layout_width="match_parent"
-          android:layout_height="100dp"
+          android:layout_height="match_parent"
           android:text="drag me"
           android:clickable="true" />
    </FrameLayout>
