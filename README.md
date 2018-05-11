@@ -2,16 +2,24 @@
 
 [![](https://jitpack.io/v/PierfrancescoSoffritti/SlidingDrawer.svg)](https://jitpack.io/#PierfrancescoSoffritti/SlidingDrawer)
 
-A custom View implementing the <a href="https://material.google.com/components/bottom-sheets.html?authuser=0">bottom sheet pattern.</a><br/>
-This ViewGroup can have only 2 children. The 1st one is the <b>non slidable view</b> ; the 2nd is the <b>slidable view</b>, which can slide over the <b>non slidable view</b>.<br/><br/>
-The substantial difference from all other implementations is that in this case is easy to position the <b>slidable view</b> relative to the <b>non slidable view</b>.<br/>
-In other implementations the only way to control the position of the <b>slidable view</b>, when collapsed, is by using a peek factor.<br/>
-Here instead the <b>slidable view</b> is placed exactly below the <b>non slidable view</b>, just like in a vertical LinearLayout. The <b>slidable view</b> is conceptually part of the hierarchy and it's not above it.
+A custom View implementing the <a href="https://material.google.com/components/bottom-sheets.html?authuser=0">bottom sheet pattern.</a>
 
-Download the sample app [here](https://github.com/PierfrancescoSoffritti/SlidingDrawer/tree/master/slidingdrawer-sample/apk)
+## Overview
+The substantial difference from all other implementations of the bottom sheet pattern is that, in this case, the `slidable view` is part of the view hierarchy, and not above it.
 
-Apps using this library: [Shuffly](https://play.google.com/store/apps/details?id=com.pierfrancescosoffritti.shuffly)
-<br/><br/>
+In other implementations the only way to control the position of a collapsed `slidable view`, is by using a peek factor.
+Here instead the `slidable view` is placed exactly below the `non slidable view`, just like in a vertical `LinearLayout`.
+
+The `SlidingDrawer` ViewGroup offerd by this library can have only 2 children.
+* The first children is the `non slidable view` (the view that will be covered when the bottom sheet is exapnded).
+* The seconds children is the `slidable view` (the actual bottom sheet, the view that will be sliding over the `non slidable view`).
+
+You can download the sample app [here](https://github.com/PierfrancescoSoffritti/SlidingDrawer/tree/master/slidingdrawer-sample/apk).
+
+A list of published apps that are using this library:
+
+- [Shuffly](https://play.google.com/store/apps/details?id=com.pierfrancescosoffritti.shuffly)
+
 <img height="450" src="https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/pics/SlidingView.gif" />
 <br/>
 
@@ -28,11 +36,12 @@ allprojects {
 Add this to your module-level `build.gradle`:
 ```
 dependencies {
-  compile 'com.github.PierfrancescoSoffritti:SlidingDrawer:0.10'
+  compile 'com.github.PierfrancescoSoffritti:SlidingDrawer:0.11'
 }
 ```
 
 ## Usage
+A simple example of an XML file using SlidingDrawer. The `LinearLayout` is the `non slidable view`, the `FrameLayout` is the `slidable view`.
 
 ```
 <com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer
@@ -70,9 +79,11 @@ dependencies {
 
 </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>
 ```
-It's important to set the id attribute to `android:id="@id/non_slidable_view"` for the <b>non slidable view</b> and to `android:id="@id/slidable_view"` for the <b>slidable view</b>.
 
-When you use this ViewGroup remember to always add a <b>drag view</b> `slidingDrawer.setDragView(view);` <br/>
-The <b>drag view</b> is the only surface from which the <b>slidable view</b> can be dragged. The drag view must be clickable.
+It's important to set the id attribute to `android:id="@id/non_slidable_view"` for the `non slidable view` and to `android:id="@id/slidable_view"` for the `slidable view`.
 
-In case the <b>slidable view</b> has different views when collapsed (<b>collapsed view</b>) or expanded (<b>expanded view</b>), and the <b>collapsed view</b> isn't a List (or equivalent), it should have the id `android:id="@id/sliding_drawer_collapsed_view"`, so the `SlidingDrawer` can adjust the view's paddingBottom to prevent its content from going offscreen.
+When you use a SlidingDrawer remember to always register a `drag view` in your Java/Kotlin code, `slidingDrawer.setDragView(view);`
+
+The `drag view` is the only surface from which the `slidable view` can be dragged. **The drag view must be clickable.**
+
+If you want the `slidable view` to show a different view when it's collapsed and expanded, the `collapsed view` should have a specific id: `android:id="@id/sliding_drawer_collapsed_view"`.
