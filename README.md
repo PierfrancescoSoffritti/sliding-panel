@@ -10,12 +10,7 @@ The substantial difference from all other implementations of the bottom sheet pa
 In other implementations the only way to control the position of a collapsed `slidable view`, is by using a peek factor.
 Here instead the `slidable view` is placed exactly below the `non slidable view`, just like in a vertical `LinearLayout`.
 
-The `SlidingDrawer` ViewGroup offerd by this library can have only 2 children.
-* The first children is the `non slidable view` (the view that will be covered when the bottom sheet is exapnded).
-* The seconds children is the `slidable view` (the actual bottom sheet, the view that will be sliding over the `non slidable view`).
-
 <img height="450" src="https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/pics/SlidingView.gif" />
-<br/>
 
 You can download the sample app [here](https://github.com/PierfrancescoSoffritti/SlidingDrawer/tree/master/slidingdrawer-sample/apk).
 
@@ -41,6 +36,10 @@ dependencies {
 ```
 
 ## Usage
+The `SlidingDrawer` ViewGroup offerd by this library can have only 2 children.
+* The first children is the `non slidable view` (the view that will be covered when the bottom sheet is exapnded).
+* The seconds children is the `slidable view` (the actual bottom sheet, the view that will be sliding over the `non slidable view`).
+
 A simple example of an XML file using SlidingDrawer. The `LinearLayout` is the `non slidable view`, the `FrameLayout` is the `slidable view`.
 
 ```
