@@ -14,14 +14,14 @@ The `SlidingDrawer` ViewGroup offerd by this library can have only 2 children.
 * The first children is the `non slidable view` (the view that will be covered when the bottom sheet is exapnded).
 * The seconds children is the `slidable view` (the actual bottom sheet, the view that will be sliding over the `non slidable view`).
 
+<img height="450" src="https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/pics/SlidingView.gif" />
+<br/>
+
 You can download the sample app [here](https://github.com/PierfrancescoSoffritti/SlidingDrawer/tree/master/slidingdrawer-sample/apk).
 
 A list of published apps that are using this library:
 
 - [Shuffly](https://play.google.com/store/apps/details?id=com.pierfrancescosoffritti.shuffly)
-
-<img height="450" src="https://github.com/PierfrancescoSoffritti/SlidingDrawer/blob/master/pics/SlidingView.gif" />
-<br/>
 
 ## Download
 Add this to you project-level `build.gradle`:
