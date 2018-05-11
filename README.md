@@ -5,7 +5,7 @@
 A custom View implementing the <a href="https://material.google.com/components/bottom-sheets.html?authuser=0">bottom sheet pattern.</a>
 
 ## Overview
-The substantial difference from all other implementations of the bottom sheet pattern is that, in this case, the bottom sheet is part of the view hierarchy, and not above it.
+The substantial difference from all other implementations of the bottom sheet pattern is that, in this case, **the bottom sheet is part of the view hierarchy, and not above it**.
 
 In other implementations the only way to control the position of a collapsed bottom sheet is by using a peek factor (its distance from the bottom of the screen).
 Here instead a collapsed bottom sheet is placed exactly where it is supposed to be in view hierarchy, just like it would be in a vertical `LinearLayout`.
