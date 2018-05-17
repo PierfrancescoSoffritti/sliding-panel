@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SlidingDrawer.iml" filepath="$PROJECT_DIR$/SlidingDrawer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SlidingDrawer.iml" filepath="$PROJECT_DIR$/SlidingDrawer.iml" />
       <module fileurl="file://$PROJECT_DIR$/slidingdrawer/slidingdrawer.iml" filepath="$PROJECT_DIR$/slidingdrawer/slidingdrawer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/slidingdrawer/slidingdrawer.iml" filepath="$PROJECT_DIR$/slidingdrawer/slidingdrawer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/slidingdrawer-sample/slidingdrawer-sample.iml" filepath="$PROJECT_DIR$/slidingdrawer-sample/slidingdrawer-sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/slidingdrawer-sample/slidingdrawer-sample.iml" filepath="$PROJECT_DIR$/slidingdrawer-sample/slidingdrawer-sample.iml" />
     </modules>
   </component>

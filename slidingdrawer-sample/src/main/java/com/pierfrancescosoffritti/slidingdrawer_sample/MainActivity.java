@@ -21,9 +21,9 @@ public class MainActivity extends AppCompatActivity implements RootFragment.Slid
         getWindow().setBackgroundDrawable(null);
 
         View target = findViewById(R.id.sample_view);
-        slidingDrawer = (SlidingDrawer) findViewById(R.id.sliding_drawer);
+        slidingDrawer = findViewById(R.id.sliding_drawer);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
 
         target.setOnClickListener(new View.OnClickListener() {
             private boolean show = false;

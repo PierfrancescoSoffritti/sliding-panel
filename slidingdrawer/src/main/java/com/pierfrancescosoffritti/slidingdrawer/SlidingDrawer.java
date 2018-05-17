@@ -24,17 +24,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A custom View implementing the bottom sheet pattern.
- * <br/>
- * This ViewGroup can have only 2 children. The 1st one is the <i>non slidable view</i> ; the 2nd is the <i>slidable view</i>, which can slide over the <i>non slidable view</i>.
+ * Custom View implementing a bottom sheet that is part of the view hierarchy, not above it.
  * <br/><br/>
- * The substantial difference from all other implementations is that in this case it is easy to position the <i>slidable view</i> relatively to the <i>non slidable view</i>.
- * <br/>
- * In other implementations the only way to control the <i>position</i> of the <i>slidable view</i>, when collapsed, is by using a <i>peek</i> factor.
- * <br/>
- * Here instead the <i>slidable view</i>, when collapsed, is placed exactly below the <i>non slidable view</i>, just like in a vertical LinearLayout. The <i>slidable view</i> is part of the view hierarchy and not above it.
+ * This ViewGroup can have only 2 children:
+ * <ol>
+ * <li>The first children is the non slidable view (the view that will be covered when the bottom sheet is expanded).</li>
+ * <li>The seconds children is the slidable view (the actual bottom sheet, the view that will be sliding over the non slidable view).</li>
+ * </ol>
  */
-
 public class SlidingDrawer extends LinearLayout {
 
     private static final int SLIDE_DURATION = 300;
@@ -67,7 +64,7 @@ public class SlidingDrawer extends LinearLayout {
     // the only view sensible to vertical dragging. Dragging this view will slide the slidableView
     private View dragView;
 
-    // the color of the shade that fades over the non slidable panel when the slidable panel is moved
+    // the color of the shade that fades over the non slidable view when the slidable view slides
     private static final int SHADE_COLOR_WITH_ALPHA = 0x99000000;
     private static final int shadeMaxAlpha = SHADE_COLOR_WITH_ALPHA >>> 24;
     private static final int shadeColor = SHADE_COLOR_WITH_ALPHA & 0x00FFFFFF;

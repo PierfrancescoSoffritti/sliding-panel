@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.pierfrancescosoffritti.slidingdrawer_sample"
@@ -24,8 +24,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     implementation project(':slidingdrawer')
-    implementation 'com.android.support:appcompat-v7:27.0.0'
-    implementation 'com.android.support:support-v4:27.0.0'
-    implementation 'com.android.support:recyclerview-v7:27.0.0'
-    implementation 'com.android.support:design:27.0.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
 }
