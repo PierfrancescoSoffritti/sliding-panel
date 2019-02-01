@@ -174,8 +174,6 @@ public class SlidingDrawer extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
         float eventY = event.getY();
 
-         maxSlide = nonSlidableView.getHeight();
-
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
                 if(isSliding && state != PanelState.EXPANDED && state != PanelState.COLLAPSED)
@@ -263,8 +261,6 @@ public class SlidingDrawer extends LinearLayout {
         if (count != 2)
             throw new IllegalStateException("SlidingDrawer must have exactly 2 children, non_slidable_view and slidable_view.");
 
-        initCollapsedView();
-
         int maxHeight = 0;
         int maxWidth = 0;
         int childState = 0;
@@ -294,18 +290,6 @@ public class SlidingDrawer extends LinearLayout {
         // Report our final dimensions.
         setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState),
                 resolveSizeAndState(maxHeight, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT));
-    }
-
-    private void initCollapsedView() {
-        Log.d(getClass().getSimpleName(), "maxSlide: "+maxSlide);
-        maxSlide = nonSlidableView.getHeight();
-        Log.d(getClass().getSimpleName(), "maxSlide: "+maxSlide);
-
-        // the collapsed view is the view shown in the slidableView when collapsed.
-        // it's important to add padding at the bottom, otherwise some content will be offscreen
-        View collapsedView = slidableView.findViewById(R.id.sliding_drawer_collapsed_view);
-        if(collapsedView != null)
-            Utils.INSTANCE.addPaddingBottom(collapsedView, maxSlide);
     }
 
     private final Rect tmpContainerRect = new Rect();
@@ -375,7 +359,9 @@ public class SlidingDrawer extends LinearLayout {
         boolean result;
         final int save = canvas.save();
 
-        if (slidableView != child) { // if main view
+        if(child == nonSlidableView) {
+            maxSlide = nonSlidableView.getHeight();
+
             // Clip against the slider; no sense drawing what will immediately be covered,
             // Unless the panel is set to overlay content
             canvas.getClipBounds(tmpRect);
@@ -389,6 +375,9 @@ public class SlidingDrawer extends LinearLayout {
                 coveredFadePaint.setColor(color);
                 canvas.drawRect(tmpRect, coveredFadePaint);
             }
+        } else if (child == slidableView) {
+            addPaddingToCollapsedView();
+            result = super.drawChild(canvas, child, drawingTime);
         } else {
             result = super.drawChild(canvas, child, drawingTime);
         }
@@ -396,6 +385,14 @@ public class SlidingDrawer extends LinearLayout {
         canvas.restoreToCount(save);
 
         return result;
+    }
+
+    private void addPaddingToCollapsedView() {
+        // the collapsed view is the view shown in the slidableView when collapsed.
+        // it's important to add padding at the bottom, otherwise some content will be offscreen
+        View collapsedView = slidableView.findViewById(R.id.sliding_drawer_collapsed_view);
+        if(collapsedView != null)
+            Utils.INSTANCE.setPaddingBottom(collapsedView, maxSlide);
     }
 
     /**

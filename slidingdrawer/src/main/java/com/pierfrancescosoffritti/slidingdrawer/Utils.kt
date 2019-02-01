@@ -14,12 +14,13 @@ object Utils {
      * Adds padding to the bottom of a view.
      * @param root the view that needs padding
      */
-    fun addPaddingBottom(root: View, bottomPadding: Int) {
+    fun setPaddingBottom(root: View, offset: Int) {
         val topPadding = root.paddingTop
         val leftPadding = root.paddingLeft
         val rightPadding = root.paddingRight
+        val bottomPadding = root.paddingRight
 
         // why not setPaddingRelative?
-        root.setPadding(leftPadding, topPadding, rightPadding, bottomPadding)
+        root.setPadding(leftPadding, topPadding, rightPadding, bottomPadding+offset)
     }
 }

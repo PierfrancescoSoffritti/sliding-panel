@@ -21,8 +21,7 @@
     <FrameLayout
         android:id="@id/slidable_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white" >
+        android:layout_height="match_parent" >
 
         <TextView
             android:id="@+id/drag_view"
@@ -32,6 +31,16 @@
             android:padding="50dp"
             android:text="drag me"
             android:clickable="true" />
+
+        <TextView
+            android:id="@id/sliding_drawer_collapsed_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/holo_green_light"
+            android:layout_marginTop="90dp"
+            android:text="sliding_drawer_collapsed_view"
+            android:padding="50dp"
+            android:gravity="bottom" />
     </FrameLayout>
 
 </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>
