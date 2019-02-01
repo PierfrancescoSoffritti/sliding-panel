@@ -11,5 +11,5 @@
     android:layout_marginRight="16dp"
     android:background="@android:color/white"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.pierfrancescosoffritti.slidingdrawer_sample.ListFragment"
+    tools:context="com.pierfrancescosoffritti.slidingdrawer_sample.old.ListFragment"
     tools:listitem="@layout/sampleitem" />

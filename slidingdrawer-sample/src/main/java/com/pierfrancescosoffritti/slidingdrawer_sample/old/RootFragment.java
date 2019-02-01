@@ -1,4 +1,4 @@
-package com.pierfrancescosoffritti.slidingdrawer_sample;
+package com.pierfrancescosoffritti.slidingdrawer_sample.old;
 
 
 import android.content.Context;
@@ -13,8 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
-import com.pierfrancescosoffritti.slidingdrawer_sample.adapters.ViewPagerAdapter;
-import com.pierfrancescosoffritti.slidingdrawer_sample.utils.FragmentsUtils;
+import com.pierfrancescosoffritti.slidingdrawer_sample.R;
+import com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters.ViewPagerAdapter;
+import com.pierfrancescosoffritti.slidingdrawer_sample.old.utils.FragmentsUtils;
 
 public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListener {
 

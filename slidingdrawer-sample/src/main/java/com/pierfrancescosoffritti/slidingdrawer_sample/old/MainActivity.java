@@ -1,4 +1,4 @@
-package com.pierfrancescosoffritti.slidingdrawer_sample;
+package com.pierfrancescosoffritti.slidingdrawer_sample.old;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,7 +7,8 @@ import android.view.View;
 
 import com.pierfrancescosoffritti.slidingdrawer.PanelState;
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
-import com.pierfrancescosoffritti.slidingdrawer_sample.utils.FragmentsUtils;
+import com.pierfrancescosoffritti.slidingdrawer_sample.R;
+import com.pierfrancescosoffritti.slidingdrawer_sample.old.utils.FragmentsUtils;
 
 public class MainActivity extends AppCompatActivity implements RootFragment.SlidingDrawerContainer, SlidingDrawer.OnSlideListener {
 

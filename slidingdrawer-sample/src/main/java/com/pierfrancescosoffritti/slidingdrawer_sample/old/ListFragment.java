@@ -1,4 +1,4 @@
-package com.pierfrancescosoffritti.slidingdrawer_sample;
+package com.pierfrancescosoffritti.slidingdrawer_sample.old;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,8 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pierfrancescosoffritti.slidingdrawer_sample.adapters.RecyclerViewAdapter;
-import com.pierfrancescosoffritti.slidingdrawer_sample.dummy.DummyContent;
+import com.pierfrancescosoffritti.slidingdrawer_sample.R;
+import com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters.RecyclerViewAdapter;
+import com.pierfrancescosoffritti.slidingdrawer_sample.old.dummy.DummyContent;
 
 public class ListFragment extends Fragment {
 

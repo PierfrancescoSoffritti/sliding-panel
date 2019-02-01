@@ -1,4 +1,4 @@
-package com.pierfrancescosoffritti.slidingdrawer_sample.adapters;
+package com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
-import com.pierfrancescosoffritti.slidingdrawer_sample.dummy.DummyContent.DummyItem;
+import com.pierfrancescosoffritti.slidingdrawer_sample.old.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 

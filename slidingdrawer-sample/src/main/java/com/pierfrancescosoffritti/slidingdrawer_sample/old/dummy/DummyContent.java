@@ -1,4 +1,4 @@
-package com.pierfrancescosoffritti.slidingdrawer_sample.dummy;
+package com.pierfrancescosoffritti.slidingdrawer_sample.old.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

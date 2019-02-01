@@ -1,4 +1,4 @@
-package com.pierfrancescosoffritti.slidingdrawer_sample.utils;
+package com.pierfrancescosoffritti.slidingdrawer_sample.old.utils;
 
 import android.os.Build;
 import android.support.annotation.IdRes;

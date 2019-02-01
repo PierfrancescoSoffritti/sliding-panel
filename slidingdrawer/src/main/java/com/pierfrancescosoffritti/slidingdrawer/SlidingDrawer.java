@@ -196,7 +196,7 @@ public class SlidingDrawer extends LinearLayout {
                 else if(eventY + dY < minSlide)
                     dY = -eventY;
 
-                updateCurrentSlide(Utils.INSTANCE.normalize(eventY + dY, maxSlide));
+                updateState(Utils.INSTANCE.normalize(eventY + dY, maxSlide));
                 break;
         }
         return true;
@@ -237,14 +237,17 @@ public class SlidingDrawer extends LinearLayout {
      * always use this method to update the position of the sliding view.
      * @param newSlideRatio new slide value, normalized between 0 and 1
      */
-    private void updateCurrentSlide(float newSlideRatio) {
+    private void updateState(float newSlideRatio) {
+        if(newSlideRatio < 0 || newSlideRatio > 1)
+            throw new IllegalArgumentException("Slide value \"" +newSlideRatio +"\" should be normalized, between 0 and 1.");
+
         currentSlide = newSlideRatio;
 
         state = currentSlide == 1 ? PanelState.EXPANDED : currentSlide == 0 ? PanelState.COLLAPSED : PanelState.SLIDING;
 
-        float slideY = Math.abs((currentSlide * maxSlide) - maxSlide);
+        float currentSlideNonNormalized = Math.abs((currentSlide * maxSlide) - maxSlide);
 
-        slidableView.setY(slideY);
+        slidableView.setY(currentSlideNonNormalized);
         invalidate();
 
         notifyListeners(currentSlide);
@@ -258,9 +261,9 @@ public class SlidingDrawer extends LinearLayout {
         int count = getChildCount();
 
         if (count != 2)
-            throw new IllegalStateException("SlidingDrawer must have exactly 2 children.");
+            throw new IllegalStateException("SlidingDrawer must have exactly 2 children, non_slidable_view and slidable_view.");
 
-        initSlidingChild();
+        initCollapsedView();
 
         int maxHeight = 0;
         int maxWidth = 0;
@@ -293,8 +296,10 @@ public class SlidingDrawer extends LinearLayout {
                 resolveSizeAndState(maxHeight, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT));
     }
 
-    private void initSlidingChild() {
+    private void initCollapsedView() {
+        Log.d(getClass().getSimpleName(), "maxSlide: "+maxSlide);
         maxSlide = nonSlidableView.getHeight();
+        Log.d(getClass().getSimpleName(), "maxSlide: "+maxSlide);
 
         // the collapsed view is the view shown in the slidableView when collapsed.
         // it's important to add padding at the bottom, otherwise some content will be offscreen
@@ -410,7 +415,7 @@ public class SlidingDrawer extends LinearLayout {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                updateCurrentSlide((Float) animation.getAnimatedValue());
+                updateState((Float) animation.getAnimatedValue());
             }
         });
         va.start();
