@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.pierfrancescosoffritti.slidingdrawer.PanelState;
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
 import com.pierfrancescosoffritti.slidingdrawer_sample.utils.FragmentsUtils;
 
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements RootFragment.Slid
                 else
                     getSupportActionBar().show();
 
-                slidingDrawer.setState(slidingDrawer.getState() == SlidingDrawer.EXPANDED ? SlidingDrawer.COLLAPSED : SlidingDrawer.EXPANDED);
+                slidingDrawer.setState(slidingDrawer.getState() == PanelState.EXPANDED ? PanelState.COLLAPSED : PanelState.EXPANDED);
 
                 show = !show;
             }
