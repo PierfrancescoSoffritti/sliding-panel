@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -66,7 +67,7 @@ public class SlidingDrawer extends LinearLayout {
     private boolean isSliding = false;
     private boolean canSlide = false;
 
-    // distance between the view's edge and the yDown coordinate
+    // distance between sliding view's edge and the yDown coordinate
     private float dY;
     private float yDown;
 
@@ -127,18 +128,22 @@ public class SlidingDrawer extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
+        if (getChildCount() != 2)
+            throw new IllegalStateException("SlidingPanel must have exactly 2 children. But has " +getChildCount());
+
         slidingView = findViewById(slidingViewId);
         nonSlidingView = findViewById(nonSlidingViewId);
         dragView = findViewById(dragViewId);
 
         fittingView = findViewById(fittingViewId);
 
+        if(dragView == null)
+            dragView = slidingView;
+
         if(slidingView == null)
             throw new RuntimeException("SlidingPanel, slidingView is null.");
         if(nonSlidingView == null)
             throw new RuntimeException("SlidingPanel, nonSlidingView is null.");
-        if(dragView == null)
-            dragView = slidingView;
     }
 
     @Override
@@ -159,8 +164,8 @@ public class SlidingDrawer extends LinearLayout {
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 // save touch coordinates
-                float rawXDown = event.getRawX();
-                float rawYDown = event.getRawY();
+                float touchX = event.getRawX();
+                float touchY = event.getRawY();
 
                 final int[] viewCoordinates = new int[2];
                 dragView.getLocationInWindow(viewCoordinates);
@@ -171,7 +176,7 @@ public class SlidingDrawer extends LinearLayout {
                 final float viewHeight = dragView.getHeight();
 
                 // slidingView can slide only if the ACTION_DOWN event is within dragView bounds
-                canSlide = !(rawXDown < viewX || rawXDown > viewX + viewWidth || rawYDown < viewY || rawYDown > viewY + viewHeight);
+                canSlide = !(touchX < viewX || touchX > viewX + viewWidth || touchY < viewY || touchY > viewY + viewHeight);
 
                 if(!canSlide)
                     return false;
@@ -290,17 +295,12 @@ public class SlidingDrawer extends LinearLayout {
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int count = getChildCount();
-
-        if (count != 2)
-            throw new IllegalStateException("SlidingDrawer must have exactly 2 children, non_slidable_view and slidable_view.");
-
         int maxHeight = 0;
         int maxWidth = 0;
         int childState = 0;
 
-        // Iterate through all children, measuring them while computing the dimensions of this view from their size.
-        for (int i = 0; i < count; i++) {
+        // Iterate through all children, measuring them while using their size to compute the dimensions of this view.
+        for (int i = 0; i < getChildCount(); i++) {
             final View child = getChildAt(i);
             if (child.getVisibility() == GONE)
                 continue;
@@ -308,7 +308,7 @@ public class SlidingDrawer extends LinearLayout {
             // Measure the child.
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
 
-            // Update our size information based on the layout params.
+            // Update SlidingPanel size based on layout params of child.
             // Children that asked to be positioned on the left or right go in those gutters.
             final LayoutParams lp = (LayoutParams) child.getLayoutParams();
             maxWidth = Math.max(maxWidth, child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
@@ -337,39 +337,37 @@ public class SlidingDrawer extends LinearLayout {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        int previousChildHeight = 0;
+        int previousChildWidth = 0;
 
-        int firstChildHeight = 0;
-
-        int parentTop = getPaddingTop();
+        int currentTop = getPaddingTop();
         int parentBottom = getPaddingBottom();
         int parentLeft = getPaddingLeft();
         int parentRight = getPaddingRight();
 
-        for (int i=0; i<2; i++) {
+        for (int i=0; i<getChildCount(); i++) {
             final View child = getChildAt(i);
 
             if (child.getVisibility() == GONE)
                 continue;
 
-            final LayoutParams lp = (LayoutParams) child.getLayoutParams();
+            final LayoutParams childLayoutParams = (LayoutParams) child.getLayoutParams();
 
-            final int width = child.getMeasuredWidth();
-            final int height = child.getMeasuredHeight();
+            final int childWidth = child.getMeasuredWidth();
+            final int childHeight = child.getMeasuredHeight();
 
-            tmpContainerRect.left = parentLeft + lp.leftMargin;
-            tmpContainerRect.right = width - lp.rightMargin - parentRight;
+            tmpContainerRect.left = parentLeft + childLayoutParams.leftMargin;
+            tmpContainerRect.right = childWidth - childLayoutParams.rightMargin;
 
-            tmpContainerRect.top = parentTop + lp.topMargin;
-            tmpContainerRect.bottom = parentTop + height - lp.bottomMargin - parentBottom;
+            tmpContainerRect.top = currentTop + childLayoutParams.topMargin;
+            tmpContainerRect.bottom = currentTop + childHeight - childLayoutParams.bottomMargin;
 
-            if(i==0)
-                firstChildHeight = child.getMeasuredHeight();
-            else if(i==1)
-                tmpContainerRect.bottom += firstChildHeight;
+            tmpContainerRect.bottom += previousChildHeight;
+            previousChildHeight = child.getMeasuredHeight();
 
-            parentTop = tmpContainerRect.bottom;
+            currentTop = tmpContainerRect.bottom;
 
-            Gravity.apply(lp.gravity, width, height, tmpContainerRect, tmpChildRect);
+            Gravity.apply(childLayoutParams.gravity, childWidth, childHeight, tmpContainerRect, tmpChildRect);
 
             child.layout(tmpChildRect.left, tmpChildRect.top, tmpChildRect.right, tmpChildRect.bottom);
         }
