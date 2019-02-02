@@ -142,27 +142,9 @@ public class SlidingDrawer extends LinearLayout {
             throw new RuntimeException("SlidingPanel, nonSlidingView is null.");
     }
 
-    /**
-     * return true only if touch event is withing view bounds
-     */
-    private boolean canSlide(MotionEvent touchEvent, View dragView) {
-        float touchX = touchEvent.getRawX();
-        float touchY = touchEvent.getRawY();
-
-        final int[] viewCoordinates = new int[2];
-        dragView.getLocationInWindow(viewCoordinates);
-
-        final float viewX = viewCoordinates[0];
-        final float viewWidth = dragView.getWidth();
-        final float viewY = viewCoordinates[1];
-        final float viewHeight = dragView.getHeight();
-
-        return !(touchX < viewX || touchX > viewX + viewWidth || touchY < viewY || touchY > viewY + viewHeight);
-    }
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent currentTouchEvent) {
-        if(!canSlide(currentTouchEvent, dragView))
+        if(!Utils.INSTANCE.canSlide(currentTouchEvent, dragView))
             return false;
 
         switch (currentTouchEvent.getAction()) {
@@ -171,7 +153,7 @@ public class SlidingDrawer extends LinearLayout {
                 slidingViewPositioOnTouchDown = getOrientation() == VERTICAL ? slidingView.getY() : slidingView.getX();
                 return false;
             } case MotionEvent.ACTION_MOVE: {
-                return canSlide(currentTouchEvent, dragView);
+                return Utils.INSTANCE.canSlide(currentTouchEvent, dragView);
             } default:
                 return false;
         }
@@ -188,7 +170,7 @@ public class SlidingDrawer extends LinearLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
 
-                if(!canSlide(touchEvent, dragView))
+                if(!Utils.INSTANCE.canSlide(touchEvent, dragView))
                     return false;
 
                 float touchOffset = initialTouchCoordinates - currentTouchEvent;
@@ -203,53 +185,6 @@ public class SlidingDrawer extends LinearLayout {
                 break;
         }
         return true;
-    }
-
-    private void completeSlide(float currentSlide, SlidingDirection direction) {
-        float targetSlide;
-
-        switch (direction) {
-            case UP:
-                if(currentSlide > 0.1)
-                    targetSlide = minSlide;
-                else
-                    targetSlide = maxSlide;
-                break;
-            case DOWN:
-                if(currentSlide < 0.9)
-                    targetSlide = maxSlide;
-                else
-                    targetSlide = minSlide;
-                break;
-            default:
-                return;
-        }
-
-        slideTo(Utils.INSTANCE.normalize(targetSlide, maxSlide));
-    }
-
-    /**
-     * always use this method to update the position of the sliding view.
-     * @param newSlideRatio new slide value, normalized between 0 and 1
-     */
-    private void updateState(float newSlideRatio) {
-        if(newSlideRatio < 0 || newSlideRatio > 1)
-            throw new IllegalArgumentException("Slide value \"" +newSlideRatio +"\" should be normalized, between 0 and 1.");
-
-        currentSlide = newSlideRatio;
-
-        state = currentSlide == 1 ? PanelState.EXPANDED : currentSlide == 0 ? PanelState.COLLAPSED : PanelState.SLIDING;
-
-        float currentSlideNonNormalized = Math.abs((currentSlide * maxSlide) - maxSlide);
-
-        if(getOrientation() == VERTICAL)
-            slidingView.setY(currentSlideNonNormalized);
-        else
-            slidingView.setX(currentSlideNonNormalized);
-
-        invalidate();
-
-        notifyListeners(currentSlide);
     }
 
     /**
@@ -300,9 +235,9 @@ public class SlidingDrawer extends LinearLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int currentTop = getPaddingTop();
-        int parentBottom = getPaddingBottom();
+        int currentBottom = getPaddingBottom();
         int currentLeft = getPaddingLeft();
-        int parentRight = getPaddingRight();
+        int currentRight = getPaddingRight();
 
         for (int i=0; i<getChildCount(); i++) {
             final View child = getChildAt(i);
@@ -359,7 +294,7 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     private final Rect tmpRect = new Rect();
-    private final Paint coveredFadePaint = new Paint();
+    private final Paint shadePaint = new Paint();
 
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
@@ -377,10 +312,10 @@ public class SlidingDrawer extends LinearLayout {
             result = super.drawChild(canvas, child, drawingTime);
 
             if (currentSlide > 0) {
-                final int currentAlpha = (int) (SHADE_COLOR_MAX_ALPHA * currentSlide);
-                final int color = currentAlpha << 24 | SHADE_COLOR;
-                coveredFadePaint.setColor(color);
-                canvas.drawRect(tmpRect, coveredFadePaint);
+                final int currentShadeAlpha = (int) (SHADE_COLOR_MAX_ALPHA * currentSlide);
+                final int currentShadeColor = currentShadeAlpha << 24 | SHADE_COLOR;
+                shadePaint.setColor(currentShadeColor);
+                canvas.drawRect(tmpRect, shadePaint);
             }
         } else if (child == slidingView) {
             applyFitToScreen();
@@ -415,7 +350,7 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     /**
-     * Use this method in order to slide at a specific position
+     * Use this method to automatically slide at a specific position
      * @param positionNormalized Normalized value (between 0.0 and 1.0) representing the final slide position
      */
     public void slideTo(float positionNormalized) {
@@ -435,6 +370,50 @@ public class SlidingDrawer extends LinearLayout {
             }
         });
         va.start();
+    }
+
+    private void completeSlide(float currentSlide, SlidingDirection direction) {
+        float targetSlide;
+
+        switch (direction) {
+            case UP:
+                if(currentSlide > 0.1)
+                    targetSlide = minSlide;
+                else
+                    targetSlide = maxSlide;
+                break;
+            case DOWN:
+                if(currentSlide < 0.9)
+                    targetSlide = maxSlide;
+                else
+                    targetSlide = minSlide;
+                break;
+            default:
+                return;
+        }
+
+        slideTo(Utils.INSTANCE.normalize(targetSlide, maxSlide));
+    }
+
+    /**
+     * always use this method to update the position of the sliding view.
+     * @param newSlideRatio new slide value, normalized between 0 and 1
+     */
+    private void updateState(float newSlideRatio) {
+        if(newSlideRatio < 0 || newSlideRatio > 1)
+            throw new IllegalArgumentException("Slide value \"" +newSlideRatio +"\" should be normalized, between 0 and 1.");
+
+        currentSlide = newSlideRatio;
+        state = currentSlide == 1 ? PanelState.EXPANDED : currentSlide == 0 ? PanelState.COLLAPSED : PanelState.SLIDING;
+
+        float currentSlideNonNormalized = Math.abs((currentSlide * maxSlide) - maxSlide);
+        if(getOrientation() == VERTICAL)
+            slidingView.setY(currentSlideNonNormalized);
+        else
+            slidingView.setX(currentSlideNonNormalized);
+
+        invalidate();
+        notifyListeners(currentSlide);
     }
 
     public void setDragView(@NonNull View dragView) {

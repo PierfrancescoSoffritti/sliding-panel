@@ -1,5 +1,8 @@
 package com.pierfrancescosoffritti.slidingdrawer
 
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 
@@ -40,5 +43,23 @@ object Utils {
         val paddingBottom = view.paddingBottom + (if(side == 3) 1 else 0) * offset
 
         view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+    }
+
+    /**
+     * return true only if touch event is withing view bounds
+     */
+    fun canSlide(touchEvent: MotionEvent, dragView: View): Boolean {
+        val touchX = touchEvent.rawX
+        val touchY = touchEvent.rawY
+
+        val viewCoordinates = IntArray(2)
+        dragView.getLocationInWindow(viewCoordinates)
+
+        val viewX = viewCoordinates[0].toFloat()
+        val viewWidth = dragView.width.toFloat()
+        val viewY = viewCoordinates[1].toFloat()
+        val viewHeight = dragView.height.toFloat()
+
+        return !(touchX < viewX || touchX > viewX + viewWidth || touchY < viewY || touchY > viewY + viewHeight)
     }
 }
