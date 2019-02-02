@@ -4,10 +4,12 @@
     android:id="@+id/sliding_panel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:slidingView="@id/sliding_view"
+    app:nonSlidingView="@id/non_sliding_view"
     app:elevation="4dp" >
 
     <LinearLayout
-        android:id="@id/non_slidable_view"
+        android:id="@+id/non_sliding_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -19,18 +21,19 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@id/slidable_view"
+        android:id="@+id/sliding_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
         <TextView
             android:id="@+id/drag_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@android:color/darker_gray"
             android:padding="50dp"
             android:text="drag me"
-            android:clickable="true" />
+            android:clickable="true"
+            android:gravity="bottom"/>
 
         <TextView
             android:id="@id/sliding_drawer_collapsed_view"
@@ -40,6 +43,7 @@
             android:layout_marginTop="90dp"
             android:text="sliding_drawer_collapsed_view"
             android:padding="50dp"
+            android:visibility="gone"
             android:gravity="bottom" />
     </FrameLayout>
 

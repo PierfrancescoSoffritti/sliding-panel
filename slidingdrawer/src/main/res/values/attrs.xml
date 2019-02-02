@@ -2,5 +2,7 @@
 <resources>
     <declare-styleable name="SlidingDrawer">
         <attr name="elevation" format="dimension" />
+        <attr name="slidingView" format="reference" />
+        <attr name="nonSlidingView" format="reference" />
     </declare-styleable>
 </resources>

@@ -13,18 +13,18 @@ class BasicExampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_basic_example)
 
-        non_slidable_view.setOnClickListener {
+        non_sliding_view.setOnClickListener {
             if(sliding_panel.state == PanelState.EXPANDED)
                 sliding_panel.state = PanelState.COLLAPSED
             else sliding_panel.state = PanelState.EXPANDED
         }
 
-        sliding_panel.addSlideListener { slidingDrawer, currentSlide ->
-            if(slidingDrawer.state == PanelState.COLLAPSED)
-                sliding_drawer_collapsed_view.visibility = View.VISIBLE
-            else
-                sliding_drawer_collapsed_view.visibility = View.GONE
-        }
+//        sliding_panel.addSlideListener { slidingDrawer, currentSlide ->
+//            if(slidingDrawer.state == PanelState.COLLAPSED)
+//                sliding_drawer_collapsed_view.visibility = View.VISIBLE
+//            else
+//                sliding_drawer_collapsed_view.visibility = View.GONE
+//        }
 
         sliding_panel.setDragView(drag_view)
     }

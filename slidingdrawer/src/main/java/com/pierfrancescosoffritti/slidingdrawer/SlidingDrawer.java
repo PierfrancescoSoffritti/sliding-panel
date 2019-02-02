@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,12 +40,12 @@ public class SlidingDrawer extends LinearLayout {
     private static final int SHADE_COLOR = SHADE_COLOR_WITH_ALPHA & 0x00FFFFFF;
 
     // view that will slide
-    private View slidableView;
+    private View slidingView;
 
     // view that won't slide
-    private View nonSlidableView;
+    private View nonSlidingView;
 
-    // the only view sensible to vertical dragging. Dragging this view will slide the slidableView
+    // the only view sensible to vertical dragging. Dragging this view will slide the slidingView
     private View dragView;
 
     private PanelState state = PanelState.COLLAPSED;
@@ -69,6 +68,9 @@ public class SlidingDrawer extends LinearLayout {
 
     private final Drawable elevationShadow;
     private int elevationShadowLength;
+
+    private int slidingViewId;
+    private int nonSlidingViewId;
 
     private final Set<OnSlideListener> listeners = new HashSet<>();
 
@@ -94,17 +96,29 @@ public class SlidingDrawer extends LinearLayout {
 
         try {
             elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingDrawer_elevation, 10);
+            slidingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_slidingView, -1);
+            nonSlidingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_nonSlidingView, -1);
         } finally {
             typedArray.recycle();
         }
+
+        if(slidingViewId == -1)
+            throw new RuntimeException("SlidingPanel, app:slidingView attribute not set. You must set this attribute to the id of the view that you want to be sliding.");
+        if(nonSlidingViewId == -1)
+            throw new RuntimeException("SlidingPanel, app:nonSlidingViewId attribute not set. You must set this attribute to the id of the view that you want to be static.");
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        slidableView = findViewById(R.id.slidable_view);
-        nonSlidableView = findViewById(R.id.non_slidable_view);
+        slidingView = findViewById(slidingViewId);
+        nonSlidingView = findViewById(nonSlidingViewId);
+
+        if(slidingView == null)
+            throw new RuntimeException("SlidingPanel, slidingView is null.");
+        if(nonSlidingView == null)
+            throw new RuntimeException("SlidingPanel, nonSlidingView is null.");
     }
 
     @Override
@@ -136,14 +150,14 @@ public class SlidingDrawer extends LinearLayout {
                 final float viewY = viewCoordinates[1];
                 final float viewHeight = dragView.getHeight();
 
-                // slidableView can slide only if the ACTION_DOWN event is within dragView bounds
+                // slidingView can slide only if the ACTION_DOWN event is within dragView bounds
                 canSlide = !(rawXDown < viewX || rawXDown > viewX + viewWidth || rawYDown < viewY || rawYDown > viewY + viewHeight);
 
                 if(!canSlide)
                     return false;
 
                 yDown = event.getY();
-                dY = slidableView.getY() - yDown;
+                dY = slidingView.getY() - yDown;
 
                 // intercept touch event only if sliding
                 return isSliding;
@@ -245,7 +259,7 @@ public class SlidingDrawer extends LinearLayout {
 
         float currentSlideNonNormalized = Math.abs((currentSlide * maxSlide) - maxSlide);
 
-        slidableView.setY(currentSlideNonNormalized);
+        slidingView.setY(currentSlideNonNormalized);
         invalidate();
 
         notifyListeners(currentSlide);
@@ -341,10 +355,10 @@ public class SlidingDrawer extends LinearLayout {
 
         // draw the elevation shadow
         if (elevationShadow != null) {
-            final int right = slidableView.getRight();
-            final int top = (int) (slidableView.getY() - elevationShadowLength);
-            final int bottom = (int) slidableView.getY();
-            final int left = slidableView.getLeft();
+            final int right = slidingView.getRight();
+            final int top = (int) (slidingView.getY() - elevationShadowLength);
+            final int bottom = (int) slidingView.getY();
+            final int left = slidingView.getLeft();
 
             elevationShadow.setBounds(left, top, right, bottom);
             elevationShadow.draw(c);
@@ -359,13 +373,13 @@ public class SlidingDrawer extends LinearLayout {
         boolean result;
         final int save = canvas.save();
 
-        if(child == nonSlidableView) {
-            maxSlide = nonSlidableView.getHeight();
+        if(child == nonSlidingView) {
+            maxSlide = nonSlidingView.getHeight();
 
             // Clip against the slider; no sense drawing what will immediately be covered,
             // Unless the panel is set to overlay content
             canvas.getClipBounds(tmpRect);
-            tmpRect.bottom = Math.min(tmpRect.bottom, slidableView.getTop());
+            tmpRect.bottom = Math.min(tmpRect.bottom, slidingView.getTop());
 
             result = super.drawChild(canvas, child, drawingTime);
 
@@ -375,7 +389,7 @@ public class SlidingDrawer extends LinearLayout {
                 coveredFadePaint.setColor(color);
                 canvas.drawRect(tmpRect, coveredFadePaint);
             }
-        } else if (child == slidableView) {
+        } else if (child == slidingView) {
             addPaddingToCollapsedView();
             result = super.drawChild(canvas, child, drawingTime);
         } else {
@@ -388,9 +402,9 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     private void addPaddingToCollapsedView() {
-        // the collapsed view is the view shown in the slidableView when collapsed.
+        // the collapsed view is the view shown in the slidingView when collapsed.
         // it's important to add padding at the bottom, otherwise some content will be offscreen
-        View collapsedView = slidableView.findViewById(R.id.sliding_drawer_collapsed_view);
+        View collapsedView = slidingView.findViewById(R.id.sliding_drawer_collapsed_view);
         if(collapsedView != null)
             Utils.INSTANCE.setPaddingBottom(collapsedView, maxSlide);
     }
@@ -441,7 +455,7 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     /**
-     * Use this method to change the state of the slidableView.
+     * Use this method to change the state of the slidingView.
      * @param state a value from {@link PanelState}
      */
     public void setState(PanelState state) {

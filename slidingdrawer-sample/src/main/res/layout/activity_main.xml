@@ -27,14 +27,16 @@
             android:id="@+id/sliding_drawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:elevation="4dp" >
+            app:elevation="4dp"
+            app:slidingView="@id/slidable_view"
+            app:nonSlidingView="@id/non_slidable_view">
 
             <include
-                android:id="@id/non_slidable_view"
+                android:id="@+id/non_slidable_view"
                 layout="@layout/video_controls" />
 
             <FrameLayout
-                android:id="@id/slidable_view"
+                android:id="@+id/slidable_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
