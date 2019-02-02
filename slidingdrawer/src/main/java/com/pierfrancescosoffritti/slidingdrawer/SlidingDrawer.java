@@ -54,15 +54,16 @@ public class SlidingDrawer extends LinearLayout {
     // A value between 1.0 and 0.0 (1.0 = EXPANDED, 0.0 = COLLAPSED)
     private float currentSlide = 0.0f;
 
-    // max and min values of the slide, non normalized
-    private int nonSlidingViewHeight;
-    private final int slidingViewDistanceFromParentTop = 0;
+    // slidingView coordinate when expanded
+    private int maxSlide;
+    // slidingView coordinate when collapsed
+    private final int minSlide = 0;
 
     // duration of the slide in milliseconds, when executed with an animation instead of a gesture
     private long slideDuration = SLIDE_DURATION;
 
-    private float slidingViewYPositioOnTouchDown;
-    private float initialTouchEventY;
+    private float slidingViewPositioOnTouchDown;
+    private float initialTouchCoordinates;
 
     private final Drawable elevationShadow;
     private int elevationShadowLength;
@@ -164,8 +165,8 @@ public class SlidingDrawer extends LinearLayout {
 
         switch (currentTouchEvent.getAction()) {
             case MotionEvent.ACTION_DOWN: {
-                initialTouchEventY = currentTouchEvent.getY();
-                slidingViewYPositioOnTouchDown = slidingView.getY();
+                initialTouchCoordinates = getOrientation() == VERTICAL ? currentTouchEvent.getY() : currentTouchEvent.getX();
+                slidingViewPositioOnTouchDown = getOrientation() == VERTICAL ? slidingView.getY() : slidingView.getX();
                 return false;
             } case MotionEvent.ACTION_MOVE: {
                 return canSlide(currentTouchEvent, dragView);
@@ -176,53 +177,53 @@ public class SlidingDrawer extends LinearLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent touchEvent) {
-        float currentTouchEventY = touchEvent.getY();
+        float currentTouchEvent = getOrientation() == VERTICAL ? touchEvent.getY() : touchEvent.getX();
 
         switch (touchEvent.getAction()) {
             case MotionEvent.ACTION_UP:
                 if(state == PanelState.SLIDING)
-                    completeSlide(currentSlide, currentTouchEventY > this.initialTouchEventY ? SlidingDirection.DOWN : SlidingDirection.UP);
+                    completeSlide(currentSlide, currentTouchEvent > initialTouchCoordinates ? SlidingDirection.DOWN : SlidingDirection.UP);
                 break;
             case MotionEvent.ACTION_MOVE:
 
                 if(!canSlide(touchEvent, dragView))
                     return false;
 
-                float touchYOffset = initialTouchEventY - currentTouchEventY;
-                float finalPositionY = slidingViewYPositioOnTouchDown - touchYOffset;
+                float touchOffset = initialTouchCoordinates - currentTouchEvent;
+                float finalPosition = slidingViewPositioOnTouchDown - touchOffset;
 
-                if(finalPositionY > nonSlidingViewHeight)
-                    finalPositionY = nonSlidingViewHeight;
-                else if(finalPositionY < slidingViewDistanceFromParentTop)
-                    finalPositionY = slidingViewDistanceFromParentTop;
+                if(finalPosition > maxSlide)
+                    finalPosition = maxSlide;
+                else if(finalPosition < minSlide)
+                    finalPosition = minSlide;
 
-                updateState(Utils.INSTANCE.normalize(finalPositionY, nonSlidingViewHeight));
+                updateState(Utils.INSTANCE.normalize(finalPosition, maxSlide));
                 break;
         }
         return true;
     }
 
     private void completeSlide(float currentSlide, SlidingDirection direction) {
-        float slidingViewTargetY;
+        float targetSlide;
 
         switch (direction) {
             case UP:
                 if(currentSlide > 0.1)
-                    slidingViewTargetY = slidingViewDistanceFromParentTop;
+                    targetSlide = minSlide;
                 else
-                    slidingViewTargetY = nonSlidingViewHeight;
+                    targetSlide = maxSlide;
                 break;
             case DOWN:
                 if(currentSlide < 0.9)
-                    slidingViewTargetY = nonSlidingViewHeight;
+                    targetSlide = maxSlide;
                 else
-                    slidingViewTargetY = slidingViewDistanceFromParentTop;
+                    targetSlide = minSlide;
                 break;
             default:
                 return;
         }
 
-        slideTo(Utils.INSTANCE.normalize(slidingViewTargetY, nonSlidingViewHeight));
+        slideTo(Utils.INSTANCE.normalize(targetSlide, maxSlide));
     }
 
     /**
@@ -237,9 +238,13 @@ public class SlidingDrawer extends LinearLayout {
 
         state = currentSlide == 1 ? PanelState.EXPANDED : currentSlide == 0 ? PanelState.COLLAPSED : PanelState.SLIDING;
 
-        float currentSlideNonNormalized = Math.abs((currentSlide * nonSlidingViewHeight) - nonSlidingViewHeight);
+        float currentSlideNonNormalized = Math.abs((currentSlide * maxSlide) - maxSlide);
 
-        slidingView.setY(currentSlideNonNormalized);
+        if(getOrientation() == VERTICAL)
+            slidingView.setY(currentSlideNonNormalized);
+        else
+            slidingView.setX(currentSlideNonNormalized);
+
         invalidate();
 
         notifyListeners(currentSlide);
@@ -350,7 +355,9 @@ public class SlidingDrawer extends LinearLayout {
         final int save = canvas.save();
 
         if(child == nonSlidingView) {
-            nonSlidingViewHeight = nonSlidingView.getHeight();
+            int nonSlidingViewHeight = nonSlidingView.getHeight();
+            int nonSlidingViewWidth = nonSlidingView.getWidth();
+            maxSlide = getOrientation() == VERTICAL ? nonSlidingViewHeight : nonSlidingViewWidth;
 
             // Clip against the slider; no sense drawing what will immediately be covered,
             // Unless the panel is set to overlay content
@@ -381,15 +388,17 @@ public class SlidingDrawer extends LinearLayout {
     private void applyFitToScreen() {
         if(fitScreenApplied) return;
 
+        int side = getOrientation() == VERTICAL ? 3 : 2;
+
         if (fitSlidingContentToScreen) {
             if (slidingView instanceof ViewGroup) {
                 for (int i = 0; i < ((ViewGroup) slidingView).getChildCount(); i++)
-                    Utils.INSTANCE.setBottomMargin(((ViewGroup) slidingView).getChildAt(i), nonSlidingViewHeight);
+                    Utils.INSTANCE.setMargin(((ViewGroup) slidingView).getChildAt(i), maxSlide, side);
             } else {
-                Utils.INSTANCE.setBottomPadding(slidingView, nonSlidingViewHeight);
+                Utils.INSTANCE.setPadding(slidingView, maxSlide, side);
             }
         } else if(fittingView != null) {
-            Utils.INSTANCE.setBottomMargin(fittingView, nonSlidingViewHeight);
+            Utils.INSTANCE.setMargin(fittingView, maxSlide, side);
         }
 
         fitScreenApplied = true;

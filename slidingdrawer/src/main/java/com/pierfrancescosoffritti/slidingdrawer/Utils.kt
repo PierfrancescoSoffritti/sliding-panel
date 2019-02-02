@@ -16,9 +16,16 @@ object Utils {
      * Adds margin to the bottom of a view.
      * @param view the view that needs padding
      */
-    fun setBottomMargin(view: View, offset: Int) {
+    fun setMargin(view: View, offset: Int, side: Int) {
         val layoutParams = view.layoutParams
-        (layoutParams as ViewGroup.MarginLayoutParams).setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin+offset)
+        val marginLayoutParams = (layoutParams as ViewGroup.MarginLayoutParams)
+
+        val leftMargin = marginLayoutParams.leftMargin + (if(side == 0) 1 else 0) * offset
+        val topMargin = marginLayoutParams.topMargin + (if(side == 1) 1 else 0) * offset
+        val rightMargin = marginLayoutParams.rightMargin + (if(side == 2) 1 else 0) * offset
+        val bottomMargin = marginLayoutParams.bottomMargin + (if(side == 3) 1 else 0) * offset
+
+        layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin)
         view.layoutParams = layoutParams
     }
 
@@ -26,7 +33,12 @@ object Utils {
      * Adds padding to the bottom of a view.
      * @param view the view that needs padding
      */
-    fun setBottomPadding(view: View, offset: Int) {
-        view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom+offset)
+    fun setPadding(view: View, offset: Int, side: Int) {
+        val paddingLeft = view.paddingLeft + (if(side == 0) 1 else 0) * offset
+        val paddingTop = view.paddingTop + (if(side == 1) 1 else 0) * offset
+        val paddingRight = view.paddingRight + (if(side == 2) 1 else 0) * offset
+        val paddingBottom = view.paddingBottom + (if(side == 3) 1 else 0) * offset
+
+        view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
     }
 }
