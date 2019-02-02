@@ -65,7 +65,8 @@ public class SlidingDrawer extends LinearLayout {
     private float slidingViewPositioOnTouchDown;
     private float initialTouchCoordinates;
 
-    private final Drawable elevationShadow;
+    private final Drawable elevationShadow90Deg;
+    private final Drawable elevationShadow180Deg;
     private int elevationShadowLength;
 
     private int slidingViewId;
@@ -90,7 +91,8 @@ public class SlidingDrawer extends LinearLayout {
 
         applyAttributes(attrs);
 
-        elevationShadow = ContextCompat.getDrawable(getContext(), R.drawable.elevation_shadow);
+        elevationShadow90Deg = ContextCompat.getDrawable(getContext(), R.drawable.elevation_shadow_90_deg);
+        elevationShadow180Deg = ContextCompat.getDrawable(getContext(), R.drawable.elevation_shadow_180_deg);
         setWillNotDraw(false);
     }
 
@@ -331,19 +333,29 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     @Override
-    public void draw(Canvas c) {
-        super.draw(c);
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+        if(getOrientation() == VERTICAL) drawElevationShadow90(canvas); else drawElevationShadow180(canvas);
+    }
 
-        // draw the elevation shadow
-        if (elevationShadow != null) {
-            final int right = slidingView.getRight();
-            final int top = (int) (slidingView.getY() - elevationShadowLength);
-            final int bottom = (int) slidingView.getY();
-            final int left = slidingView.getLeft();
+    private void drawElevationShadow90(Canvas canvas) {
+        final int top = (int) (slidingView.getY() - elevationShadowLength);
+        final int bottom = (int) slidingView.getY();
+        final int left = slidingView.getLeft();
+        final int right = slidingView.getRight();
 
-            elevationShadow.setBounds(left, top, right, bottom);
-            elevationShadow.draw(c);
-        }
+        elevationShadow90Deg.setBounds(left, top, right, bottom);
+        elevationShadow90Deg.draw(canvas);
+    }
+
+    private void drawElevationShadow180(Canvas canvas) {
+        final int top = slidingView.getTop();
+        final int bottom = slidingView.getBottom();
+        final int left = (int) (slidingView.getX() - elevationShadowLength);
+        final int right = (int) slidingView.getX();
+
+        elevationShadow180Deg.setBounds(left, top, right, bottom);
+        elevationShadow180Deg.draw(canvas);
     }
 
     private final Rect tmpRect = new Rect();
@@ -355,9 +367,7 @@ public class SlidingDrawer extends LinearLayout {
         final int save = canvas.save();
 
         if(child == nonSlidingView) {
-            int nonSlidingViewHeight = nonSlidingView.getHeight();
-            int nonSlidingViewWidth = nonSlidingView.getWidth();
-            maxSlide = getOrientation() == VERTICAL ? nonSlidingViewHeight : nonSlidingViewWidth;
+            maxSlide = getOrientation() == VERTICAL ? nonSlidingView.getHeight() : nonSlidingView.getWidth();
 
             // Clip against the slider; no sense drawing what will immediately be covered,
             // Unless the panel is set to overlay content
