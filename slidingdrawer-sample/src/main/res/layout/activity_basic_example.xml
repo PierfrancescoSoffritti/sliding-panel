@@ -35,9 +35,9 @@
         <TextView
             android:id="@+id/drag_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:background="@android:color/darker_gray"
-            android:padding="50dp"
+            android:padding="20dp"
             android:text="drag me"
             android:clickable="true"
             android:gravity="bottom"/>

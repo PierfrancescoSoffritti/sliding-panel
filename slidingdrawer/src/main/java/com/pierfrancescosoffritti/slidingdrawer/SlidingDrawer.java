@@ -10,11 +10,9 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
@@ -34,7 +32,6 @@ import java.util.Set;
 public class SlidingDrawer extends LinearLayout {
 
     private static final int SLIDE_DURATION = 300;
-    private final int TOUCH_SLOP = ViewConfiguration.get(getContext()).getScaledTouchSlop();
 
     // the color of the shade that fades over the non slidable view when the slidable view slides
     private static final int SHADE_COLOR_WITH_ALPHA = 0x99000000;
@@ -64,11 +61,7 @@ public class SlidingDrawer extends LinearLayout {
     // duration of the slide in milliseconds, when executed with an animation instead of a gesture
     private long slideDuration = SLIDE_DURATION;
 
-    private boolean isSliding = false;
-    private boolean canSlide = false;
-
-    // distance between sliding view's edge and the initialTouchEventY coordinate
-    private float touchYSlidingViewTopDelta;
+    private float slidingViewYPositioOnTouchDown;
     private float initialTouchEventY;
 
     private final Drawable elevationShadow;
@@ -146,84 +139,57 @@ public class SlidingDrawer extends LinearLayout {
             throw new RuntimeException("SlidingPanel, nonSlidingView is null.");
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent touchEvent) {
-        final int action = touchEvent.getAction();
+    /**
+     * return true only if touch event is withing view bounds
+     */
+    private boolean canSlide(MotionEvent touchEvent, View dragView) {
+        float touchX = touchEvent.getRawX();
+        float touchY = touchEvent.getRawY();
 
-        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
-            // stop sliding and let the child handle the touch event
-            isSliding = false;
-            canSlide = false;
+        final int[] viewCoordinates = new int[2];
+        dragView.getLocationInWindow(viewCoordinates);
 
-            return false;
-        }
+        final float viewX = viewCoordinates[0];
+        final float viewWidth = dragView.getWidth();
+        final float viewY = viewCoordinates[1];
+        final float viewHeight = dragView.getHeight();
 
-        switch (action) {
-            case MotionEvent.ACTION_DOWN: {
-                // save touch coordinates
-                float touchX = touchEvent.getRawX();
-                float touchY = touchEvent.getRawY();
-
-                final int[] viewCoordinates = new int[2];
-                dragView.getLocationInWindow(viewCoordinates);
-
-                final float viewX = viewCoordinates[0];
-                final float viewWidth = dragView.getWidth();
-                final float viewY = viewCoordinates[1];
-                final float viewHeight = dragView.getHeight();
-
-                // slidingView can slide only if the ACTION_DOWN event is within dragView bounds
-                canSlide = !(touchX < viewX || touchX > viewX + viewWidth || touchY < viewY || touchY > viewY + viewHeight);
-
-                if(!canSlide)
-                    return false;
-
-                initialTouchEventY = touchEvent.getY();
-                touchYSlidingViewTopDelta = slidingView.getY() - initialTouchEventY;
-
-                // intercept touch event only if sliding
-                return isSliding;
-            }
-            case MotionEvent.ACTION_MOVE: {
-                if (isSliding)
-                    return true;
-                if(!canSlide)
-                    return false;
-
-                // start sliding only if the user dragged for more than TOUCH_SLOP
-                final float diff = Math.abs(touchEvent.getY() - initialTouchEventY);
-
-                if (diff > TOUCH_SLOP /2) {
-                    // Start sliding
-                    isSliding = true;
-                    return true;
-                }
-                break;
-            }
-        }
-
-        // In general, we don't want to intercept touch events. They should be handled by the child view.
-        return false;
+        return !(touchX < viewX || touchX > viewX + viewWidth || touchY < viewY || touchY > viewY + viewHeight);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        float currentTouchEventY = event.getY();
+    public boolean onInterceptTouchEvent(MotionEvent currentTouchEvent) {
+        if(!canSlide(currentTouchEvent, dragView))
+            return false;
 
-        switch (event.getAction()) {
+        switch (currentTouchEvent.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
+                initialTouchEventY = currentTouchEvent.getY();
+                slidingViewYPositioOnTouchDown = slidingView.getY();
+                return false;
+            } case MotionEvent.ACTION_MOVE: {
+                return canSlide(currentTouchEvent, dragView);
+            } default:
+                return false;
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent touchEvent) {
+        float currentTouchEventY = touchEvent.getY();
+
+        switch (touchEvent.getAction()) {
             case MotionEvent.ACTION_UP:
-                if(isSliding && state != PanelState.EXPANDED && state != PanelState.COLLAPSED)
+                if(state == PanelState.SLIDING)
                     completeSlide(currentSlide, currentTouchEventY > this.initialTouchEventY ? SlidingDirection.DOWN : SlidingDirection.UP);
-
-                canSlide = false;
-                isSliding = false;
                 break;
             case MotionEvent.ACTION_MOVE:
 
-                if(!isSliding || !canSlide)
+                if(!canSlide(touchEvent, dragView))
                     return false;
 
-                float finalPositionY = currentTouchEventY + touchYSlidingViewTopDelta;
+                float touchYOffset = initialTouchEventY - currentTouchEventY;
+                float finalPositionY = slidingViewYPositioOnTouchDown - touchYOffset;
 
                 if(finalPositionY > nonSlidingViewHeight)
                     finalPositionY = nonSlidingViewHeight;
