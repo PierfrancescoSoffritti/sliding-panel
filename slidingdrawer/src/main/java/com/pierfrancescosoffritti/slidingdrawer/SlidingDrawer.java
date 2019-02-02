@@ -71,6 +71,7 @@ public class SlidingDrawer extends LinearLayout {
 
     private int slidingViewId;
     private int nonSlidingViewId;
+    private int dragViewId;
 
     private final Set<OnSlideListener> listeners = new HashSet<>();
 
@@ -95,9 +96,11 @@ public class SlidingDrawer extends LinearLayout {
         TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.SlidingDrawer, 0, 0);
 
         try {
-            elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingDrawer_elevation, 10);
             slidingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_slidingView, -1);
             nonSlidingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_nonSlidingView, -1);
+            dragViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_dragView, -1);
+
+            elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingDrawer_elevation, 10);
         } finally {
             typedArray.recycle();
         }
@@ -114,11 +117,14 @@ public class SlidingDrawer extends LinearLayout {
 
         slidingView = findViewById(slidingViewId);
         nonSlidingView = findViewById(nonSlidingViewId);
+        dragView = findViewById(dragViewId);
 
         if(slidingView == null)
             throw new RuntimeException("SlidingPanel, slidingView is null.");
         if(nonSlidingView == null)
             throw new RuntimeException("SlidingPanel, nonSlidingView is null.");
+        if(dragView == null)
+            dragView = slidingView;
     }
 
     @Override

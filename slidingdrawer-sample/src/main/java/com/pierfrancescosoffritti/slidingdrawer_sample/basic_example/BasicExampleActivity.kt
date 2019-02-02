@@ -26,6 +26,6 @@ class BasicExampleActivity : AppCompatActivity() {
 //                sliding_drawer_collapsed_view.visibility = View.GONE
 //        }
 
-        sliding_panel.setDragView(drag_view)
+//        sliding_panel.setDragView(drag_view)
     }
 }

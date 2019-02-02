@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     app:slidingView="@id/sliding_view"
     app:nonSlidingView="@id/non_sliding_view"
+    app:dragView="@id/drag_view"
     app:elevation="4dp" >
 
     <LinearLayout
