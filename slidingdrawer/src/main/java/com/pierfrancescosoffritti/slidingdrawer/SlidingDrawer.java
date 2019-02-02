@@ -59,7 +59,7 @@ public class SlidingDrawer extends LinearLayout {
 
     // max and min values of the slide, non normalized
     private int nonSlidingViewHeight;
-    private final int minSlide = 0;
+    private final int slidingViewDistanceFromParentTop = 0;
 
     // duration of the slide in milliseconds, when executed with an animation instead of a gesture
     private long slideDuration = SLIDE_DURATION;
@@ -67,9 +67,9 @@ public class SlidingDrawer extends LinearLayout {
     private boolean isSliding = false;
     private boolean canSlide = false;
 
-    // distance between sliding view's edge and the yDown coordinate
-    private float dY;
-    private float yDown;
+    // distance between sliding view's edge and the initialTouchEventY coordinate
+    private float touchYSlidingViewTopDelta;
+    private float initialTouchEventY;
 
     private final Drawable elevationShadow;
     private int elevationShadowLength;
@@ -147,11 +147,8 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        if(dragView == null)
-            throw new IllegalStateException("DragView is null. SlidingPanel requires you to always set a DragView manually, call SlidingPanel.setDragView");
-
-        final int action = event.getAction();
+    public boolean onInterceptTouchEvent(MotionEvent touchEvent) {
+        final int action = touchEvent.getAction();
 
         if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
             // stop sliding and let the child handle the touch event
@@ -164,8 +161,8 @@ public class SlidingDrawer extends LinearLayout {
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 // save touch coordinates
-                float touchX = event.getRawX();
-                float touchY = event.getRawY();
+                float touchX = touchEvent.getRawX();
+                float touchY = touchEvent.getRawY();
 
                 final int[] viewCoordinates = new int[2];
                 dragView.getLocationInWindow(viewCoordinates);
@@ -181,8 +178,8 @@ public class SlidingDrawer extends LinearLayout {
                 if(!canSlide)
                     return false;
 
-                yDown = event.getY();
-                dY = slidingView.getY() - yDown;
+                initialTouchEventY = touchEvent.getY();
+                touchYSlidingViewTopDelta = slidingView.getY() - initialTouchEventY;
 
                 // intercept touch event only if sliding
                 return isSliding;
@@ -194,7 +191,7 @@ public class SlidingDrawer extends LinearLayout {
                     return false;
 
                 // start sliding only if the user dragged for more than TOUCH_SLOP
-                final float diff = Math.abs(event.getY() - yDown);
+                final float diff = Math.abs(touchEvent.getY() - initialTouchEventY);
 
                 if (diff > TOUCH_SLOP /2) {
                     // Start sliding
@@ -211,13 +208,12 @@ public class SlidingDrawer extends LinearLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float eventY = event.getY();
+        float currentTouchEventY = event.getY();
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
                 if(isSliding && state != PanelState.EXPANDED && state != PanelState.COLLAPSED)
-                    // complete the slide if it's not completed yet.
-                    completeSlide(currentSlide, eventY > yDown ? SlidingDirection.DOWN : SlidingDirection.UP);
+                    completeSlide(currentSlide, currentTouchEventY > this.initialTouchEventY ? SlidingDirection.DOWN : SlidingDirection.UP);
 
                 canSlide = false;
                 isSliding = false;
@@ -227,47 +223,40 @@ public class SlidingDrawer extends LinearLayout {
                 if(!isSliding || !canSlide)
                     return false;
 
-                // stay within the bounds (nonSlidingViewHeight and 0)
-                if(eventY + dY > nonSlidingViewHeight)
-                    dY = nonSlidingViewHeight - eventY;
-                else if(eventY + dY < minSlide)
-                    dY = -eventY;
+                float finalPositionY = currentTouchEventY + touchYSlidingViewTopDelta;
 
-                updateState(Utils.INSTANCE.normalize(eventY + dY, nonSlidingViewHeight));
+                if(finalPositionY > nonSlidingViewHeight)
+                    finalPositionY = nonSlidingViewHeight;
+                else if(finalPositionY < slidingViewDistanceFromParentTop)
+                    finalPositionY = slidingViewDistanceFromParentTop;
+
+                updateState(Utils.INSTANCE.normalize(finalPositionY, nonSlidingViewHeight));
                 break;
         }
         return true;
     }
 
     private void completeSlide(float currentSlide, SlidingDirection direction) {
-        float finalY;
+        float slidingViewTargetY;
 
         switch (direction) {
             case UP:
                 if(currentSlide > 0.1)
-                    finalY = minSlide;
+                    slidingViewTargetY = slidingViewDistanceFromParentTop;
                 else
-                    finalY = nonSlidingViewHeight;
+                    slidingViewTargetY = nonSlidingViewHeight;
                 break;
             case DOWN:
                 if(currentSlide < 0.9)
-                    finalY = nonSlidingViewHeight;
+                    slidingViewTargetY = nonSlidingViewHeight;
                 else
-                    finalY = minSlide;
+                    slidingViewTargetY = slidingViewDistanceFromParentTop;
                 break;
-                // do i need this?
-//            case NONE:
-//                // handle the single touch scenario
-//                if(currentSlide == 1)
-//                    finalY = minSlide;
-//                else if(currentSlide == 0)
-//                    finalY = nonSlidingViewHeight;
-//                break;
             default:
                 return;
         }
 
-        slideTo(Utils.INSTANCE.normalize(finalY, nonSlidingViewHeight));
+        slideTo(Utils.INSTANCE.normalize(slidingViewTargetY, nonSlidingViewHeight));
     }
 
     /**
@@ -359,8 +348,10 @@ public class SlidingDrawer extends LinearLayout {
             tmpContainerRect.top = currentTop + childLayoutParams.topMargin;
             tmpContainerRect.bottom = currentTop + childHeight - childLayoutParams.bottomMargin;
 
-            currentTop = tmpContainerRect.bottom;
-//            currentLeft = tmpContainerRect.right;
+            if(getOrientation() == VERTICAL)
+                currentTop = tmpContainerRect.bottom;
+            else
+                currentLeft = tmpContainerRect.right;
 
             Gravity.apply(childLayoutParams.gravity, childWidth, childHeight, tmpContainerRect, tmpChildRect);
 
