@@ -48,7 +48,7 @@ object Utils {
     /**
      * return true only if touch event is withing view bounds
      */
-    fun canSlide(touchEvent: MotionEvent, dragView: View): Boolean {
+    fun withinBoundaries(touchEvent: MotionEvent, dragView: View): Boolean {
         val touchX = touchEvent.rawX
         val touchY = touchEvent.rawY
 

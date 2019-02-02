@@ -20,24 +20,21 @@ public class MainActivity extends AppCompatActivity implements SlidingDrawer.OnS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        View target = findViewById(R.id.empty_view);
+        View emptyView = findViewById(R.id.empty_view);
         slidingDrawer = findViewById(R.id.sliding_panel);
 
         fab = findViewById(R.id.fab);
 
-        target.setOnClickListener(new View.OnClickListener() {
-            private boolean show = false;
-
+        emptyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!show)
+                if(slidingDrawer.getState() == PanelState.COLLAPSED) {
                     getSupportActionBar().hide();
-                else
+                    slidingDrawer.setState(PanelState.EXPANDED);
+                } else {
                     getSupportActionBar().show();
-
-                slidingDrawer.setState(slidingDrawer.getState() == PanelState.EXPANDED ? PanelState.COLLAPSED : PanelState.EXPANDED);
-
-                show = !show;
+                    slidingDrawer.setState(PanelState.COLLAPSED);
+                }
             }
         });
 
@@ -57,6 +54,5 @@ public class MainActivity extends AppCompatActivity implements SlidingDrawer.OnS
             fab.show();
         else
             fab.hide();
-
     }
 }

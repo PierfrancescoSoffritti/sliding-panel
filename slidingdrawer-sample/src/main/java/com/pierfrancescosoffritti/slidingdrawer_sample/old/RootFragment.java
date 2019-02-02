@@ -17,7 +17,6 @@ import com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters.ViewPagerAda
 import com.pierfrancescosoffritti.slidingdrawer_sample.old.utils.FragmentsUtils;
 
 public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListener {
-
     private final static String TAG_1 = "TAG_1";
     private final static String TAG_2 = "TAG_2";
 
@@ -89,21 +88,19 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
     @SafeVarargs
     private final void setupViewPager(View view, TabLayout tabs, Pair<Fragment, String>... fragments) {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), fragments);
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
+        ViewPager viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(viewPagerAdapter);
-
         tabs.setupWithViewPager(viewPager);
     }
 
     @Override
     public void onSlide(SlidingDrawer slidingDrawer, float currentSlide) {
         expandedView.setAlpha(currentSlide);
+        slidingDrawer.setDragView(collapsedView);
 
         if(currentSlide == 0) {
             collapsedView.setVisibility(View.VISIBLE);
             expandedView.setVisibility(View.INVISIBLE);
-
-            slidingDrawer.setDragView(collapsedView);
         }else if (currentSlide == 1) {
             collapsedView.setVisibility(View.INVISIBLE);
             expandedView.setVisibility(View.VISIBLE);

@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -64,6 +65,8 @@ public class SlidingDrawer extends LinearLayout {
 
     private float slidingViewPositioOnTouchDown;
     private float initialTouchCoordinates;
+
+    boolean isSliding = false;
 
     private final Drawable elevationShadow90Deg;
     private final Drawable elevationShadow180Deg;
@@ -144,8 +147,13 @@ public class SlidingDrawer extends LinearLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent currentTouchEvent) {
-        if(!Utils.INSTANCE.canSlide(currentTouchEvent, dragView))
+        if(!Utils.INSTANCE.withinBoundaries(currentTouchEvent, dragView)) {
+            Log.d(getClass().getSimpleName(), "not within bound");
+            isSliding = false;
             return false;
+        }
+
+        Log.d(getClass().getSimpleName(), "within bound");
 
         switch (currentTouchEvent.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -153,8 +161,10 @@ public class SlidingDrawer extends LinearLayout {
                 slidingViewPositioOnTouchDown = getOrientation() == VERTICAL ? slidingView.getY() : slidingView.getX();
                 return false;
             } case MotionEvent.ACTION_MOVE: {
-                return Utils.INSTANCE.canSlide(currentTouchEvent, dragView);
+                isSliding = true;
+                return true;
             } default:
+                isSliding = false;
                 return false;
         }
     }
@@ -169,8 +179,7 @@ public class SlidingDrawer extends LinearLayout {
                     completeSlide(currentSlide, currentTouchEvent > initialTouchCoordinates ? SlidingDirection.DOWN : SlidingDirection.UP);
                 break;
             case MotionEvent.ACTION_MOVE:
-
-                if(!Utils.INSTANCE.canSlide(touchEvent, dragView))
+                if(!isSliding && !Utils.INSTANCE.withinBoundaries(touchEvent, dragView))
                     return false;
 
                 float touchOffset = initialTouchCoordinates - currentTouchEvent;

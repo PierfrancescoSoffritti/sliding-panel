@@ -2,6 +2,7 @@ package com.pierfrancescosoffritti.slidingdrawer_sample.old;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,14 +18,8 @@ import com.pierfrancescosoffritti.slidingdrawer_sample.old.dummy.DummyContent;
 public class ListFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
+    private int columnCount = 1;
 
-    private RecyclerView recyclerView;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public ListFragment() {
     }
 
@@ -41,30 +36,24 @@ public class ListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            columnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (columnCount <= 1)
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+            else
+                recyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
+
             recyclerView.setAdapter(new RecyclerViewAdapter(DummyContent.ITEMS));
         }
         return view;
-    }
-
-    public View getScrollableView() {
-        return recyclerView;
     }
 }
