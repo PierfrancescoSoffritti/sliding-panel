@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="SlidingDrawer">
-        <attr name="elevation" format="dimension" />
         <attr name="slidingView" format="reference" />
         <attr name="nonSlidingView" format="reference" />
         <attr name="dragView" format="reference" />
+
+        <attr name="elevation" format="dimension" />
+        <attr name="fitSlidingContentToScreen" format="boolean" />
+        <attr name="fitViewToScreen" format="reference" />
     </declare-styleable>
 </resources>

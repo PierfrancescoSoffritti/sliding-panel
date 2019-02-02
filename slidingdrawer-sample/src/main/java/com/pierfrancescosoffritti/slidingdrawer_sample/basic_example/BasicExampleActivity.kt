@@ -19,13 +19,11 @@ class BasicExampleActivity : AppCompatActivity() {
             else sliding_panel.state = PanelState.EXPANDED
         }
 
-//        sliding_panel.addSlideListener { slidingDrawer, currentSlide ->
-//            if(slidingDrawer.state == PanelState.COLLAPSED)
-//                sliding_drawer_collapsed_view.visibility = View.VISIBLE
-//            else
-//                sliding_drawer_collapsed_view.visibility = View.GONE
-//        }
-
-//        sliding_panel.setDragView(drag_view)
+        sliding_panel.addSlideListener { slidingDrawer, currentSlide ->
+            if(slidingDrawer.state == PanelState.COLLAPSED)
+                fit_to_screen_view.visibility = View.VISIBLE
+            else
+                fit_to_screen_view.visibility = View.GONE
+        }
     }
 }

@@ -7,6 +7,8 @@
     app:slidingView="@id/sliding_view"
     app:nonSlidingView="@id/non_sliding_view"
     app:dragView="@id/drag_view"
+    app:fitSlidingContentToScreen="false"
+    app:fitViewToScreen="@id/fit_to_screen_view"
     app:elevation="4dp" >
 
     <LinearLayout
@@ -24,7 +26,8 @@
     <FrameLayout
         android:id="@+id/sliding_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@android:color/holo_red_dark">
 
         <TextView
             android:id="@+id/drag_view"
@@ -36,16 +39,19 @@
             android:clickable="true"
             android:gravity="bottom"/>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <TextView
-            android:id="@id/sliding_drawer_collapsed_view"
+            android:id="@+id/fit_to_screen_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/holo_green_light"
             android:layout_marginTop="90dp"
             android:text="sliding_drawer_collapsed_view"
             android:padding="50dp"
-            android:visibility="gone"
             android:gravity="bottom" />
+        </FrameLayout>
     </FrameLayout>
 
 </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>

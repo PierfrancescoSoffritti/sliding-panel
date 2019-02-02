@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
@@ -48,12 +49,15 @@ public class SlidingDrawer extends LinearLayout {
     // the only view sensible to vertical dragging. Dragging this view will slide the slidingView
     private View dragView;
 
+    // an optional view, child of slidingView, to which a margin bottom is added, in order to make it always fit in the screen.
+    private View fittingView;
+
     private PanelState state = PanelState.COLLAPSED;
     // A value between 1.0 and 0.0 (1.0 = EXPANDED, 0.0 = COLLAPSED)
     private float currentSlide = 0.0f;
 
     // max and min values of the slide, non normalized
-    private int maxSlide;
+    private int nonSlidingViewHeight;
     private final int minSlide = 0;
 
     // duration of the slide in milliseconds, when executed with an animation instead of a gesture
@@ -72,6 +76,9 @@ public class SlidingDrawer extends LinearLayout {
     private int slidingViewId;
     private int nonSlidingViewId;
     private int dragViewId;
+    private int fittingViewId;
+
+    private boolean fitSlidingContentToScreen;
 
     private final Set<OnSlideListener> listeners = new HashSet<>();
 
@@ -99,8 +106,10 @@ public class SlidingDrawer extends LinearLayout {
             slidingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_slidingView, -1);
             nonSlidingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_nonSlidingView, -1);
             dragViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_dragView, -1);
+            fittingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_fitViewToScreen, -1);
 
             elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingDrawer_elevation, 10);
+            fitSlidingContentToScreen = typedArray.getBoolean(R.styleable.SlidingDrawer_fitSlidingContentToScreen, true);
         } finally {
             typedArray.recycle();
         }
@@ -109,6 +118,9 @@ public class SlidingDrawer extends LinearLayout {
             throw new RuntimeException("SlidingPanel, app:slidingView attribute not set. You must set this attribute to the id of the view that you want to be sliding.");
         if(nonSlidingViewId == -1)
             throw new RuntimeException("SlidingPanel, app:nonSlidingViewId attribute not set. You must set this attribute to the id of the view that you want to be static.");
+        if(fitSlidingContentToScreen && fittingViewId != -1)
+            throw new RuntimeException("SlidingPanel, app:fitSlidingContentToScreen is set to true and app:fitViewToScreen is used." +
+                    " This two attributes are mutually exclusive, you can use only one at a time.");
     }
 
     @Override
@@ -118,6 +130,8 @@ public class SlidingDrawer extends LinearLayout {
         slidingView = findViewById(slidingViewId);
         nonSlidingView = findViewById(nonSlidingViewId);
         dragView = findViewById(dragViewId);
+
+        fittingView = findViewById(fittingViewId);
 
         if(slidingView == null)
             throw new RuntimeException("SlidingPanel, slidingView is null.");
@@ -208,13 +222,13 @@ public class SlidingDrawer extends LinearLayout {
                 if(!isSliding || !canSlide)
                     return false;
 
-                // stay within the bounds (maxSlide and 0)
-                if(eventY + dY > maxSlide)
-                    dY = maxSlide - eventY;
+                // stay within the bounds (nonSlidingViewHeight and 0)
+                if(eventY + dY > nonSlidingViewHeight)
+                    dY = nonSlidingViewHeight - eventY;
                 else if(eventY + dY < minSlide)
                     dY = -eventY;
 
-                updateState(Utils.INSTANCE.normalize(eventY + dY, maxSlide));
+                updateState(Utils.INSTANCE.normalize(eventY + dY, nonSlidingViewHeight));
                 break;
         }
         return true;
@@ -228,11 +242,11 @@ public class SlidingDrawer extends LinearLayout {
                 if(currentSlide > 0.1)
                     finalY = minSlide;
                 else
-                    finalY = maxSlide;
+                    finalY = nonSlidingViewHeight;
                 break;
             case DOWN:
                 if(currentSlide < 0.9)
-                    finalY = maxSlide;
+                    finalY = nonSlidingViewHeight;
                 else
                     finalY = minSlide;
                 break;
@@ -242,13 +256,13 @@ public class SlidingDrawer extends LinearLayout {
 //                if(currentSlide == 1)
 //                    finalY = minSlide;
 //                else if(currentSlide == 0)
-//                    finalY = maxSlide;
+//                    finalY = nonSlidingViewHeight;
 //                break;
             default:
                 return;
         }
 
-        slideTo(Utils.INSTANCE.normalize(finalY, maxSlide));
+        slideTo(Utils.INSTANCE.normalize(finalY, nonSlidingViewHeight));
     }
 
     /**
@@ -263,7 +277,7 @@ public class SlidingDrawer extends LinearLayout {
 
         state = currentSlide == 1 ? PanelState.EXPANDED : currentSlide == 0 ? PanelState.COLLAPSED : PanelState.SLIDING;
 
-        float currentSlideNonNormalized = Math.abs((currentSlide * maxSlide) - maxSlide);
+        float currentSlideNonNormalized = Math.abs((currentSlide * nonSlidingViewHeight) - nonSlidingViewHeight);
 
         slidingView.setY(currentSlideNonNormalized);
         invalidate();
@@ -308,8 +322,14 @@ public class SlidingDrawer extends LinearLayout {
         maxWidth = Math.max(maxWidth, getSuggestedMinimumWidth());
 
         // Report our final dimensions.
-        setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState),
-                resolveSizeAndState(maxHeight, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT));
+        setMeasuredDimension(
+                resolveSizeAndState(maxWidth, widthMeasureSpec, childState),
+                resolveSizeAndState(
+                        maxHeight,
+                        heightMeasureSpec,
+                        childState << MEASURED_HEIGHT_STATE_SHIFT
+                )
+        );
     }
 
     private final Rect tmpContainerRect = new Rect();
@@ -380,7 +400,7 @@ public class SlidingDrawer extends LinearLayout {
         final int save = canvas.save();
 
         if(child == nonSlidingView) {
-            maxSlide = nonSlidingView.getHeight();
+            nonSlidingViewHeight = nonSlidingView.getHeight();
 
             // Clip against the slider; no sense drawing what will immediately be covered,
             // Unless the panel is set to overlay content
@@ -396,7 +416,7 @@ public class SlidingDrawer extends LinearLayout {
                 canvas.drawRect(tmpRect, coveredFadePaint);
             }
         } else if (child == slidingView) {
-            addPaddingToCollapsedView();
+            applyFitToScreen();
             result = super.drawChild(canvas, child, drawingTime);
         } else {
             result = super.drawChild(canvas, child, drawingTime);
@@ -407,12 +427,22 @@ public class SlidingDrawer extends LinearLayout {
         return result;
     }
 
-    private void addPaddingToCollapsedView() {
-        // the collapsed view is the view shown in the slidingView when collapsed.
-        // it's important to add padding at the bottom, otherwise some content will be offscreen
-        View collapsedView = slidingView.findViewById(R.id.sliding_drawer_collapsed_view);
-        if(collapsedView != null)
-            Utils.INSTANCE.setPaddingBottom(collapsedView, maxSlide);
+    boolean fitScreenApplied = false;
+    private void applyFitToScreen() {
+        if(fitScreenApplied) return;
+
+        if (fitSlidingContentToScreen) {
+            if (slidingView instanceof ViewGroup) {
+                for (int i = 0; i < ((ViewGroup) slidingView).getChildCount(); i++)
+                    Utils.INSTANCE.setBottomMargin(((ViewGroup) slidingView).getChildAt(i), nonSlidingViewHeight);
+            } else {
+                Utils.INSTANCE.setBottomPadding(slidingView, nonSlidingViewHeight);
+            }
+        } else if(fittingView != null) {
+            Utils.INSTANCE.setBottomMargin(fittingView, nonSlidingViewHeight);
+        }
+
+        fitScreenApplied = true;
     }
 
     /**
