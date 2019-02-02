@@ -4,42 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:id="@+id/sliding_drawer_collapsed_view"
+    <TextView
+        android:id="@+id/collapsed_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white" >
-
-        <TextView
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Collapsed View"
-            android:layout_alignParentBottom="true" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground" />
-
-    </RelativeLayout>
+        android:text="@string/sample_text"
+        android:gravity="center"
+        android:background="@android:color/white" />
 
     <LinearLayout
         android:id="@+id/expanded_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="fixed"
             android:background="@color/colorPrimary"
-            android:elevation="2dp"
 
+            app:tabMode="fixed"
             app:tabTextColor="@android:color/white"
             app:tabSelectedTextColor="@android:color/white" />
 

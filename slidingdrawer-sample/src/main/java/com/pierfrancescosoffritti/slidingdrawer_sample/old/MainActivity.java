@@ -10,7 +10,7 @@ import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
 import com.pierfrancescosoffritti.slidingdrawer_sample.old.utils.FragmentsUtils;
 
-public class MainActivity extends AppCompatActivity implements RootFragment.SlidingDrawerContainer, SlidingDrawer.OnSlideListener {
+public class MainActivity extends AppCompatActivity implements SlidingDrawer.OnSlideListener {
 
     private SlidingDrawer slidingDrawer;
     private FloatingActionButton fab;
@@ -20,10 +20,8 @@ public class MainActivity extends AppCompatActivity implements RootFragment.Slid
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getWindow().setBackgroundDrawable(null);
-
-        View target = findViewById(R.id.sample_view);
-        slidingDrawer = findViewById(R.id.sliding_drawer);
+        View target = findViewById(R.id.empty_view);
+        slidingDrawer = findViewById(R.id.sliding_panel);
 
         fab = findViewById(R.id.fab);
 
@@ -45,18 +43,12 @@ public class MainActivity extends AppCompatActivity implements RootFragment.Slid
 
         RootFragment fragment;
         if(savedInstanceState == null)
-            fragment = (RootFragment) FragmentsUtils.swapFragments(getSupportFragmentManager(), R.id.slidable_view, RootFragment.newInstance());
+            fragment = (RootFragment) FragmentsUtils.swapFragments(getSupportFragmentManager(), R.id.sliding_view, RootFragment.newInstance());
         else
             fragment = (RootFragment) FragmentsUtils.findFragment(getSupportFragmentManager(), RootFragment.newInstance(), null);
 
         slidingDrawer.addSlideListener(fragment);
         slidingDrawer.addSlideListener(this);
-    }
-
-
-    @Override
-    public void setDragView(View view) {
-        slidingDrawer.setDragView(view);
     }
 
     @Override

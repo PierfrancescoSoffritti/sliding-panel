@@ -11,35 +11,35 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/sample_view"
+            android:id="@+id/empty_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="186dp"
+            android:padding="100dp"
             android:gravity="center"
             android:text="Hello World!"
-            android:clickable="true"
-            android:elevation="2dp"
-            android:outlineProvider="bounds"
-
             android:background="@android:color/white" />
 
         <com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer
-            android:id="@+id/sliding_drawer"
+            android:id="@+id/sliding_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
+
             app:elevation="4dp"
-            app:slidingView="@id/slidable_view"
-            app:nonSlidingView="@id/non_slidable_view">
+            app:nonSlidingView="@id/non_sliding_view"
+            app:slidingView="@id/sliding_view"
+            app:dragView="@id/collapsed_view" >
 
             <include
-                android:id="@+id/non_slidable_view"
+                android:id="@+id/non_sliding_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 layout="@layout/video_controls" />
 
             <FrameLayout
-                android:id="@+id/slidable_view"
+                android:id="@+id/sliding_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
 
         </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>
 
@@ -49,10 +49,11 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="16dp"
         android:src="@drawable/ic_shuffle_black_24dp"
         android:tint="@android:color/white"
+        android:layout_gravity="center | bottom"
         android:clickable="true"
-        android:layout_gravity="center | bottom" />
+        android:focusable="true" />
 
 </android.support.design.widget.CoordinatorLayout>

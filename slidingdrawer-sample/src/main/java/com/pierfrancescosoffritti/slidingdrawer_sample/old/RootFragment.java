@@ -1,9 +1,8 @@
 package com.pierfrancescosoffritti.slidingdrawer_sample.old;
 
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -29,8 +28,6 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
 
     private TabLayout tabLayout;
 
-    @Nullable private SlidingDrawerContainer slidingDrawerContainer;
-
     public RootFragment() {
     }
 
@@ -44,13 +41,13 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_root, container, false);
 
-        collapsedView = view.findViewById(R.id.sliding_drawer_collapsed_view);
+        collapsedView = view.findViewById(R.id.collapsed_view);
         expandedView = view.findViewById(R.id.expanded_view);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        tabLayout = view.findViewById(R.id.tab_layout);
 
         Fragment listFragment1;
         Fragment listFragment2;
@@ -73,14 +70,11 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
                 new Pair<>(listFragment2, "name2")
         );
 
-        assert slidingDrawerContainer != null;
-        slidingDrawerContainer.setDragView(collapsedView);
-
         return view;
     }
 
     @Override
-    public void onSaveInstanceState (Bundle outState) {
+    public void onSaveInstanceState (@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if(viewPagerAdapter != null) {
@@ -89,16 +83,6 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
         } else {
             outState.putString(TAG_1, TAG_1);
             outState.putString(TAG_2, TAG_2);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof SlidingDrawerContainer) {
-            slidingDrawerContainer = (SlidingDrawerContainer) context;
-        } else {
-            throw new RuntimeException(context.getClass().getSimpleName() +" must implement " +SlidingDrawerContainer.class.getSimpleName());
         }
     }
 
@@ -129,9 +113,5 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
             collapsedView.setVisibility(View.VISIBLE);
             expandedView.setVisibility(View.VISIBLE);
         }
-    }
-
-    public interface SlidingDrawerContainer {
-        void setDragView(View view);
     }
 }

@@ -1,56 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" >
-
-        <TextView
-            android:id="@+id/video_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:text="@string/sample_text"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size"
-            android:lines="2"
-
-            android:paddingLeft="@dimen/vertical_margin"
-            android:paddingStart="@dimen/vertical_margin"
-            android:paddingTop="@dimen/horizontal_margin"
-
-            android:layout_toLeftOf="@+id/video_info"
-            android:layout_toStartOf="@+id/video_info" />
-
-        <ImageView
-            android:id="@+id/video_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:src="@drawable/ic_info_outline_black_24dp"
-            android:tint="@android:color/white"
-
-            android:clickable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-
-            android:padding="@dimen/vertical_margin"
-
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-    </RelativeLayout>
+        android:text="@string/sample_text"
+        android:textColor="@android:color/white"
+        android:padding="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorPrimary">
+        android:orientation="horizontal" >
 
         <ImageView
             android:layout_width="0dp"
@@ -60,11 +28,8 @@
             android:src="@drawable/ic_thumb_up_border_black_36dp"
             android:tint="@android:color/white"
 
-            android:clickable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-
-            android:paddingTop="@dimen/horizontal_margin"
-            android:paddingBottom="@dimen/horizontal_margin" />
+            android:padding="16dp"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:layout_width="0dp"
@@ -74,11 +39,8 @@
             android:src="@drawable/ic_thumb_down_border_black_36dp"
             android:tint="@android:color/white"
 
-            android:clickable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-
-            android:paddingTop="@dimen/horizontal_margin"
-            android:paddingBottom="@dimen/horizontal_margin" />
+            android:padding="16dp"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:layout_width="0dp"
@@ -88,11 +50,8 @@
             android:src="@drawable/ic_favorite_border_black_36dp"
             android:tint="@android:color/white"
 
-            android:clickable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-
-            android:paddingTop="@dimen/horizontal_margin"
-            android:paddingBottom="@dimen/horizontal_margin" />
+            android:padding="16dp"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:layout_width="0dp"
@@ -102,11 +61,8 @@
             android:src="@drawable/ic_share_black_36dp"
             android:tint="@android:color/white"
 
-            android:clickable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-
-            android:paddingTop="@dimen/horizontal_margin"
-            android:paddingBottom="@dimen/horizontal_margin" />
+            android:padding="16dp"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
