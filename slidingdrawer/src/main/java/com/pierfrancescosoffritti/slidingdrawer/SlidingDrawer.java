@@ -337,12 +337,9 @@ public class SlidingDrawer extends LinearLayout {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        int previousChildHeight = 0;
-        int previousChildWidth = 0;
-
         int currentTop = getPaddingTop();
         int parentBottom = getPaddingBottom();
-        int parentLeft = getPaddingLeft();
+        int currentLeft = getPaddingLeft();
         int parentRight = getPaddingRight();
 
         for (int i=0; i<getChildCount(); i++) {
@@ -356,16 +353,14 @@ public class SlidingDrawer extends LinearLayout {
             final int childWidth = child.getMeasuredWidth();
             final int childHeight = child.getMeasuredHeight();
 
-            tmpContainerRect.left = parentLeft + childLayoutParams.leftMargin;
-            tmpContainerRect.right = childWidth - childLayoutParams.rightMargin;
+            tmpContainerRect.left = currentLeft + childLayoutParams.leftMargin;
+            tmpContainerRect.right = currentLeft + childWidth - childLayoutParams.rightMargin;
 
             tmpContainerRect.top = currentTop + childLayoutParams.topMargin;
             tmpContainerRect.bottom = currentTop + childHeight - childLayoutParams.bottomMargin;
 
-            tmpContainerRect.bottom += previousChildHeight;
-            previousChildHeight = child.getMeasuredHeight();
-
             currentTop = tmpContainerRect.bottom;
+//            currentLeft = tmpContainerRect.right;
 
             Gravity.apply(childLayoutParams.gravity, childWidth, childHeight, tmpContainerRect, tmpChildRect);
 

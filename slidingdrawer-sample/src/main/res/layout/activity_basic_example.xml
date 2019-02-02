@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-
+    android:orientation="vertical"
 
     app:slidingView="@id/sliding_view"
     app:nonSlidingView="@id/non_sliding_view"
@@ -42,9 +42,6 @@
             android:clickable="true"
             android:gravity="bottom"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
         <TextView
             android:id="@+id/fit_to_screen_view"
             android:layout_width="match_parent"
@@ -54,7 +51,7 @@
             android:text="sliding_drawer_collapsed_view"
             android:padding="50dp"
             android:gravity="bottom" />
-        </FrameLayout>
+
     </FrameLayout>
 
 </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>
