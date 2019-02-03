@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:text="This text is visible because this view is set to app:fitViewToScreen in sliding panel. Otherwise it would be below the screen."
         android:gravity="bottom"
-        android:background="@android:color/white"
+        android:background="@color/lightGray"
         tools:ignore="HardcodedText" />
 
     <LinearLayout

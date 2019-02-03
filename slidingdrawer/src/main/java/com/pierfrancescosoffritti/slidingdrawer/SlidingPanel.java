@@ -1,6 +1,7 @@
 package com.pierfrancescosoffritti.slidingdrawer;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -13,6 +14,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
@@ -31,7 +33,9 @@ import java.util.Set;
  */
 public class SlidingPanel extends LinearLayout {
 
-    private static final int SLIDE_DURATION = 300;
+    private final int TOUCH_SLOP = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+    private static final int SLIDE_DURATION_SHORT = 300;
+    private static final int SLIDE_DURATION_LONG = 600;
 
     // the color of the shade that fades over the non slidable view when the slidable view slides
     private static final int SHADE_COLOR_WITH_ALPHA = 0x99000000;
@@ -60,7 +64,7 @@ public class SlidingPanel extends LinearLayout {
     private final int minSlide = 0;
 
     // duration of the slide in milliseconds, when executed with an animation instead of a gesture
-    private long slideDuration = SLIDE_DURATION;
+    private long slideDuration = SLIDE_DURATION_SHORT;
 
     private float slidingViewPositioOnTouchDown;
     private float initialTouchCoordinates;
@@ -135,10 +139,12 @@ public class SlidingPanel extends LinearLayout {
 
         fittingView = findViewById(fittingViewId);
 
-        if(slidingViewId != -1 && slidingView == null)
-            throw new RuntimeException("SlidingPanel, can't find slidingView.");
-        if(nonSlidingViewId != -1 && nonSlidingView == null)
-            throw new RuntimeException("SlidingPanel, can't find nonSlidingView.");
+        if(slidingView == null)
+            throw new RuntimeException("SlidingPanel, slidingView is null.");
+        if(nonSlidingView == null)
+            throw new RuntimeException("SlidingPanel, nonSlidingView is null.");
+
+        // optional views
         if(dragViewId != -1 && dragView == null)
             throw new RuntimeException("SlidingPanel, can't find dragView.");
         if(fittingViewId != -1 && fittingView == null)
@@ -146,16 +152,11 @@ public class SlidingPanel extends LinearLayout {
 
         if(dragView == null)
             dragView = slidingView;
-
-        if(slidingView == null)
-            throw new RuntimeException("SlidingPanel, slidingView is null.");
-        if(nonSlidingView == null)
-            throw new RuntimeException("SlidingPanel, nonSlidingView is null.");
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent currentTouchEvent) {
-        if(!Utils.INSTANCE.withinBoundaries(currentTouchEvent, dragView)) {
+        if(!Utils.INSTANCE.isMotionEventWithinBoundaries(currentTouchEvent, dragView)) {
             isSliding = false;
             return false;
         }
@@ -166,14 +167,18 @@ public class SlidingPanel extends LinearLayout {
                 slidingViewPositioOnTouchDown = getOrientation() == VERTICAL ? slidingView.getY() : slidingView.getX();
                 return false;
             } case MotionEvent.ACTION_MOVE: {
-                isSliding = true;
-                return true;
+                float currentTouch = getOrientation() == VERTICAL ? currentTouchEvent.getY() : currentTouchEvent.getX();
+                final float diff = Math.abs(currentTouch - initialTouchCoordinates);
+
+                isSliding = diff > TOUCH_SLOP/4;
+                return isSliding;
             } default:
                 isSliding = false;
                 return false;
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent touchEvent) {
         float currentTouchEvent = getOrientation() == VERTICAL ? touchEvent.getY() : touchEvent.getX();
@@ -184,7 +189,7 @@ public class SlidingPanel extends LinearLayout {
                     completeSlide(currentSlide, currentTouchEvent > initialTouchCoordinates ? SlidingDirection.DOWN : SlidingDirection.UP);
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(!isSliding && !Utils.INSTANCE.withinBoundaries(touchEvent, dragView))
+                if(!isSliding && !Utils.INSTANCE.isMotionEventWithinBoundaries(touchEvent, dragView))
                     return false;
 
                 float touchOffset = initialTouchCoordinates - currentTouchEvent;
@@ -198,6 +203,15 @@ public class SlidingPanel extends LinearLayout {
                 updateState(Utils.INSTANCE.normalize(finalPosition, maxSlide));
                 break;
         }
+        return true;
+    }
+
+    @Override
+    public boolean performClick() {
+        super.performClick();
+
+        if(state == PanelState.EXPANDED) setState(PanelState.COLLAPSED); else setState(PanelState.EXPANDED);
+
         return true;
     }
 
@@ -249,9 +263,7 @@ public class SlidingPanel extends LinearLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int currentTop = getPaddingTop();
-        int currentBottom = getPaddingBottom();
         int currentLeft = getPaddingLeft();
-        int currentRight = getPaddingRight();
 
         for (int i=0; i<getChildCount(); i++) {
             final View child = getChildAt(i);

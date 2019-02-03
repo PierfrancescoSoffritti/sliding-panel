@@ -1,7 +1,5 @@
 package com.pierfrancescosoffritti.slidingdrawer
 
-import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -45,20 +43,17 @@ object Utils {
         view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
     }
 
-    /**
-     * return true only if touch event is withing view bounds
-     */
-    fun withinBoundaries(touchEvent: MotionEvent, dragView: View): Boolean {
+    fun isMotionEventWithinBoundaries(touchEvent: MotionEvent, view: View): Boolean {
         val touchX = touchEvent.rawX
         val touchY = touchEvent.rawY
 
         val viewCoordinates = IntArray(2)
-        dragView.getLocationInWindow(viewCoordinates)
+        view.getLocationInWindow(viewCoordinates)
 
         val viewX = viewCoordinates[0].toFloat()
-        val viewWidth = dragView.width.toFloat()
         val viewY = viewCoordinates[1].toFloat()
-        val viewHeight = dragView.height.toFloat()
+        val viewWidth = view.width.toFloat()
+        val viewHeight = view.height.toFloat()
 
         return !(touchX < viewX || touchX > viewX + viewWidth || touchY < viewY || touchY > viewY + viewHeight)
     }

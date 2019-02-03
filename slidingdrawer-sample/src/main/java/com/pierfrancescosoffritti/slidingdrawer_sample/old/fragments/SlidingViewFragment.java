@@ -2,18 +2,19 @@ package com.pierfrancescosoffritti.slidingdrawer_sample.old.fragments;
 
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.tabs.TabLayout;
 import com.pierfrancescosoffritti.slidingdrawer.SlidingPanel;
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
 import com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters.ViewPagerAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 public class SlidingViewFragment extends Fragment implements SlidingPanel.OnSlideListener {
     private final static String TAG_0 = "TAG_0";
@@ -88,11 +89,12 @@ public class SlidingViewFragment extends Fragment implements SlidingPanel.OnSlid
     @Override
     public void onSlide(SlidingPanel slidingPanel, float currentSlide) {
         expandedView.setAlpha(currentSlide);
-        slidingPanel.setDragView(collapsedView);
 
         if(currentSlide == 0) {
             collapsedView.setVisibility(View.VISIBLE);
             expandedView.setVisibility(View.INVISIBLE);
+
+            slidingPanel.setDragView(collapsedView);
         }else if (currentSlide == 1) {
             collapsedView.setVisibility(View.INVISIBLE);
             expandedView.setVisibility(View.VISIBLE);
