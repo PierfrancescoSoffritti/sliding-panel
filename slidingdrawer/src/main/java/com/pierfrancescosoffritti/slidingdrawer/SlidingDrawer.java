@@ -123,8 +123,8 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
 
         if (getChildCount() != 2)
             throw new IllegalStateException("SlidingPanel must have exactly 2 children. But has " +getChildCount());

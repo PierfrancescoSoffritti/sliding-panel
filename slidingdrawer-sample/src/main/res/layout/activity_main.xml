@@ -28,9 +28,9 @@
             app:elevation="4dp"
             app:nonSlidingView="@id/non_sliding_view"
             app:slidingView="@id/sliding_view"
-            app:dragView="@id/collapsed_view"
+            app:dragView="@+id/collapsed_view"
 
-            app:fitViewToScreen="@id/collapsed_view"
+            app:fitViewToScreen="@+id/collapsed_view"
             app:fitSlidingContentToScreen="false" >
 
             <include
