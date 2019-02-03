@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -136,6 +135,15 @@ public class SlidingDrawer extends LinearLayout {
 
         fittingView = findViewById(fittingViewId);
 
+        if(slidingViewId != -1 && slidingView == null)
+            throw new RuntimeException("SlidingPanel, can't find slidingView.");
+        if(nonSlidingViewId != -1 && nonSlidingView == null)
+            throw new RuntimeException("SlidingPanel, can't find nonSlidingView.");
+        if(dragViewId != -1 && dragView == null)
+            throw new RuntimeException("SlidingPanel, can't find dragView.");
+        if(fittingViewId != -1 && fittingView == null)
+            throw new RuntimeException("SlidingPanel, can't find fittingView.");
+
         if(dragView == null)
             dragView = slidingView;
 
@@ -148,12 +156,9 @@ public class SlidingDrawer extends LinearLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent currentTouchEvent) {
         if(!Utils.INSTANCE.withinBoundaries(currentTouchEvent, dragView)) {
-            Log.d(getClass().getSimpleName(), "not within bound");
             isSliding = false;
             return false;
         }
-
-        Log.d(getClass().getSimpleName(), "within bound");
 
         switch (currentTouchEvent.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -343,7 +348,6 @@ public class SlidingDrawer extends LinearLayout {
         if(fitScreenApplied) return;
 
         int side = getOrientation() == VERTICAL ? 3 : 2;
-
         if (fitSlidingContentToScreen) {
             if (slidingView instanceof ViewGroup) {
                 for (int i = 0; i < ((ViewGroup) slidingView).getChildCount(); i++)

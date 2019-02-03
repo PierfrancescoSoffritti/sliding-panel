@@ -15,7 +15,7 @@ import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
 import com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters.ViewPagerAdapter;
 
-public class ViewPagerFragment extends Fragment implements SlidingDrawer.OnSlideListener {
+public class SlidingViewFragment extends Fragment implements SlidingDrawer.OnSlideListener {
     private final static String TAG_0 = "TAG_0";
     private final static String TAG_1 = "TAG_1";
 
@@ -26,7 +26,7 @@ public class ViewPagerFragment extends Fragment implements SlidingDrawer.OnSlide
 
     private TabLayout tabLayout;
 
-    public ViewPagerFragment() {
+    public SlidingViewFragment() {
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ViewPagerFragment extends Fragment implements SlidingDrawer.OnSlide
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_root, container, false);
+        View view = inflater.inflate(R.layout.fragment_sliding_view, container, false);
 
         collapsedView = view.findViewById(R.id.collapsed_view);
         expandedView = view.findViewById(R.id.expanded_view);

@@ -9,7 +9,7 @@ import android.view.View;
 import com.pierfrancescosoffritti.slidingdrawer.PanelState;
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
-import com.pierfrancescosoffritti.slidingdrawer_sample.old.fragments.ViewPagerFragment;
+import com.pierfrancescosoffritti.slidingdrawer_sample.old.fragments.SlidingViewFragment;
 
 public class MainActivity extends AppCompatActivity implements SlidingDrawer.OnSlideListener {
 
@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity implements SlidingDrawer.OnS
             }
         });
 
-        ViewPagerFragment fragment;
+        SlidingViewFragment fragment;
         if (savedInstanceState == null) {
-            fragment = new ViewPagerFragment();
+            fragment = new SlidingViewFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.sliding_view, fragment, "TAG").commit();
         } else {
-            fragment = (ViewPagerFragment) getSupportFragmentManager().findFragmentByTag("TAG");
+            fragment = (SlidingViewFragment) getSupportFragmentManager().findFragmentByTag("TAG");
         }
 
         slidingDrawer.addSlideListener(fragment);
