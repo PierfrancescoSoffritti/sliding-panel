@@ -1,9 +1,9 @@
 package com.pierfrancescosoffritti.slidingdrawer_sample.old;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import com.pierfrancescosoffritti.slidingdrawer.PanelState;

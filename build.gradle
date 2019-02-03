@@ -22,6 +22,10 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 }
 

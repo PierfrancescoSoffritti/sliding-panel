@@ -1,11 +1,9 @@
 package com.pierfrancescosoffritti.slidingdrawer_sample.old;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DummyListItems {
 
