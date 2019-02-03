@@ -1,6 +1,5 @@
-package com.pierfrancescosoffritti.slidingdrawer_sample.old;
+package com.pierfrancescosoffritti.slidingdrawer_sample.old.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,21 +12,20 @@ import android.view.ViewGroup;
 
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
 import com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters.RecyclerViewAdapter;
-import com.pierfrancescosoffritti.slidingdrawer_sample.old.dummy.DummyContent;
+import com.pierfrancescosoffritti.slidingdrawer_sample.old.DummyListItems;
 
 public class ListFragment extends Fragment {
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String COLUMN_COUNT = "column-count";
     private int columnCount = 1;
-
-    public ListFragment() {
-    }
 
     public static ListFragment newInstance(int columnCount) {
         ListFragment fragment = new ListFragment();
+
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putInt(COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -35,25 +33,23 @@ public class ListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            columnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
+        if (getArguments() != null)
+            columnCount = getArguments().getInt(COLUMN_COUNT);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment, container, false);
 
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (columnCount <= 1)
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            else
-                recyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
+        RecyclerView recyclerView = (RecyclerView) view;
 
-            recyclerView.setAdapter(new RecyclerViewAdapter(DummyContent.ITEMS));
-        }
+        if (columnCount <= 1)
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        else
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columnCount));
+
+        recyclerView.setAdapter(new RecyclerViewAdapter(DummyListItems.ITEMS));
+
         return view;
     }
 }

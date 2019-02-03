@@ -7,26 +7,26 @@ import android.util.Pair;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private Pair<Fragment, String>[] mFragments;
+    private Pair<Fragment, String>[] fragments;
 
     @SafeVarargs
-    public ViewPagerAdapter(FragmentManager fm, Pair<Fragment, String>... fragments) {
-        super(fm);
-        mFragments = fragments;
+    public ViewPagerAdapter(FragmentManager fragmentManager, Pair<Fragment, String>... fragments) {
+        super(fragmentManager);
+        this.fragments = fragments;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return mFragments[position].first;
+        return fragments[position].first;
     }
 
     @Override
     public int getCount() {
-        return mFragments.length;
+        return fragments.length;
     }
 
     @Override
     public CharSequence getPageTitle (int position) {
-        return mFragments[position].second;
+        return fragments[position].second;
     }
 }

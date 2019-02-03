@@ -1,4 +1,4 @@
-package com.pierfrancescosoffritti.slidingdrawer_sample.old;
+package com.pierfrancescosoffritti.slidingdrawer_sample.old.fragments;
 
 
 import android.os.Bundle;
@@ -14,11 +14,10 @@ import android.view.ViewGroup;
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
 import com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters.ViewPagerAdapter;
-import com.pierfrancescosoffritti.slidingdrawer_sample.old.utils.FragmentsUtils;
 
-public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListener {
+public class ViewPagerFragment extends Fragment implements SlidingDrawer.OnSlideListener {
+    private final static String TAG_0 = "TAG_0";
     private final static String TAG_1 = "TAG_1";
-    private final static String TAG_2 = "TAG_2";
 
     private ViewPagerAdapter viewPagerAdapter;
 
@@ -27,11 +26,7 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
 
     private TabLayout tabLayout;
 
-    public RootFragment() {
-    }
-
-    public static RootFragment newInstance() {
-        return new RootFragment();
+    public ViewPagerFragment() {
     }
 
     @Override
@@ -52,14 +47,14 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
         Fragment listFragment2;
 
         if(savedInstanceState == null) {
-            listFragment1 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(1), null);
-            listFragment2 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(2), null);
+            listFragment1 = ListFragment.newInstance(1);
+            listFragment2 = ListFragment.newInstance(2);
         } else {
-            String tag0 = savedInstanceState.getString(TAG_1);
-            String tag1 = savedInstanceState.getString(TAG_2);
+            String tag0 = savedInstanceState.getString(TAG_0);
+            String tag1 = savedInstanceState.getString(TAG_1);
 
-            listFragment1 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(1), tag0);
-            listFragment2 = FragmentsUtils.findFragment(getChildFragmentManager(), ListFragment.newInstance(2), tag1);
+            listFragment1 = getFragmentManager().findFragmentByTag(tag0);
+            listFragment2 = getFragmentManager().findFragmentByTag(tag1);
         }
 
         setupViewPager(
@@ -77,11 +72,8 @@ public class RootFragment extends Fragment implements SlidingDrawer.OnSlideListe
         super.onSaveInstanceState(outState);
 
         if(viewPagerAdapter != null) {
-            outState.putString(TAG_1, viewPagerAdapter.getItem(0).getTag());
-            outState.putString(TAG_2, viewPagerAdapter.getItem(1).getTag());
-        } else {
-            outState.putString(TAG_1, TAG_1);
-            outState.putString(TAG_2, TAG_2);
+            outState.putString(TAG_0, viewPagerAdapter.getItem(0).getTag());
+            outState.putString(TAG_1, viewPagerAdapter.getItem(1).getTag());
         }
     }
 

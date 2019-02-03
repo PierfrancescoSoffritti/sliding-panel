@@ -2,13 +2,14 @@ package com.pierfrancescosoffritti.slidingdrawer_sample.old;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.pierfrancescosoffritti.slidingdrawer.PanelState;
 import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
-import com.pierfrancescosoffritti.slidingdrawer_sample.old.utils.FragmentsUtils;
+import com.pierfrancescosoffritti.slidingdrawer_sample.old.fragments.ViewPagerFragment;
 
 public class MainActivity extends AppCompatActivity implements SlidingDrawer.OnSlideListener {
 
@@ -38,11 +39,14 @@ public class MainActivity extends AppCompatActivity implements SlidingDrawer.OnS
             }
         });
 
-        RootFragment fragment;
-        if(savedInstanceState == null)
-            fragment = (RootFragment) FragmentsUtils.swapFragments(getSupportFragmentManager(), R.id.sliding_view, RootFragment.newInstance());
-        else
-            fragment = (RootFragment) FragmentsUtils.findFragment(getSupportFragmentManager(), RootFragment.newInstance(), null);
+        ViewPagerFragment fragment;
+        if (savedInstanceState == null) {
+            fragment = new ViewPagerFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.sliding_view, fragment, "TAG").commit();
+        } else {
+            fragment = (ViewPagerFragment) getSupportFragmentManager().findFragmentByTag("TAG");
+        }
 
         slidingDrawer.addSlideListener(fragment);
         slidingDrawer.addSlideListener(this);

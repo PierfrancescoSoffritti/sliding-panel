@@ -4,66 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
-    android:orientation="vertical" >
+    android:orientation="horizontal"
+    android:background="@color/colorPrimary" >
 
-    <TextView
-        android:id="@+id/video_title"
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/sample_text"
-        android:textColor="@android:color/white"
-        android:padding="16dp" />
+        android:layout_weight="1"
 
-    <LinearLayout
-        android:layout_width="match_parent"
+        android:src="@drawable/ic_thumb_up_border_black_36dp"
+        android:tint="@android:color/white"
+
+        android:padding="16dp"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_weight="1"
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+        android:src="@drawable/ic_thumb_down_border_black_36dp"
+        android:tint="@android:color/white"
 
-            android:src="@drawable/ic_thumb_up_border_black_36dp"
-            android:tint="@android:color/white"
+        android:padding="16dp"
+        tools:ignore="ContentDescription" />
 
-            android:padding="16dp"
-            tools:ignore="ContentDescription" />
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+        android:src="@drawable/ic_favorite_border_black_36dp"
+        android:tint="@android:color/white"
 
-            android:src="@drawable/ic_thumb_down_border_black_36dp"
-            android:tint="@android:color/white"
+        android:padding="16dp"
+        tools:ignore="ContentDescription" />
 
-            android:padding="16dp"
-            tools:ignore="ContentDescription" />
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+        android:src="@drawable/ic_share_black_36dp"
+        android:tint="@android:color/white"
 
-            android:src="@drawable/ic_favorite_border_black_36dp"
-            android:tint="@android:color/white"
-
-            android:padding="16dp"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:src="@drawable/ic_share_black_36dp"
-            android:tint="@android:color/white"
-
-            android:padding="16dp"
-            tools:ignore="ContentDescription" />
-
-    </LinearLayout>
+        android:padding="16dp"
+        tools:ignore="ContentDescription" />
 
 </LinearLayout>
