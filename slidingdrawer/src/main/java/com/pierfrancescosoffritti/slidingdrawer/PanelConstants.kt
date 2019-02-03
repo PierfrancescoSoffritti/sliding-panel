@@ -7,3 +7,7 @@ enum class PanelState {
 enum class SlidingDirection {
     UP, DOWN, NONE
 }
+
+enum class Side {
+    TOP, BOTTOM, LEFT, RIGHT
+}

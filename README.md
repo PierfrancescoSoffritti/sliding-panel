@@ -1,6 +1,6 @@
 # SlidingDrawer
 
-[![](https://jitpack.io/v/PierfrancescoSoffritti/SlidingDrawer.svg)](https://jitpack.io/#PierfrancescoSoffritti/SlidingDrawer)
+[![Build Status](https://travis-ci.com/PierfrancescoSoffritti/sliding-drawer.svg?branch=master)](https://travis-ci.com/PierfrancescoSoffritti/sliding-drawer) [![](https://jitpack.io/v/PierfrancescoSoffritti/SlidingDrawer.svg)](https://jitpack.io/#PierfrancescoSoffritti/SlidingDrawer)
 
 A custom View implementing a [bottom sheet](https://material.io/design/components/sheets-bottom.html#usage) that is part of the view hierarchy, not above it.
 

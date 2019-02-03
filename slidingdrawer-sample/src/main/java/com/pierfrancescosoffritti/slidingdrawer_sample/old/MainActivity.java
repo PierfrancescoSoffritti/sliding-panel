@@ -2,6 +2,8 @@ package com.pierfrancescosoffritti.slidingdrawer_sample.old;
 
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements SlidingPanel.OnSl
     }
 
     @Override
-    public void onSlide(SlidingPanel slidingPanel, float currentSlide) {
+    public void onSlide(@NonNull SlidingPanel slidingPanel, @NonNull PanelState state, float currentSlide) {
         if(currentSlide == 0)
             fab.show();
         else

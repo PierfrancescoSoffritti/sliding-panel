@@ -50,7 +50,7 @@
             android:layout_marginTop="90dp"
             android:text="sliding_drawer_collapsed_view"
             android:padding="10dp"
-            android:gravity="end" />
+            android:gravity="bottom" />
 
     </FrameLayout>
 

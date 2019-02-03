@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
+import com.pierfrancescosoffritti.slidingdrawer.PanelState;
 import com.pierfrancescosoffritti.slidingdrawer.SlidingPanel;
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
 import com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters.ViewPagerAdapter;
@@ -87,7 +88,7 @@ public class SlidingViewFragment extends Fragment implements SlidingPanel.OnSlid
     }
 
     @Override
-    public void onSlide(SlidingPanel slidingPanel, float currentSlide) {
+    public void onSlide(@NonNull SlidingPanel slidingPanel, @NonNull PanelState panelState, float currentSlide) {
         expandedView.setAlpha(currentSlide);
 
         if(currentSlide == 0) {

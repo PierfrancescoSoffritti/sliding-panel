@@ -34,7 +34,7 @@ import java.util.Set;
  * <li>The seconds children is the slidable view (the actual bottom sheet, the view that will be sliding over the non slidable view).</li>
  * </ol>
  */
-public class SlidingPanel extends LinearLayout {
+public class SlidingPanelJava extends LinearLayout {
 
     public static final int SLIDE_DURATION_SHORT = 300;
     public static final int SLIDE_DURATION_LONG = 600;
@@ -62,10 +62,10 @@ public class SlidingPanel extends LinearLayout {
     // A value between 1.0 and 0.0 (1.0 = EXPANDED, 0.0 = COLLAPSED)
     private float currentSlide = 0.0f;
 
-    // slidingView coordinate when expanded
+    // the maximum amount the slidingView can slide. It corresponds to the height (width) of the nonSlidingView.
     private int maxSlide;
-    // slidingView coordinate when collapsed
-    private final int minSlide = 0;
+    // the minimum coordinate the slidingView can slide to. It corresponds to the top (right) of the nonSlidingView.
+    private int minSlide;
 
     // duration of the slide in milliseconds, when executed with an animation instead of a gesture
     private long slideDuration = SLIDE_DURATION_SHORT;
@@ -88,15 +88,15 @@ public class SlidingPanel extends LinearLayout {
 
     private final Set<OnSlideListener> listeners = new HashSet<>();
 
-    public SlidingPanel(Context context) {
+    public SlidingPanelJava(Context context) {
         this(context, null);
     }
 
-    public SlidingPanel(Context context, AttributeSet attrs) {
+    public SlidingPanelJava(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SlidingPanel(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SlidingPanelJava(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         applyAttributes(attrs);
@@ -321,6 +321,7 @@ public class SlidingPanel extends LinearLayout {
 
         if(child == nonSlidingView) {
             maxSlide = getOrientation() == VERTICAL ? nonSlidingView.getHeight() : nonSlidingView.getWidth();
+            minSlide = getOrientation() == VERTICAL ? nonSlidingView.getTop() : nonSlidingView.getRight();
 
             canvas.getClipBounds(drawChild_ChildTempRect);
             result = super.drawChild(canvas, child, drawingTime);
@@ -346,7 +347,7 @@ public class SlidingPanel extends LinearLayout {
     private void applyFitToScreenOnce() {
         if(fitScreenApplied) return;
 
-        int side = getOrientation() == VERTICAL ? 3 : 2;
+        Side side = getOrientation() == VERTICAL ? Side.BOTTOM : Side.RIGHT;
         if (fitSlidingContentToScreen) {
             if (slidingView instanceof ViewGroup) {
                 for (int i = 0; i < ((ViewGroup) slidingView).getChildCount(); i++)
@@ -499,6 +500,6 @@ public class SlidingPanel extends LinearLayout {
      * Implement this interface if you want to observe slide changes
      */
     public interface OnSlideListener {
-        void onSlide(SlidingPanel slidingPanel, float currentSlide);
+        void onSlide(SlidingPanelJava slidingPanel, float currentSlide);
     }
 }
