@@ -1,18 +1,10 @@
-package com.pierfrancescosoffritti.slidingdrawer
+package com.pierfrancescosoffritti.slidingdrawer.utils
 
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 
-
-object Utils {
-    /**
-     * Normalize value to interval [0,1]
-     */
-    fun normalize(value: Float, max: Float): Float {
-        return Math.abs(value - max) / max
-    }
-
+internal object ViewUtils {
     /**
      * Adds margin to the bottom of a view.
      * @param view the view that needs padding

@@ -19,6 +19,9 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
+import com.pierfrancescosoffritti.slidingdrawer.utils.Utils;
+import com.pierfrancescosoffritti.slidingdrawer.utils.ViewUtils;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -157,7 +160,7 @@ public class SlidingPanel extends LinearLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent currentTouchEvent) {
-        if(!Utils.INSTANCE.isMotionEventWithinBoundaries(currentTouchEvent, dragView)) {
+        if(!ViewUtils.INSTANCE.isMotionEventWithinBoundaries(currentTouchEvent, dragView)) {
             isSliding = false;
             return false;
         }
@@ -189,7 +192,7 @@ public class SlidingPanel extends LinearLayout {
                     completeSlide(currentSlide, currentTouchEvent > initialTouchCoordinates ? SlidingDirection.DOWN : SlidingDirection.UP);
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(!isSliding && !Utils.INSTANCE.isMotionEventWithinBoundaries(touchEvent, dragView))
+                if(!isSliding && !ViewUtils.INSTANCE.isMotionEventWithinBoundaries(touchEvent, dragView))
                     return false;
 
                 float touchOffset = initialTouchCoordinates - currentTouchEvent;
@@ -200,7 +203,7 @@ public class SlidingPanel extends LinearLayout {
                 else if(finalPosition < minSlide)
                     finalPosition = minSlide;
 
-                updateState(Utils.INSTANCE.normalize(finalPosition, maxSlide));
+                updateState(Utils.INSTANCE.normalizeScreenCoordinate(finalPosition, maxSlide));
                 break;
         }
         return true;
@@ -347,12 +350,12 @@ public class SlidingPanel extends LinearLayout {
         if (fitSlidingContentToScreen) {
             if (slidingView instanceof ViewGroup) {
                 for (int i = 0; i < ((ViewGroup) slidingView).getChildCount(); i++)
-                    Utils.INSTANCE.setMargin(((ViewGroup) slidingView).getChildAt(i), maxSlide, side);
+                    ViewUtils.INSTANCE.setMargin(((ViewGroup) slidingView).getChildAt(i), maxSlide, side);
             } else {
-                Utils.INSTANCE.setPadding(slidingView, maxSlide, side);
+                ViewUtils.INSTANCE.setPadding(slidingView, maxSlide, side);
             }
         } else if(fittingView != null) {
-            Utils.INSTANCE.setMargin(fittingView, maxSlide, side);
+            ViewUtils.INSTANCE.setMargin(fittingView, maxSlide, side);
         }
 
         fitScreenApplied = true;
@@ -401,7 +404,7 @@ public class SlidingPanel extends LinearLayout {
                 return;
         }
 
-        slideTo(Utils.INSTANCE.normalize(targetSlide, maxSlide));
+        slideTo(Utils.INSTANCE.normalizeScreenCoordinate(targetSlide, maxSlide));
     }
 
     /**
