@@ -11,11 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer;
+import com.pierfrancescosoffritti.slidingdrawer.SlidingPanel;
 import com.pierfrancescosoffritti.slidingdrawer_sample.R;
 import com.pierfrancescosoffritti.slidingdrawer_sample.old.adapters.ViewPagerAdapter;
 
-public class SlidingViewFragment extends Fragment implements SlidingDrawer.OnSlideListener {
+public class SlidingViewFragment extends Fragment implements SlidingPanel.OnSlideListener {
     private final static String TAG_0 = "TAG_0";
     private final static String TAG_1 = "TAG_1";
 
@@ -86,9 +86,9 @@ public class SlidingViewFragment extends Fragment implements SlidingDrawer.OnSli
     }
 
     @Override
-    public void onSlide(SlidingDrawer slidingDrawer, float currentSlide) {
+    public void onSlide(SlidingPanel slidingPanel, float currentSlide) {
         expandedView.setAlpha(currentSlide);
-        slidingDrawer.setDragView(collapsedView);
+        slidingPanel.setDragView(collapsedView);
 
         if(currentSlide == 0) {
             collapsedView.setVisibility(View.VISIBLE);
@@ -97,7 +97,7 @@ public class SlidingViewFragment extends Fragment implements SlidingDrawer.OnSli
             collapsedView.setVisibility(View.INVISIBLE);
             expandedView.setVisibility(View.VISIBLE);
 
-            slidingDrawer.setDragView(tabLayout);
+            slidingPanel.setDragView(tabLayout);
         } else {
             collapsedView.setVisibility(View.VISIBLE);
             expandedView.setVisibility(View.VISIBLE);

@@ -1,4 +1,4 @@
-<com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer
+<com.pierfrancescosoffritti.slidingdrawer.SlidingPanel
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sliding_panel"
@@ -54,4 +54,4 @@
 
     </FrameLayout>
 
-</com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>
+</com.pierfrancescosoffritti.slidingdrawer.SlidingPanel>

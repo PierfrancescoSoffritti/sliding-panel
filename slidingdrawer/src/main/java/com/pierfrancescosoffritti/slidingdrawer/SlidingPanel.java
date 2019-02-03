@@ -29,7 +29,7 @@ import java.util.Set;
  * <li>The seconds children is the slidable view (the actual bottom sheet, the view that will be sliding over the non slidable view).</li>
  * </ol>
  */
-public class SlidingDrawer extends LinearLayout {
+public class SlidingPanel extends LinearLayout {
 
     private static final int SLIDE_DURATION = 300;
 
@@ -80,15 +80,15 @@ public class SlidingDrawer extends LinearLayout {
 
     private final Set<OnSlideListener> listeners = new HashSet<>();
 
-    public SlidingDrawer(Context context) {
+    public SlidingPanel(Context context) {
         this(context, null);
     }
 
-    public SlidingDrawer(Context context, AttributeSet attrs) {
+    public SlidingPanel(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SlidingDrawer(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SlidingPanel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         applyAttributes(attrs);
@@ -99,16 +99,16 @@ public class SlidingDrawer extends LinearLayout {
     }
 
     private void applyAttributes(AttributeSet attrs) {
-        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.SlidingDrawer, 0, 0);
+        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.SlidingPanel, 0, 0);
 
         try {
-            slidingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_slidingView, -1);
-            nonSlidingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_nonSlidingView, -1);
-            dragViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_dragView, -1);
-            fittingViewId = typedArray.getResourceId(R.styleable.SlidingDrawer_fitViewToScreen, -1);
+            slidingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_slidingView, -1);
+            nonSlidingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_nonSlidingView, -1);
+            dragViewId = typedArray.getResourceId(R.styleable.SlidingPanel_dragView, -1);
+            fittingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_fitViewToScreen, -1);
 
-            elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingDrawer_elevation, 10);
-            fitSlidingContentToScreen = typedArray.getBoolean(R.styleable.SlidingDrawer_fitSlidingContentToScreen, true);
+            elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingPanel_elevation, 10);
+            fitSlidingContentToScreen = typedArray.getBoolean(R.styleable.SlidingPanel_fitSlidingContentToScreen, true);
         } finally {
             typedArray.recycle();
         }
@@ -500,6 +500,6 @@ public class SlidingDrawer extends LinearLayout {
      * Implement this interface if you want to observe slide changes
      */
     public interface OnSlideListener {
-        void onSlide(SlidingDrawer slidingDrawer, float currentSlide);
+        void onSlide(SlidingPanel slidingPanel, float currentSlide);
     }
 }

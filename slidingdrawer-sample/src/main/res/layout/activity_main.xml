@@ -19,7 +19,7 @@
             android:text="Hello World!"
             android:background="@android:color/white" />
 
-        <com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer
+        <com.pierfrancescosoffritti.slidingdrawer.SlidingPanel
             android:id="@+id/sliding_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-        </com.pierfrancescosoffritti.slidingdrawer.SlidingDrawer>
+        </com.pierfrancescosoffritti.slidingdrawer.SlidingPanel>
 
     </LinearLayout>
 
