@@ -20,6 +20,7 @@
         android:layout_height="match_parent"
 
         app:orientation="horizontal"
+
         app:nonSlidingView="@id/non_sliding_view"
         app:slidingView="@id/sliding_view" >
 

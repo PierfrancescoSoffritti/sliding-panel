@@ -294,7 +294,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
 
         if (child === nonSlidingView) {
             maxSlide = if (isOrientationVertical()) nonSlidingView.height.toFloat() else nonSlidingView.width.toFloat()
-            minSlide = if (isOrientationVertical()) nonSlidingView.top.toFloat() else nonSlidingView.right.toFloat()
+            minSlide = if (isOrientationVertical()) nonSlidingView.top.toFloat() else nonSlidingView.left.toFloat()
 
             canvas.getClipBounds(drawChildChildTempRect)
             result = super.drawChild(canvas, child, drawingTime)
