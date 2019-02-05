@@ -1,57 +1,43 @@
-<com.pierfrancescosoffritti.slidingdrawer.SlidingPanel
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sliding_panel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    android:orientation="vertical"
-
-    app:slidingView="@id/sliding_view"
-    app:nonSlidingView="@id/non_sliding_view"
-    app:dragView="@id/drag_view"
-    app:fitSlidingContentToScreen="false"
-    app:fitViewToScreen="@id/fit_to_screen_view"
-    app:elevation="4dp" >
-
-    <LinearLayout
-        android:id="@+id/non_sliding_view"
+    <TextView
+        android:id="@+id/placeholder_text_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:padding="100dp"
+        android:gravity="center"
+        android:text="Hello World!"
+        android:background="@android:color/white" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:text="non slidable content" />
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/sliding_view"
+    <com.pierfrancescosoffritti.slidingdrawer.SlidingPanel
+        android:id="@+id/sliding_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/holo_red_dark">
+
+        app:orientation="horizontal"
+        app:nonSlidingView="@id/non_sliding_view"
+        app:slidingView="@id/sliding_view" >
 
         <TextView
-            android:id="@+id/drag_view"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@android:color/darker_gray"
-            android:padding="20dp"
-            android:text="drag me"
-            android:clickable="true"
-            android:gravity="bottom"/>
+            android:id="@+id/non_sliding_view"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="non sliding view"
+            android:background="#64B5F6" />
 
         <TextView
-            android:id="@+id/fit_to_screen_view"
+            android:id="@+id/sliding_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_green_light"
-            android:layout_marginTop="90dp"
-            android:text="sliding_drawer_collapsed_view"
-            android:padding="10dp"
-            android:gravity="bottom" />
+            android:gravity="center"
+            android:text="sliding view"
+            android:background="#1976D2" />
 
-    </FrameLayout>
-
-</com.pierfrancescosoffritti.slidingdrawer.SlidingPanel>
+    </com.pierfrancescosoffritti.slidingdrawer.SlidingPanel>
+</LinearLayout>

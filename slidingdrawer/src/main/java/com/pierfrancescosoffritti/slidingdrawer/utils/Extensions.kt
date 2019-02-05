@@ -2,12 +2,12 @@ package com.pierfrancescosoffritti.slidingdrawer.utils
 
 import android.view.MotionEvent
 import android.view.View
-import android.widget.LinearLayout
+import com.pierfrancescosoffritti.slidingdrawer.Orientation
 import com.pierfrancescosoffritti.slidingdrawer.SlidingPanel
 
 internal object Extensions {
     fun SlidingPanel.isOrientationVertical(): Boolean {
-        return orientation == LinearLayout.VERTICAL
+        return orientation == Orientation.VERTICAL
     }
 
     fun View.isMotionEventWithinBounds(motionEvent: MotionEvent): Boolean {

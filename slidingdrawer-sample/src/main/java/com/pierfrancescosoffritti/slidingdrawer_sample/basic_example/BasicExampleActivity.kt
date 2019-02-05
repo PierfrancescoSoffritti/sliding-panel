@@ -14,18 +14,14 @@ class BasicExampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_basic_example)
 
-        non_sliding_view.setOnClickListener {
-            if(sliding_panel.getState() == PanelState.EXPANDED)
-                sliding_panel.setState(PanelState.COLLAPSED)
-            else
-                sliding_panel.setState(PanelState.EXPANDED)
-        }
+//        non_sliding_view.setOnClickListener {
+//            if(sliding_panel.getState() == PanelState.EXPANDED)
+//                sliding_panel.setState(PanelState.COLLAPSED)
+//            else
+//                sliding_panel.setState(PanelState.EXPANDED)
+//        }
 
-        sliding_panel.addSlideListener { _, state, _ ->
-            if(state == PanelState.COLLAPSED)
-                fit_to_screen_view.visibility = View.VISIBLE
-            else
-                fit_to_screen_view.visibility = View.GONE
-        }
+//        sliding_panel.addSlideListener { _, state, _ ->
+//        }
     }
 }

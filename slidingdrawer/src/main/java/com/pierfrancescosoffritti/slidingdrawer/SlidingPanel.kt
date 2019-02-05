@@ -14,7 +14,7 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 
 import com.pierfrancescosoffritti.slidingdrawer.utils.Utils
 import com.pierfrancescosoffritti.slidingdrawer.utils.ViewUtils
@@ -29,7 +29,7 @@ import java.util.HashSet
  *
  * Read [detailed documentation here](https://github.com/PierfrancescoSoffritti/sliding-drawer)
  */
-class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout(context, attrs) {
+class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
 
     companion object {
         const val  SLIDE_DURATION_SHORT = 300L
@@ -51,6 +51,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
 
     // an optional view, child of slidingView, to which a margin bottom is added, in order to make it always fit on the screen.
     private var fittingView: View? = null
+
+    internal val orientation: Orientation
 
     private var state = PanelState.COLLAPSED
     // A value between 1.0 and 0.0 (0.0 = COLLAPSED, 1.0 = EXPANDED)
@@ -102,8 +104,9 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
             dragViewId = typedArray.getResourceId(R.styleable.SlidingPanel_dragView, -1)
             fittingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_fitViewToScreen, -1)
 
-            elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingPanel_elevation, 10)
             fitSlidingViewContentToScreen = typedArray.getBoolean(R.styleable.SlidingPanel_fitSlidingContentToScreen, true)
+            orientation = if(typedArray.getInt(R.styleable.SlidingPanel_orientation, 0) == 0) Orientation.VERTICAL else Orientation.HORIZONTAL
+            elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingPanel_elevation, 10)
         } finally {
             typedArray.recycle()
         }
@@ -202,7 +205,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
 
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
 
-            val layoutParams = child.layoutParams as LinearLayout.LayoutParams
+            val layoutParams = child.layoutParams as FrameLayout.LayoutParams
 
             slidingPanelWidth = Math.max(slidingPanelWidth, child.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin)
             slidingPanelHeight = Math.max(slidingPanelHeight, child.measuredHeight + layoutParams.topMargin + layoutParams.bottomMargin)
@@ -232,7 +235,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
             if (child.visibility == View.GONE)
                 continue
 
-            val childLayoutParams = child.layoutParams as LinearLayout.LayoutParams
+            val childLayoutParams = child.layoutParams as FrameLayout.LayoutParams
 
             val childWidth = child.measuredWidth
             val childHeight = child.measuredHeight

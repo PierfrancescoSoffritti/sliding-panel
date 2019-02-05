@@ -11,3 +11,7 @@ internal enum class SlidingDirection {
 internal enum class Side {
     TOP, BOTTOM, LEFT, RIGHT
 }
+
+internal enum class Orientation {
+    VERTICAL, HORIZONTAL
+}

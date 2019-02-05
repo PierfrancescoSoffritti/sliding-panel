@@ -5,8 +5,13 @@
         <attr name="nonSlidingView" format="reference" />
         <attr name="dragView" format="reference" />
 
-        <attr name="elevation" format="dimension" />
         <attr name="fitSlidingContentToScreen" format="boolean" />
         <attr name="fitViewToScreen" format="reference" />
+
+        <attr name="elevation" format="dimension" />
+        <attr name="orientation" format="enum">
+            <enum name="vertical" value="0"/>
+            <enum name="horizontal" value="1"/>
+        </attr>
     </declare-styleable>
 </resources>
