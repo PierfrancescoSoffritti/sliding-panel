@@ -4,10 +4,10 @@ enum class PanelState {
     EXPANDED, COLLAPSED, SLIDING
 }
 
-enum class SlidingDirection {
-    UP, DOWN, NONE
+internal enum class SlidingDirection {
+    UP_OR_LEFT, DOWN_OR_RIGHT, NONE
 }
 
-enum class Side {
+internal enum class Side {
     TOP, BOTTOM, LEFT, RIGHT
 }

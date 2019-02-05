@@ -169,7 +169,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
         when (touchEvent.action) {
             MotionEvent.ACTION_UP ->
                 if (state == PanelState.SLIDING)
-                    completeSlide(currentSlide, if (currentTouchEvent > coordOfFirstTouch) SlidingDirection.DOWN else SlidingDirection.UP)
+                    completeSlide(currentSlide, if (currentTouchEvent > coordOfFirstTouch) SlidingDirection.DOWN_OR_RIGHT else SlidingDirection.UP_OR_LEFT)
             MotionEvent.ACTION_MOVE -> {
                 if (!isSliding && !dragView.isMotionEventWithinBounds(touchEvent))
                     return false
@@ -350,11 +350,11 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
 
     private fun completeSlide(currentSlide: Float, direction: SlidingDirection) {
         val targetSlide: Float = when (direction) {
-            SlidingDirection.UP -> if (currentSlide > 0.1)
+            SlidingDirection.UP_OR_LEFT -> if (currentSlide > 0.1)
                 minSlide
             else
                 maxSlide
-            SlidingDirection.DOWN -> if (currentSlide < 0.9)
+            SlidingDirection.DOWN_OR_RIGHT -> if (currentSlide < 0.9)
                 maxSlide
             else
                 minSlide
@@ -385,13 +385,12 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
         notifyListeners(currentSlide)
     }
 
+    /**
+     * Sets the drag view. The drag view is the view from which the sliding panel can be dragged.
+     */
     fun setDragView(dragView: View) {
         this.dragView = dragView
         dragViewId = dragView.id
-    }
-
-    fun getState(): PanelState {
-        return state
     }
 
     /**
@@ -409,6 +408,13 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
         }
     }
 
+    fun getState(): PanelState {
+        return state
+    }
+
+    /**
+     * Toogles the state of the panel, between [PanelState.COLLAPSED] and [PanelState.EXPANDED]
+     */
     fun toggleState() {
         if (state === PanelState.EXPANDED) setState(PanelState.COLLAPSED) else setState(PanelState.EXPANDED)
     }
@@ -436,6 +442,12 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
      * Implement this interface if you want to observe changes in the panel.
      */
     interface OnSlideListener {
+        /**
+         * This function is called every time the panel slides.
+         * @param slidingPanel a reference to the panel that is being observed.
+         * @param state the state of the panel. One of the states defined in [PanelState].
+         * @param currentSlide the current slide value. It is a value between 0 ([PanelState.COLLAPSED]) and 1 ([PanelState.EXPANDED]).
+         */
         fun onSlide(slidingPanel: SlidingPanel, state: PanelState, currentSlide: Float)
     }
 }
