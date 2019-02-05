@@ -47,4 +47,46 @@ class UtilsTest {
         // ASSERT
         assertEquals(result, 0f)
     }
+
+    @Test
+    fun clamp_notClampedTest() {
+        // ARRANGE
+        val value = 5f
+        val min = 0f
+        val max = 10f
+
+        // ACT
+        val result = Utils.clamp(value, min, max)
+
+        // ASSERT
+        assertEquals(result, 5f)
+    }
+
+    @Test
+    fun clamp_clampedMaxTest() {
+        // ARRANGE
+        val value = 50f
+        val min = 0f
+        val max = 10f
+
+        // ACT
+        val result = Utils.clamp(value, min, max)
+
+        // ASSERT
+        assertEquals(result, 10f)
+    }
+
+    @Test
+    fun clamp_clampedMinTest() {
+        // ARRANGE
+        val value = -10f
+        val min = 0f
+        val max = 10f
+
+        // ACT
+        val result = Utils.clamp(value, min, max)
+
+        // ASSERT
+        assertEquals(result, 0f)
+    }
 }

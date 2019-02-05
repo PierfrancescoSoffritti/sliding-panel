@@ -10,4 +10,15 @@ internal object Utils {
     fun normalizeScreenCoordinate(value: Float, max: Float): Float {
         return Math.abs(value - max) / max
     }
+
+    /**
+     * Restrict value to given range
+     */
+    fun clamp(value: Float, min: Float, max: Float): Float {
+        return when {
+            value > max -> max
+            value < min -> min
+            else -> value
+        }
+    }
 }

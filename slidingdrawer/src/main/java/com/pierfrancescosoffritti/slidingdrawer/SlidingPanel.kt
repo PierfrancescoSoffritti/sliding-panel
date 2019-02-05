@@ -18,17 +18,16 @@ import android.widget.LinearLayout
 
 import com.pierfrancescosoffritti.slidingdrawer.utils.Utils
 import com.pierfrancescosoffritti.slidingdrawer.utils.ViewUtils
+import com.pierfrancescosoffritti.slidingdrawer.utils.Extensions.isOrientationVertical
+import com.pierfrancescosoffritti.slidingdrawer.utils.Extensions.isMotionEventWithinBounds
+import java.lang.Float.isNaN
 
 import java.util.HashSet
 
 /**
- * Custom View implementing a bottom sheet that is part of the view hierarchy, not above it.
- * <br></br><br></br>
- * This ViewGroup can have only 2 children:
+ * Custom View implementing a sliding panel (bottom sheet pattern) that is part of the view hierarchy, not above it.
  *
- *  1. The first children is the non slidable view (the view that will be covered when the bottom sheet is expanded).
- *  1. The seconds children is the slidable view (the actual bottom sheet, the view that will be sliding over the non slidable view).
- *
+ * Read [detailed documentation here](https://github.com/PierfrancescoSoffritti/sliding-drawer)
  */
 class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout(context, attrs) {
 
@@ -58,14 +57,14 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
     private var currentSlide = 0.0f
 
     // the maximum amount the slidingView can slide. It corresponds to the height (width) of the nonSlidingView.
-    private var maxSlide = 0
+    private var maxSlide = 0f
     // the minimum coordinate the slidingView can slide to. It corresponds to the top (right) of the nonSlidingView.
-    private var minSlide = 0
+    private var minSlide = 0f
 
     // position of the slidingView recorded when the user touches the screen for the first time (eg. at the beginning of a swipe gesture)
-    private var slidingViewPositionAtFirstTouch = 0f
+    private var slidingViewPosAtFirstTouch = 0f
     // touch coordinates of the first touch gesture (eg. at the beginning of a swipe gesture)
-    private var coordinateOfFirstTouch = 0f
+    private var coordOfFirstTouch = 0f
 
     private var isSliding = false
 
@@ -126,42 +125,33 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
         if (childCount != 2)
             throw IllegalStateException("SlidingPanel must have exactly 2 children. But has $childCount")
 
-        val tSlidingView = findViewById<View>(slidingViewId)
-        val tNonSlidingView = findViewById<View>(nonSlidingViewId)
-        val tDragView = findViewById<View>(dragViewId)
+        slidingView = findViewById(slidingViewId) ?: throw RuntimeException("SlidingPanel, slidingView is null.")
+        nonSlidingView = findViewById(nonSlidingViewId) ?: throw RuntimeException("SlidingPanel, nonSlidingView is null.")
 
-        fittingView = findViewById(fittingViewId)
+        dragView = findViewById(dragViewId) ?:
+                if (dragViewId != -1) throw RuntimeException("SlidingPanel, can't find dragView.")
+                else slidingView
 
-        if (tSlidingView == null)
-            throw RuntimeException("SlidingPanel, slidingView is null.")
-        if (tNonSlidingView == null)
-            throw RuntimeException("SlidingPanel, nonSlidingView is null.")
-
-        if (dragViewId != -1 && tDragView == null)
-            throw RuntimeException("SlidingPanel, can't find dragView.")
-        if (fittingViewId != -1 && fittingView == null)
-            throw RuntimeException("SlidingPanel, can't find fittingView.")
-
-        slidingView = tSlidingView
-        nonSlidingView = tNonSlidingView
-        dragView = tDragView ?: slidingView
+        fittingView = findViewById(fittingViewId) ?:
+                if(fittingViewId != -1) throw RuntimeException("SlidingPanel, can't find fittingView.")
+                else null
     }
 
     override fun onInterceptTouchEvent(currentTouchEvent: MotionEvent): Boolean {
-        if (!ViewUtils.isMotionEventWithinBoundaries(currentTouchEvent, dragView)) {
+        if (!dragView.isMotionEventWithinBounds(currentTouchEvent)) {
             isSliding = false
             return false
         }
 
         when (currentTouchEvent.action) {
             MotionEvent.ACTION_DOWN -> {
-                coordinateOfFirstTouch = if (orientation == LinearLayout.VERTICAL) currentTouchEvent.y else currentTouchEvent.x
-                slidingViewPositionAtFirstTouch = if (orientation == LinearLayout.VERTICAL) slidingView.y else slidingView.x
+                coordOfFirstTouch = if (isOrientationVertical()) currentTouchEvent.y else currentTouchEvent.x
+                slidingViewPosAtFirstTouch = if (isOrientationVertical()) slidingView.y else slidingView.x
                 return false
             }
             MotionEvent.ACTION_MOVE -> {
-                val currentTouch = if (orientation == LinearLayout.VERTICAL) currentTouchEvent.y else currentTouchEvent.x
-                val diff = Math.abs(currentTouch - coordinateOfFirstTouch)
+                val currentTouch: Float = if (isOrientationVertical()) currentTouchEvent.y else currentTouchEvent.x
+                val diff: Float = Math.abs(currentTouch - coordOfFirstTouch)
                 isSliding = diff > touchSlop / 4
                 return isSliding
             }
@@ -174,25 +164,21 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(touchEvent: MotionEvent): Boolean {
-        val currentTouchEvent = if (orientation == LinearLayout.VERTICAL) touchEvent.y else touchEvent.x
+        val currentTouchEvent = if (isOrientationVertical()) touchEvent.y else touchEvent.x
 
         when (touchEvent.action) {
             MotionEvent.ACTION_UP ->
                 if (state == PanelState.SLIDING)
-                    completeSlide(currentSlide, if (currentTouchEvent > coordinateOfFirstTouch) SlidingDirection.DOWN else SlidingDirection.UP)
+                    completeSlide(currentSlide, if (currentTouchEvent > coordOfFirstTouch) SlidingDirection.DOWN else SlidingDirection.UP)
             MotionEvent.ACTION_MOVE -> {
-                if (!isSliding && !ViewUtils.isMotionEventWithinBoundaries(touchEvent, dragView))
+                if (!isSliding && !dragView.isMotionEventWithinBounds(touchEvent))
                     return false
 
-                val touchOffset = coordinateOfFirstTouch - currentTouchEvent
-                var finalPosition = slidingViewPositionAtFirstTouch - touchOffset
+                val touchOffset: Float = coordOfFirstTouch - currentTouchEvent
+                var finalPosition: Float = slidingViewPosAtFirstTouch - touchOffset
 
-                if (finalPosition > maxSlide)
-                    finalPosition = maxSlide.toFloat()
-                else if (finalPosition < minSlide)
-                    finalPosition = minSlide.toFloat()
-
-                updateState(Utils.normalizeScreenCoordinate(finalPosition, maxSlide.toFloat()))
+                finalPosition = Utils.clamp(finalPosition, minSlide, maxSlide)
+                updateState(Utils.normalizeScreenCoordinate(finalPosition, maxSlide))
             }
         }
         return true
@@ -200,7 +186,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
 
     override fun performClick(): Boolean {
         super.performClick()
-        if (state === PanelState.EXPANDED) setState(PanelState.COLLAPSED) else setState(PanelState.EXPANDED)
+        toggleState()
         return true
     }
 
@@ -209,8 +195,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
         var slidingPanelWidth = 0
         var childrenCombinedMeasuredStates = 0
 
-        for (i in 0 until childCount) {
-            val child = getChildAt(i)
+        for (i: Int in 0 until childCount) {
+            val child: View = getChildAt(i)
             if (child.visibility == View.GONE)
                 continue
 
@@ -240,8 +226,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
         var currentTop = paddingTop
         var currentLeft = paddingLeft
 
-        for (i in 0 until childCount) {
-            val child = getChildAt(i)
+        for (i: Int in 0 until childCount) {
+            val child: View = getChildAt(i)
 
             if (child.visibility == View.GONE)
                 continue
@@ -257,7 +243,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
             onLayoutContainerRect.top = currentTop + childLayoutParams.topMargin
             onLayoutContainerRect.bottom = currentTop + childHeight - childLayoutParams.bottomMargin
 
-            if (orientation == LinearLayout.VERTICAL)
+            if (isOrientationVertical())
                 currentTop = onLayoutContainerRect.bottom
             else
                 currentLeft = onLayoutContainerRect.right
@@ -270,7 +256,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
-        if (orientation == LinearLayout.VERTICAL)
+        if (isOrientationVertical())
             drawElevationShadow90(canvas)
         else
             drawElevationShadow180(canvas)
@@ -304,8 +290,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
         val result: Boolean
 
         if (child === nonSlidingView) {
-            maxSlide = if (orientation == LinearLayout.VERTICAL) nonSlidingView.height else nonSlidingView.width
-            minSlide = if (orientation == LinearLayout.VERTICAL) nonSlidingView.top else nonSlidingView.right
+            maxSlide = if (isOrientationVertical()) nonSlidingView.height.toFloat() else nonSlidingView.width.toFloat()
+            minSlide = if (isOrientationVertical()) nonSlidingView.top.toFloat() else nonSlidingView.right.toFloat()
 
             canvas.getClipBounds(drawChildChildTempRect)
             result = super.drawChild(canvas, child, drawingTime)
@@ -330,16 +316,16 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
     private fun applyFitToScreenOnce() {
         if (fitScreenApplied) return
 
-        val side = if (orientation == LinearLayout.VERTICAL) Side.BOTTOM else Side.RIGHT
+        val side = if (isOrientationVertical()) Side.BOTTOM else Side.RIGHT
         if (fitSlidingViewContentToScreen) {
             if (slidingView is ViewGroup) {
-                for (i in 0 until (slidingView as ViewGroup).childCount)
-                    ViewUtils.setMargin((slidingView as ViewGroup).getChildAt(i), maxSlide, side)
+                for (i: Int in 0 until (slidingView as ViewGroup).childCount)
+                    ViewUtils.setMargin((slidingView as ViewGroup).getChildAt(i), maxSlide.toInt(), side)
             } else {
-                ViewUtils.setPadding(slidingView, maxSlide, side)
+                ViewUtils.setPadding(slidingView, maxSlide.toInt(), side)
             }
         } else if (fittingView != null) {
-            ViewUtils.setMargin(fittingView!!, maxSlide, side)
+            ViewUtils.setMargin(fittingView!!, maxSlide.toInt(), side)
         }
 
         fitScreenApplied = true
@@ -350,7 +336,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
      * @param positionNormalized Normalized value (between 0.0 and 1.0) representing the final slide position
      */
     private fun slideTo(positionNormalized: Float) {
-        if (java.lang.Float.isNaN(positionNormalized))
+        if (isNaN(positionNormalized))
             throw IllegalArgumentException("Bad value. Can't slide to NaN")
         if (positionNormalized < 0 || positionNormalized > 1)
             throw IllegalArgumentException("Bad value. Can't slide to $positionNormalized. Value must be between 0 and 1")
@@ -365,17 +351,17 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
     private fun completeSlide(currentSlide: Float, direction: SlidingDirection) {
         val targetSlide: Float = when (direction) {
             SlidingDirection.UP -> if (currentSlide > 0.1)
-                minSlide.toFloat()
+                minSlide
             else
-                maxSlide.toFloat()
+                maxSlide
             SlidingDirection.DOWN -> if (currentSlide < 0.9)
-                maxSlide.toFloat()
+                maxSlide
             else
-                minSlide.toFloat()
+                minSlide
             else -> return
         }
 
-        slideTo(Utils.normalizeScreenCoordinate(targetSlide, maxSlide.toFloat()))
+        slideTo(Utils.normalizeScreenCoordinate(targetSlide, maxSlide))
     }
 
     /**
@@ -390,7 +376,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
         state = if (currentSlide == 1f) PanelState.EXPANDED else if (currentSlide == 0f) PanelState.COLLAPSED else PanelState.SLIDING
 
         val currentSlideNonNormalized = Math.abs(currentSlide * maxSlide - maxSlide)
-        if (orientation == LinearLayout.VERTICAL)
+        if (isOrientationVertical())
             slidingView.y = currentSlideNonNormalized
         else
             slidingView.x = currentSlideNonNormalized
@@ -421,6 +407,10 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : LinearLayout
             PanelState.SLIDING -> {
             }
         }
+    }
+
+    fun toggleState() {
+        if (state === PanelState.EXPANDED) setState(PanelState.COLLAPSED) else setState(PanelState.EXPANDED)
     }
 
     fun addSlideListener(listener: OnSlideListener) {

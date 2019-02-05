@@ -1,6 +1,5 @@
 package com.pierfrancescosoffritti.slidingdrawer.utils
 
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.pierfrancescosoffritti.slidingdrawer.Side
@@ -34,20 +33,5 @@ internal object ViewUtils {
         val paddingBottom = view.paddingBottom + (if(side == Side.BOTTOM) 1 else 0) * offset
 
         view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
-    }
-
-    fun isMotionEventWithinBoundaries(touchEvent: MotionEvent, view: View): Boolean {
-        val touchX = touchEvent.rawX
-        val touchY = touchEvent.rawY
-
-        val viewCoordinates = IntArray(2)
-        view.getLocationInWindow(viewCoordinates)
-
-        val viewX = viewCoordinates[0].toFloat()
-        val viewY = viewCoordinates[1].toFloat()
-        val viewWidth = view.width.toFloat()
-        val viewHeight = view.height.toFloat()
-
-        return !(touchX < viewX || touchX > viewX + viewWidth || touchY < viewY || touchY > viewY + viewHeight)
     }
 }
