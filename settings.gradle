@@ -1,1 +1,1 @@
-include ':slidingdrawer', ':slidingdrawer-sample'
+include ':sample-app', ':core'

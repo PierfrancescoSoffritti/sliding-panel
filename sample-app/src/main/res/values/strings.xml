@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">sliding-panel</string>
+    <string name="basic_example_activity">Basic Example</string>
+    <string name="advanced_example_activity">Advanced Example</string>
+</resources>
