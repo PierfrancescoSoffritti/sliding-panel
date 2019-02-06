@@ -1,8 +1,8 @@
-package com.psoffritti.slidingpanel.examples.basic
+package com.psoffritti.slidingpanel.sampleapp.examples.basic
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.psoffritti.slidingpanel.R
+import com.psoffritti.slidingpanel.sampleapp.R
 
 class BasicExampleActivity : AppCompatActivity() {
 

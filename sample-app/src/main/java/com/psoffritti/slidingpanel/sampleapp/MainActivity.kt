@@ -1,4 +1,4 @@
-package com.psoffritti.slidingpanel
+package com.psoffritti.slidingpanel.sampleapp
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,8 +6,8 @@ import android.os.Bundle
 import com.psoffritti.librarysampleapptemplate.core.Constants
 import com.psoffritti.librarysampleapptemplate.core.SampleAppTemplateActivity
 import com.psoffritti.librarysampleapptemplate.core.utils.ExampleActivityDetails
-import com.psoffritti.slidingpanel.examples.advanced.AdvancedExampleActivity
-import com.psoffritti.slidingpanel.examples.basic.BasicExampleActivity
+import com.psoffritti.slidingpanel.sampleapp.examples.advanced.AdvancedExampleActivity
+import com.psoffritti.slidingpanel.sampleapp.examples.basic.BasicExampleActivity
 
 class MainActivity : AppCompatActivity() {
 

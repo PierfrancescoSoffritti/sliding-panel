@@ -1,4 +1,4 @@
-package com.psoffritti.slidingpanel.examples.advanced.fragments;
+package com.psoffritti.slidingpanel.sampleapp.examples.advanced.fragments;
 
 
 import android.os.Bundle;
@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.psoffritti.slidingpanel.PanelState;
-import com.psoffritti.slidingpanel.R;
 import com.psoffritti.slidingpanel.SlidingPanel;
-import com.psoffritti.slidingpanel.examples.advanced.adapters.ViewPagerAdapter;
+import com.psoffritti.slidingpanel.sampleapp.R;
+import com.psoffritti.slidingpanel.sampleapp.examples.advanced.adapters.ViewPagerAdapter;
 
 public class SlidingViewFragment extends Fragment implements SlidingPanel.OnSlideListener {
     private final static String TAG_0 = "TAG_0";

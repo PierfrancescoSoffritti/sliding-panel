@@ -1,4 +1,4 @@
-package com.psoffritti.slidingpanel.examples.advanced.adapters;
+package com.psoffritti.slidingpanel.sampleapp.examples.advanced.adapters;
 
 import android.util.Pair;
 import androidx.fragment.app.Fragment;

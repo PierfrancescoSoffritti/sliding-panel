@@ -1,0 +1,25 @@
+ext.versions = [
+        // Project
+        minSdk                      : 15,
+        compileSdk                  : 28,
+        buildTools                  : '28.0.3',
+        publishVersion              : '1.0.0',
+        publishVersionCode          : 1,
+
+        // Plugins
+        gradlePlugin                : '3.3.0',
+        bintrayPlugin               : '0.9',
+
+        // AndroidX
+        androidxCore                : '1.0.2',
+        androidxMaterial            : '1.0.0',
+        androidxConstraintLayout    : '1.1.3',
+
+        // Kotlin
+        kotlin                      : '1.3.20',
+
+        // Tests
+        junit                       : '4.12',
+        runner                      : '1.1.1',
+        espressoCore                : '3.1.1'
+]

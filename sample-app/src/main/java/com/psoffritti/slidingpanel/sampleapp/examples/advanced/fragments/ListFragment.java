@@ -1,4 +1,4 @@
-package com.psoffritti.slidingpanel.examples.advanced.fragments;
+package com.psoffritti.slidingpanel.sampleapp.examples.advanced.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.psoffritti.slidingpanel.R;
-import com.psoffritti.slidingpanel.examples.advanced.DummyListItems;
-import com.psoffritti.slidingpanel.examples.advanced.adapters.RecyclerViewAdapter;
+import com.psoffritti.slidingpanel.sampleapp.R;
+import com.psoffritti.slidingpanel.sampleapp.examples.advanced.DummyListItems;
+import com.psoffritti.slidingpanel.sampleapp.examples.advanced.adapters.RecyclerViewAdapter;
 
 public class ListFragment extends Fragment {
 

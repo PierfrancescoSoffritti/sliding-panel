@@ -1,4 +1,4 @@
-package com.psoffritti.slidingpanel.examples.advanced;
+package com.psoffritti.slidingpanel.sampleapp.examples.advanced;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.psoffritti.slidingpanel.PanelState;
-import com.psoffritti.slidingpanel.R;
 import com.psoffritti.slidingpanel.SlidingPanel;
-import com.psoffritti.slidingpanel.examples.advanced.fragments.SlidingViewFragment;
+import com.psoffritti.slidingpanel.sampleapp.R;
+import com.psoffritti.slidingpanel.sampleapp.examples.advanced.fragments.SlidingViewFragment;
 
 public class AdvancedExampleActivity extends AppCompatActivity implements SlidingPanel.OnSlideListener {
 
