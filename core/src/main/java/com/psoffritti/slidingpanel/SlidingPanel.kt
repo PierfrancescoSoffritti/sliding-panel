@@ -15,6 +15,7 @@ import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
+import androidx.annotation.IdRes
 
 import com.psoffritti.slidingpanel.utils.Utils
 import com.psoffritti.slidingpanel.utils.ViewUtils
@@ -70,13 +71,13 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
 
     private var isSliding = false
 
-    private val elevationShadow90Deg = ContextCompat.getDrawable(getContext(), R.drawable.elevation_shadow_90_deg)!!
-    private val elevationShadow180Deg = ContextCompat.getDrawable(getContext(), R.drawable.elevation_shadow_180_deg)!!
+    private val elevationShadow90Deg = ContextCompat.getDrawable(getContext(), R.drawable.sp_elevation_shadow_90_deg)!!
+    private val elevationShadow180Deg = ContextCompat.getDrawable(getContext(), R.drawable.sp_elevation_shadow_180_deg)!!
 
-    private val slidingViewId: Int
-    private val nonSlidingViewId: Int
-    private val fittingViewId: Int
-    private var dragViewId: Int
+    @IdRes private val slidingViewId: Int
+    @IdRes private val nonSlidingViewId: Int
+    @IdRes private val fittingViewId: Int
+    @IdRes private var dragViewId: Int
 
     private val fitSlidingViewContentToScreen: Boolean
     private var fitScreenApplied = false

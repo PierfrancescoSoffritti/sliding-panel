@@ -20,6 +20,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    // this is needed because I'm importing 2 modules called "core" (core and com.psoffritti.librarysampleapptemplate:core) (https://discuss.kotlinlang.org/t/disable-meta-inf-generation-in-gradle-android-project/3830)
+    packagingOptions {
+        exclude 'META-INF/core_release.kotlin_module'
+    }
 }
 
 dependencies {
@@ -27,17 +32,15 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$versions.runner"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espressoCore"
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
 
     implementation "androidx.appcompat:appcompat:$versions.androidxCore"
     implementation "androidx.constraintlayout:constraintlayout:$versions.androidxConstraintLayout"
     implementation "com.google.android.material:material:$versions.androidxMaterial"
 
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation "androidx.recyclerview:recyclerview:$versions.androidxRecyclerView"
 
-    implementation 'com.psoffritti.librarysampleapptemplate:core:1.0.0'
+    implementation 'com.psoffritti.librarysampleapptemplate:core:1.0.1'
 
     implementation project(':core')
 }
