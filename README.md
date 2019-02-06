@@ -4,12 +4,25 @@
 [![core](https://api.bintray.com/packages/pierfrancescosoffritti/maven/sliding-panel%3Acore/images/download.svg) ](https://bintray.com/pierfrancescosoffritti/maven/sliding-panel%3Acore/_latestVersion)
 [![share on twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Custom%20View%20implementing%20a%20sliding%20panel%20that%20is%20part%20of%20the%20view%20hierarchy,%20not%20above%20it:&url=https://github.com/PierfrancescoSoffritti/sliding-panel&via=PierfrancescoSo&hashtags=opensource,slidingpanel,bottomsheet,androiddev)
 
-A custom View implementing a sliding panel ([bottom sheet pattern](https://material.io/design/components/sheets-bottom.html)) that is part of the view hierarchy, not above it.
+A custom ViewGroup implementing a sliding panel ([bottom sheet pattern](https://material.io/design/components/sheets-bottom.html)) that is part of the view hierarchy, not above it.
 
-## Overview
+### Difference from other libraries
 All other implementations of the bottom _sheet patter_ and _sliding panel pattern_ implement a panel that sits above all the other Views of the app. When the panel is collapsed (but visible) the only way to set its position is by using a peek factor (its distance from the bottom of the screen).
 
-With sliding-panel instead, the bottom sheet is placed exactly where it is supposed to be in the view hierarchy, just like it would be in a vertical `LinearLayout`. It doesn't sit above other Views.
+With this library the sliding panel (or bottom sheet) is placed exactly where it is supposed to be in the view hierarchy, just like it would be in a vertical or horizontal `LinearLayout`. It doesn't sit above other Views.
+
+### Overview
+`SlidingPanel` is a ViewGroup exending `FrameLayout`.
+
+It has exacly two children: a **non sliding view** and a **sliding view**.
+
+* The **non sliding view** is just a static view, positioned as if `SlidingPanel` were a `LinearLayout`.
+* The **sliding view** can be dragged by the user. It slides over the non sliding view, both vertically and horizontally.
+
+The sliding view can be **collapsed** or **expanded**:
+
+* When **collapsed**, the sliding view is exactly where it would be if `SlidingPanel` were a LinearLayout.
+* When **expanded**, the sliding view is positioned to exactly cover the non sliding view. (Therefore the maximum amount of movement allowed to the sliding view is equal to the height (or width) of the non sliding view)
 
 ## Sample app
 You can download the apk for the sample app of this library [at this link](./sample-app/apk), or [on the PlayStore](https://play.google.com/store/apps/details?id=com.psoffritti.slidingpanel.sampleapp).
