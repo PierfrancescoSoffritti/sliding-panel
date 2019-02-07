@@ -152,7 +152,7 @@ This attribute is used to tell `SlidingPanel` that we want a view to be shifted 
 
 See the screenshots below to better understand. In the first one `fitToScreenView` is set, in the second one it isn't. Notice the white text at the bottom of the screen.
 
-![fitToScreenView](./images/fitToScreenView_small.png)
+![fitToScreenView](./images/fitToScreenView.png)
 
 ```xml
 <com.psoffritti.slidingpanel.SlidingPanel
