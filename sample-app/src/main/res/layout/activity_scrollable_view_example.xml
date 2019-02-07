@@ -24,6 +24,7 @@
         app:nonSlidingView="@id/non_sliding_view"
         app:slidingView="@id/sliding_view"
         app:dragView="@id/drag_view"
+        app:fitToScreenView="@id/placeholder_view"
         app:elevation="4dp" >
 
         <TextView
@@ -35,11 +36,12 @@
             android:background="#64B5F6"
             tools:ignore="HardcodedText" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/sliding_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="#fff">
 
             <TextView
                 android:id="@+id/drag_view"
@@ -48,18 +50,44 @@
                 android:gravity="center"
                 android:text="drag view"
                 android:background="#1976D2"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true" />
 
             <TextView
-                android:id="@+id/fit_to_screen_view"
+                android:id="@+id/placeholder_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="placeholder view"
-                android:background="#01579B"
-                tools:ignore="HardcodedText" />
+                android:text="expand sliding panel to reveal ScrollableView"
+                android:background="#fff"
+                tools:ignore="HardcodedText"
 
-        </LinearLayout>
+                android:layout_below="@id/drag_view"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true" />
+
+            <include
+                layout="@layout/recycler_view"
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:layout_below="@id/drag_view"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
 
     </com.psoffritti.slidingpanel.SlidingPanel>
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.psoffritti.slidingpanel.sampleapp.examples.advanced;
+package com.psoffritti.slidingpanel.sampleapp.examples.utils;
 
 import androidx.annotation.NonNull;
 

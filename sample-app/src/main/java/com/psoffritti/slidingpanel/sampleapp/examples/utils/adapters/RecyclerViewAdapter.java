@@ -1,4 +1,4 @@
-package com.psoffritti.slidingpanel.sampleapp.examples.advanced.adapters;
+package com.psoffritti.slidingpanel.sampleapp.examples.utils.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.psoffritti.slidingpanel.sampleapp.R;
-import com.psoffritti.slidingpanel.sampleapp.examples.advanced.DummyListItems;
+import com.psoffritti.slidingpanel.sampleapp.examples.utils.DummyListItems;
 
 import java.util.List;
 

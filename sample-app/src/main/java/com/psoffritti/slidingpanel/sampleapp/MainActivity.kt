@@ -10,6 +10,8 @@ import com.psoffritti.slidingpanel.sampleapp.examples.advanced.AdvancedExampleAc
 import com.psoffritti.slidingpanel.sampleapp.examples.basic.BasicExampleHorizontalActivity
 import com.psoffritti.slidingpanel.sampleapp.examples.basic.BasicExampleVerticalActivity
 import com.psoffritti.slidingpanel.sampleapp.examples.dragview.DragViewExampleActivity
+import com.psoffritti.slidingpanel.sampleapp.examples.fittoscreenview.FitToScreenViewExampleActivity
+import com.psoffritti.slidingpanel.sampleapp.examples.scrollableview.ScrollableViewExampleActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +38,16 @@ class MainActivity : AppCompatActivity() {
                 R.string.drag_view_example,
                 null,
                 DragViewExampleActivity::class.java
+            ),
+            ExampleActivityDetails(
+                R.string.fit_to_screen_view_example,
+                null,
+                FitToScreenViewExampleActivity::class.java
+            ),
+            ExampleActivityDetails(
+                R.string.scrollable_view_example,
+                null,
+                ScrollableViewExampleActivity::class.java
             ),
             ExampleActivityDetails(
                 R.string.advanced_example_activity,

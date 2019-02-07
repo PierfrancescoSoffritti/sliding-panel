@@ -13,7 +13,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.psoffritti.slidingpanel.PanelState;
 import com.psoffritti.slidingpanel.SlidingPanel;
 import com.psoffritti.slidingpanel.sampleapp.R;
-import com.psoffritti.slidingpanel.sampleapp.examples.advanced.adapters.ViewPagerAdapter;
+import com.psoffritti.slidingpanel.sampleapp.examples.utils.adapters.ViewPagerAdapter;
 
 public class SlidingViewFragment extends Fragment implements SlidingPanel.OnSlideListener {
     private final static String TAG_0 = "TAG_0";

@@ -4,4 +4,6 @@
     <string name="basic_example_vertical">Basic Example Vertical</string>
     <string name="advanced_example_activity">Advanced Example</string>
     <string name="drag_view_example">DragView Example</string>
+    <string name="fit_to_screen_view_example">Fit to screen View Example</string>
+    <string name="scrollable_view_example">ScrollableView Example</string>
 </resources>

@@ -30,8 +30,7 @@
             app:slidingView="@id/sliding_view"
             app:dragView="@+id/collapsed_view"
 
-            app:fitViewToScreen="@+id/collapsed_view"
-            app:fitSlidingContentToScreen="false" >
+            app:fitToScreenView="@+id/collapsed_view" >
 
             <include
                 android:id="@+id/non_sliding_view"

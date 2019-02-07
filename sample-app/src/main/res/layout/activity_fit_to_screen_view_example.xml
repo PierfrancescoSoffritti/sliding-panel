@@ -24,6 +24,7 @@
         app:nonSlidingView="@id/non_sliding_view"
         app:slidingView="@id/sliding_view"
         app:dragView="@id/drag_view"
+        app:fitToScreenView="@id/fit_to_screen_view"
         app:elevation="4dp" >
 
         <TextView
@@ -39,7 +40,8 @@
             android:id="@+id/sliding_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="#E57373">
 
             <TextView
                 android:id="@+id/drag_view"
@@ -54,8 +56,9 @@
                 android:id="@+id/fit_to_screen_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="placeholder view"
+                android:gravity="bottom"
+                android:text="this text is visible when the panel is collapsed only because this view is passed to app:fitToScreenView"
+                android:textColor="#fff"
                 android:background="#01579B"
                 tools:ignore="HardcodedText" />
 

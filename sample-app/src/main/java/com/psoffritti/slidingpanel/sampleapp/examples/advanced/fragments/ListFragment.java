@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.psoffritti.slidingpanel.sampleapp.R;
-import com.psoffritti.slidingpanel.sampleapp.examples.advanced.DummyListItems;
-import com.psoffritti.slidingpanel.sampleapp.examples.advanced.adapters.RecyclerViewAdapter;
+import com.psoffritti.slidingpanel.sampleapp.examples.utils.DummyListItems;
+import com.psoffritti.slidingpanel.sampleapp.examples.utils.adapters.RecyclerViewAdapter;
 
 public class ListFragment extends Fragment {
 
@@ -38,7 +38,7 @@ public class ListFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_fragment, container, false);
+        View view = inflater.inflate(R.layout.recycler_view, container, false);
 
         RecyclerView recyclerView = (RecyclerView) view;
 
