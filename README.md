@@ -100,7 +100,7 @@ sliding_panel.addSlideListener { slidingPanel, state, currentSlide ->
 `SlidingPanel` has a set of attributes that you can set to customize its behviour. Some of this attributes are mandatory.
 
 ### slidingView
-**Mandatory: yes  -- Value: view reference         -- Default: null**
+**Mandatory: yes      -- Value: view reference         -- Default: `null`**
 
 This mandatory attribute is used to tell `SlidingPanel` which of its two children is the sliding view. If this attribute is not set `SlidingPanel` will throw an Excpetion.
 
@@ -110,12 +110,11 @@ This mandatory attribute is used to tell `SlidingPanel` which of its two childre
   app:slidingView="@id/sliding_view" >
 
   ...
-
 </com.psoffritti.slidingpanel.SlidingPanel>
 ```
 
 ### nonSlidingView
-**Mandatory: yes  -- Value: view reference         -- Default: null**
+**Mandatory: yes      -- Value: view reference         -- Default: `null`**
 
 This mandatory attribute is used to tell `SlidingPanel` which of its two children is the non sliding view. If this attribute is not set `SlidingPanel` will throw an Excpetion.
 
@@ -125,12 +124,11 @@ This mandatory attribute is used to tell `SlidingPanel` which of its two childre
   app:nonSlidingView="@id/non_sliding_view" >
 
   ...
-
 </com.psoffritti.slidingpanel.SlidingPanel>
 ```
 
 ### dragView
-**Mandatory: no   -- Value: view reference         -- Default: slidingView**
+**Mandatory: no       -- Value: view reference         -- Default: slidingView**
 
 This attribute is used to tell `SlidingPanel` which View should be used to drag the sliding view. If not set this value defaults to the sliding view. Therefore the whole panel will be sensible to dragging.
 
@@ -142,15 +140,54 @@ Note that if the whole panel is draggable it won't be possible to use scrollable
   app:dragView="@id/drag_view" >
 
   ...
-
 </com.psoffritti.slidingpanel.SlidingPanel>
 ```
 
 ### fitToScreenView
-**Mandatory: no   -- Value: view reference         -- Default: null**
+**Mandatory: no       -- Value: view reference         -- Default: `null`**
+
+When collapsed, the sliding view is shifted down (or right) by an amount equal to the height (or width) of the non sliding view. Therefore, when collapsed, the bottom (or right) part of the sliding view will be out of the screen.
+
+This attribute is used to tell `SlidingPanel` that we want a view to be shifted up (or left) so that it is always visible.
+
+See the screenshots below to better understand. In the first one `fitToScreenView` is set, in the second one it isn't. Notice the white text at the bottom of the screen.
+
+![fitToScreenView](./images/fitToScreenView_small.png)
+
+```xml
+<com.psoffritti.slidingpanel.SlidingPanel
+  ...
+  app:fitToScreenView="@id/fit_to_screen_view" >
+
+  ...
+</com.psoffritti.slidingpanel.SlidingPanel>
+```
+The sample app has [an example specific for this attribute](./sample-app/..).
 
 ### orientation
-**Mandatory: no   -- Value: vertical | horizontal  -- Default: vertical**
+**Mandatory: no       -- Value: `vertical` | `horizontal`  -- Default: `vertical`**
+
+This attribute is used to set the orientation of `SlidingPanel` in the same way that it is used for a `LinearLayout`. By default it is set to `vertical`.
+
+```xml
+<com.psoffritti.slidingpanel.SlidingPanel
+  ...
+  app:orientation="horizontal" >
+
+  ...
+</com.psoffritti.slidingpanel.SlidingPanel>
+```
 
 ### elevation
-**Mandatory: no   -- Value: dimension              -- Default: 4dp**
+**Mandatory: no       -- Value: dimension              -- Default: `4dp`**
+
+This attribute is used to set the length of the shadow drawn to the top (or left) side of the sliding view.
+
+```xml
+<com.psoffritti.slidingpanel.SlidingPanel
+  ...
+  app:elevation="10dp" >
+
+  ...
+</com.psoffritti.slidingpanel.SlidingPanel>
+```
