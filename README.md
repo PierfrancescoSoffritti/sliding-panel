@@ -1,5 +1,7 @@
 # sliding-panel
 
+<img align="right" width="250px" src="./images/icon_512.png" title="logo" />
+
 [![Build Status](https://travis-ci.com/PierfrancescoSoffritti/sliding-drawer.svg?branch=master)](https://travis-ci.com/PierfrancescoSoffritti/sliding-drawer) 
 [![core](https://api.bintray.com/packages/pierfrancescosoffritti/maven/sliding-panel%3Acore/images/download.svg) ](https://bintray.com/pierfrancescosoffritti/maven/sliding-panel%3Acore/_latestVersion)
 [![share on twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Custom%20View%20implementing%20a%20sliding%20panel%20that%20is%20part%20of%20the%20view%20hierarchy,%20not%20above%20it:&url=https://github.com/PierfrancescoSoffritti/sliding-panel&via=PierfrancescoSo&hashtags=opensource,slidingpanel,bottomsheet,androiddev)
@@ -23,6 +25,8 @@ The sliding view can be **collapsed** or **expanded**.
 
 * When **collapsed**, the sliding view is exactly where it would be if `SlidingPanel` was a LinearLayout.
 * When **expanded**, the sliding view is positioned to exactly cover the non sliding view. (Therefore the maximum amount of movement allowed to the sliding view is equal to the height (or width) of the non sliding view)
+
+<img width="250px" src="./images/sliding_panel.gif" title="logo" />
 
 ## Sample app
 You can download the apk of the sample app [at this link](./sample-app/apk), or [on the PlayStore](https://play.google.com/store/apps/details?id=com.psoffritti.slidingpanel.sampleapp).
@@ -274,4 +278,4 @@ sliding_panel.addSlideListener(object : SlidingPanel.OnSlideListener {
 
 ---
 
-For any question feel free to [open an issue on the GitHub repository](./issues).
+For any question feel free to [open an issue on the GitHub repository](https://github.com/PierfrancescoSoffritti/sliding-panel/issues).
