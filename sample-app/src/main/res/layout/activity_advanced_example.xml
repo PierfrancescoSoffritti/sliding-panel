@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -16,8 +17,9 @@
             android:layout_height="wrap_content"
             android:padding="100dp"
             android:gravity="center"
-            android:text="Hello World!"
-            android:background="@android:color/white" />
+            android:text="Click me"
+            android:background="@android:color/white"
+            tools:ignore="HardcodedText" />
 
         <com.psoffritti.slidingpanel.SlidingPanel
             android:id="@+id/sliding_panel"
@@ -25,24 +27,22 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
 
-            app:elevation="4dp"
             app:nonSlidingView="@id/non_sliding_view"
             app:slidingView="@id/sliding_view"
-            app:dragView="@+id/collapsed_view"
-
-            app:fitToScreenView="@+id/collapsed_view" >
+            app:dragView="@id/collapsed_view"
+            app:fitToScreenView="@id/collapsed_view"
+            app:elevation="4dp" >
 
             <include
+                layout="@layout/placeholder_layout"
                 android:id="@+id/non_sliding_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                layout="@layout/video_controls" />
+                android:layout_height="wrap_content" />
 
             <FrameLayout
                 android:id="@+id/sliding_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
         </com.psoffritti.slidingpanel.SlidingPanel>
 
     </LinearLayout>
@@ -54,8 +54,6 @@
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_shuffle_black_24dp"
         android:tint="@android:color/white"
-        android:layout_gravity="center | bottom"
-        android:clickable="true"
-        android:focusable="true" />
+        android:layout_gravity="center | bottom" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>
