@@ -1,4 +1,4 @@
-package com.psoffritti.slidingpanel.sampleapp.examples.utils
+package com.psoffritti.slidingpanel.sampleapp.utils
 
 import java.util.ArrayList
 

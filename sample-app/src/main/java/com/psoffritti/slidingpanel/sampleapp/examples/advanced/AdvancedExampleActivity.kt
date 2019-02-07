@@ -8,19 +8,17 @@ import com.psoffritti.slidingpanel.sampleapp.examples.advanced.fragments.Sliding
 import kotlinx.android.synthetic.main.activity_advanced_example.*
 
 class AdvancedExampleActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_advanced_example)
 
         empty_view.setOnClickListener {
-            if (sliding_panel.getState() === PanelState.COLLAPSED) {
+            if (sliding_panel.state == PanelState.COLLAPSED)
                 supportActionBar?.hide()
-                sliding_panel.setState(PanelState.EXPANDED)
-            } else {
+            else
                 supportActionBar?.show()
-                sliding_panel.setState(PanelState.COLLAPSED)
-            }
+
+            sliding_panel.toggle()
         }
 
         val fragment: SlidingViewFragment
@@ -38,5 +36,12 @@ class AdvancedExampleActivity : AppCompatActivity() {
             fab.show()
         else
             fab.hide() }
+    }
+
+    override fun onBackPressed() {
+        if(sliding_panel.state == PanelState.EXPANDED)
+            sliding_panel.slideTo(PanelState.COLLAPSED)
+        else
+            super.onBackPressed()
     }
 }

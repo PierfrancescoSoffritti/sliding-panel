@@ -1,4 +1,4 @@
-package com.psoffritti.slidingpanel.sampleapp.examples.utils.adapters
+package com.psoffritti.slidingpanel.sampleapp.utils.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.psoffritti.slidingpanel.sampleapp.R
-import com.psoffritti.slidingpanel.sampleapp.examples.utils.DummyListItems
+import com.psoffritti.slidingpanel.sampleapp.utils.DummyListItems
 
 class RecyclerViewAdapter(private val items: List<DummyListItems.DummyItem>) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 

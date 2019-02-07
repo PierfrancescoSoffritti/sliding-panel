@@ -54,7 +54,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
 
     internal val orientation: Orientation
 
-    private var state = PanelState.COLLAPSED
+    var state = PanelState.COLLAPSED
+
     // A value between 1.0 and 0.0 (0.0 = COLLAPSED, 1.0 = EXPANDED)
     private var currentSlide = 0.0f
 
@@ -182,7 +183,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
 
     override fun performClick(): Boolean {
         super.performClick()
-        toggleState()
+        toggle()
         return true
     }
 
@@ -384,27 +385,22 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     /**
      * Use this method to change the state of the slidingView.
      */
-    fun setState(state: PanelState) {
+    fun slideTo(state: PanelState) {
         if (state === this.state)
             return
 
         when (state) {
             PanelState.EXPANDED -> slideTo(1f)
             PanelState.COLLAPSED -> slideTo(0f)
-            PanelState.SLIDING -> {
-            }
+            PanelState.SLIDING -> { }
         }
-    }
-
-    fun getState(): PanelState {
-        return state
     }
 
     /**
      * Toogles the state of the panel, between [PanelState.COLLAPSED] and [PanelState.EXPANDED]
      */
-    fun toggleState() {
-        if (state === PanelState.EXPANDED) setState(PanelState.COLLAPSED) else setState(PanelState.EXPANDED)
+    fun toggle() {
+        if (state === PanelState.EXPANDED) slideTo(PanelState.COLLAPSED) else slideTo(PanelState.EXPANDED)
     }
 
     fun addSlideListener(listener: OnSlideListener) {

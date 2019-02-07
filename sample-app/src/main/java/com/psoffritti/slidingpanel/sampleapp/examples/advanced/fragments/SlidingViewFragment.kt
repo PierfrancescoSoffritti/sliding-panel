@@ -11,7 +11,7 @@ import com.google.android.material.tabs.TabLayout
 import com.psoffritti.slidingpanel.PanelState
 import com.psoffritti.slidingpanel.SlidingPanel
 import com.psoffritti.slidingpanel.sampleapp.R
-import com.psoffritti.slidingpanel.sampleapp.examples.utils.adapters.ViewPagerAdapter
+import com.psoffritti.slidingpanel.sampleapp.utils.adapters.ViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_sliding_view.*
 import kotlinx.android.synthetic.main.fragment_sliding_view.view.*
 

@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.psoffritti.slidingpanel.sampleapp.R
-import com.psoffritti.slidingpanel.sampleapp.examples.utils.DummyListItems
-import com.psoffritti.slidingpanel.sampleapp.examples.utils.adapters.RecyclerViewAdapter
+import com.psoffritti.slidingpanel.sampleapp.utils.DummyListItems
+import com.psoffritti.slidingpanel.sampleapp.utils.adapters.RecyclerViewAdapter
 
 class ListFragment : Fragment() {
 
