@@ -55,6 +55,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     internal val orientation: Orientation
 
     var state = PanelState.COLLAPSED
+        private set
 
     // A value between 1.0 and 0.0 (0.0 = COLLAPSED, 1.0 = EXPANDED)
     private var currentSlide = 0.0f
@@ -286,24 +287,29 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
         val save = canvas.save()
         val result: Boolean
 
-        if (child === nonSlidingView) {
-            maxSlide = if (isOrientationVertical()) nonSlidingView.height.toFloat() else nonSlidingView.width.toFloat()
-            minSlide = if (isOrientationVertical()) nonSlidingView.top.toFloat() else nonSlidingView.left.toFloat()
+        when (child) {
+            nonSlidingView -> {
+                maxSlide =
+                    if (isOrientationVertical()) nonSlidingView.height.toFloat() else nonSlidingView.width.toFloat()
+                minSlide = if (isOrientationVertical()) nonSlidingView.top.toFloat() else nonSlidingView.left.toFloat()
 
-            canvas.getClipBounds(drawChildChildTempRect)
-            result = super.drawChild(canvas, child, drawingTime)
+                canvas.getClipBounds(drawChildChildTempRect)
+                result = super.drawChild(canvas, child, drawingTime)
 
-            if (currentSlide > 0) {
-                val currentShadeAlpha = (SHADE_COLOR_MAX_ALPHA * currentSlide).toInt()
-                val currentShadeColor = currentShadeAlpha shl 24 or SHADE_COLOR
-                shadePaint.color = currentShadeColor
-                canvas.drawRect(drawChildChildTempRect, shadePaint)
+                if (currentSlide > 0) {
+                    val currentShadeAlpha = (SHADE_COLOR_MAX_ALPHA * currentSlide).toInt()
+                    val currentShadeColor = currentShadeAlpha shl 24 or SHADE_COLOR
+                    shadePaint.color = currentShadeColor
+                    canvas.drawRect(drawChildChildTempRect, shadePaint)
+                }
             }
-        } else if (child == slidingView) {
-            applyFitToScreenOnce()
-            result = super.drawChild(canvas, child, drawingTime)
-        } else {
-            result = super.drawChild(canvas, child, drawingTime)
+            slidingView -> {
+                applyFitToScreenOnce()
+                result = super.drawChild(canvas, child, drawingTime)
+            }
+            else -> {
+                result = super.drawChild(canvas, child, drawingTime)
+            }
         }
 
         canvas.restoreToCount(save)
@@ -362,7 +368,11 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             throw IllegalArgumentException("Slide value \"$newSlideRatio\" should be normalized, between 0 and 1.")
 
         currentSlide = newSlideRatio
-        state = if (currentSlide == 1f) PanelState.EXPANDED else if (currentSlide == 0f) PanelState.COLLAPSED else PanelState.SLIDING
+        state = when (currentSlide) {
+            1f -> PanelState.EXPANDED
+            0f -> PanelState.COLLAPSED
+            else -> PanelState.SLIDING
+        }
 
         val currentSlideNonNormalized = Math.abs(currentSlide * maxSlide - maxSlide)
         if (isOrientationVertical())
