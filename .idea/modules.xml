@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample-app/sample-app.iml" filepath="$PROJECT_DIR$/sample-app/sample-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample-app/sample-app.iml" filepath="$PROJECT_DIR$/sample-app/sample-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/sliding-panel.iml" filepath="$PROJECT_DIR$/.idea/sliding-panel.iml" />
       <module fileurl="file://$PROJECT_DIR$/sliding-panel.iml" filepath="$PROJECT_DIR$/sliding-panel.iml" />
