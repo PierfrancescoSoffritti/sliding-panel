@@ -1,8 +1,8 @@
 # sliding-panel
 
-<img align="right" width="250px" src="./images/icon_512.png" title="logo" />
+<img align="right" width="200px" src="./images/icon_512.png" title="logo" />
 
-[![Build Status](https://travis-ci.com/PierfrancescoSoffritti/sliding-drawer.svg?branch=master)](https://travis-ci.com/PierfrancescoSoffritti/sliding-drawer) 
+[![Build Status](https://travis-ci.com/PierfrancescoSoffritti/sliding-panel.svg?branch=master)](https://travis-ci.com/PierfrancescoSoffritti/sliding-panel) 
 [![core](https://api.bintray.com/packages/pierfrancescosoffritti/maven/sliding-panel%3Acore/images/download.svg) ](https://bintray.com/pierfrancescosoffritti/maven/sliding-panel%3Acore/_latestVersion)
 [![share on twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Custom%20View%20implementing%20a%20sliding%20panel%20that%20is%20part%20of%20the%20view%20hierarchy,%20not%20above%20it:&url=https://github.com/PierfrancescoSoffritti/sliding-panel&via=PierfrancescoSo&hashtags=opensource,slidingpanel,bottomsheet,androiddev)
 
