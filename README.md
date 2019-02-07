@@ -96,6 +96,23 @@ sliding_panel.addSlideListener { slidingPanel, state, currentSlide ->
 }
 ```
 
+## API documentation
+
+### Table of contents
+1. [SlidingPanel attributes](#slidingpanel-attributes)
+    1. [slidingView](#slidingview)
+    2. [nonSlidingView](#nonslidingview)
+    3. [dragView](#dragview)
+    4. [fitToScreenView](#fittoscreenview)
+    5. [orientation](#orientation)
+    6. [elevation](#elevation)
+3. [API](#api)
+    1. [Panel state](#panel-state)
+    2. [slideTo](#slideto)
+    3. [slideDuration](#slideduration)
+    4. [Programmatically set drag view](#programmatically-set-drag-view)
+    5. [Listen to events](#listen-to-events)
+
 ## SlidingPanel attributes
 `SlidingPanel` has a set of attributes that you can set to customize its behviour. Some of this attributes are mandatory.
 
@@ -150,9 +167,13 @@ When collapsed, the sliding view is shifted down (or right) by an amount equal t
 
 This attribute is used to tell `SlidingPanel` that we want a view to be shifted up (or left) so that it is always visible.
 
-See the screenshots below to better understand. In the first one `fitToScreenView` is set, in the second one it isn't. Notice the white text at the bottom of the screen.
+See the screenshots below to better understand. In the first one `fitToScreenView` is set, in the second one it isn't.
 
 ![fitToScreenView](./images/fitToScreenView.png)
+
+Notice the white text at the bottom of the screen. It is not visible in the second screen, it is visible only when the panel is expanded.
+
+The sample app has [an example specific for this attribute](./sample-app/src/main/java/com/psoffritti/slidingpanel/sampleapp/examplesfittoscreenview/FitToScreenViewExampleActivity.kt).
 
 ```xml
 <com.psoffritti.slidingpanel.SlidingPanel
@@ -162,7 +183,6 @@ See the screenshots below to better understand. In the first one `fitToScreenVie
   ...
 </com.psoffritti.slidingpanel.SlidingPanel>
 ```
-The sample app has [an example specific for this attribute](./sample-app/..).
 
 ### orientation
 **Mandatory: no       -- Value: `vertical` | `horizontal`  -- Default: `vertical`**
@@ -191,3 +211,67 @@ This attribute is used to set the length of the shadow drawn to the top (or left
   ...
 </com.psoffritti.slidingpanel.SlidingPanel>
 ```
+
+## API
+You can interact with `SlidingPanel` programmatically through its API.
+
+### Panel state
+`SlidingPanel` has a state that can be one of: `EXPANDED`, `COLLAPSED` and `SLIDING`.
+
+You can `get` the state but are not allowed to set it directly.
+
+To programmatically change the state of the panel you should use the [`slideTo`](#slideto) method.
+
+### `slideTo`
+This method takes as argument one of the possible states of the panel: `EXPANDED`, `COLLAPSED`. If you try to pass `SLIDING` the panel will throw an `IllegalArgumentException`.
+
+When this method is called the panel will automatically animate to to match the state passed as argument.
+
+### `slideDuration`
+You can set the duration of the slide animation using the `slideDuration` property.
+
+This property affects: 
+- the duration of the slide triggered by `slideTo`.
+- the speed at which the panel autocompletes the slides when the user stops dragging it before reaching the `EXPANDED` or `COLLAPSED` state.
+
+You can use the constants defined in `SlidingPanel` (`SlidingPanel.SLIDE_DURATION_SHORT`, `SlidingPanel.SLIDE_DURATION_LONG`) or set it to an arbitrary duration in millisecond.
+
+```kotlin
+sliding_panel.slideDuration = SlidingPanel.SLIDE_DURATION_SHORT
+sliding_panel.slideDuration = SlidingPanel.SLIDE_DURATION_LONG
+```
+
+### Programmatically set drag view
+Sometimes it is usefull to change the dragView at runtime.
+
+[An example is give in the sample app, in the "advanced example"](./sample-app/src/main/java/com/psoffritti/slidingpanel/sampleapp/examples/advanced). In this case a list is shown when the panel is expanded, therefore the drag view has to be changed. Otherwise the list wouldn't be scrollable.
+
+Use the `setDragView(view: View)` method to programmatically set the drag view.
+
+### Listen to events
+You can listen to slide events, by adding an `OnSlideListener` to the `SlidingPanel`.
+
+```kotlin
+sliding_panel.addSlideListener { slidingPanel, state, currentSlide ->
+  when(state) {
+    PanelState.COLLAPSED -> { }
+    PanelState.EXPANDED -> { }
+    PanelState.SLIDING -> { }
+  }
+}
+```
+or
+
+```kotlin
+sliding_panel.addSlideListener(object : SlidingPanel.OnSlideListener {
+  override fun onSlide(slidingPanel: SlidingPanel, state: PanelState, currentSlide: Float) { }
+})
+```
+
+- The first argument is a referece to the `SlidingPanel` emitting the event.
+- The second argument is the current state of the panel.
+- The third argument is a value between 0 and 1. The value is 0 when the state is `COLLAPSED` and 1 when `EXPANDED`.
+
+---
+
+For any question feel free to [open an issue on the GitHub repository](./issues).

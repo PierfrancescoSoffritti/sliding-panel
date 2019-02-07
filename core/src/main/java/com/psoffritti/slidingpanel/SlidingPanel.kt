@@ -89,10 +89,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
      */
     var slideDuration = SLIDE_DURATION_SHORT
 
-    /**
-     * Sliding panel shadow height in pixels
-     */
-    var elevationShadowLength: Int = 0
+
+    private var slidingPanelShadowLengthPixels: Int = 0
 
     init {
         setWillNotDraw(false)
@@ -106,7 +104,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             fittingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_fitToScreenView, -1)
 
             orientation = if(typedArray.getInt(R.styleable.SlidingPanel_orientation, 0) == 0) Orientation.VERTICAL else Orientation.HORIZONTAL
-            elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingPanel_elevation, resources.getDimensionPixelSize(R.dimen.sp_4dp))
+            slidingPanelShadowLengthPixels = typedArray.getDimensionPixelSize(R.styleable.SlidingPanel_elevation, resources.getDimensionPixelSize(R.dimen.sp_4dp))
         } finally {
             typedArray.recycle()
         }
@@ -261,7 +259,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     }
 
     private fun drawElevationShadow90(canvas: Canvas) {
-        val top = (slidingView.y - elevationShadowLength).toInt()
+        val top = (slidingView.y - slidingPanelShadowLengthPixels).toInt()
         val bottom = slidingView.y.toInt()
         val left = slidingView.left
         val right = slidingView.right
@@ -273,7 +271,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     private fun drawElevationShadow180(canvas: Canvas) {
         val top = slidingView.top
         val bottom = slidingView.bottom
-        val left = (slidingView.x - elevationShadowLength).toInt()
+        val left = (slidingView.x - slidingPanelShadowLengthPixels).toInt()
         val right = slidingView.x.toInt()
 
         elevationShadow180Deg.setBounds(left, top, right, bottom)
@@ -402,7 +400,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
         when (state) {
             PanelState.EXPANDED -> slideTo(1f)
             PanelState.COLLAPSED -> slideTo(0f)
-            PanelState.SLIDING -> { }
+            PanelState.SLIDING -> throw IllegalArgumentException("You are not allowed to set the state to SLIDING. Please use EXPANDED or COLLAPSED")
         }
     }
 
