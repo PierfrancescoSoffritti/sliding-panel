@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
         intent.putExtra(Constants.TITLE.name, getString(R.string.app_name))
         intent.putExtra(Constants.GITHUB_URL.name, "https://github.com/PierfrancescoSoffritti/sliding-panel")
+        intent.putExtra(Constants.HOMEPAGE_URL.name, "https://github.com/PierfrancescoSoffritti/sliding-panel")
+        intent.putExtra(Constants.PLAYSTORE_PACKAGE_NAME.name, "com.psoffritti.slidingpanel.sampleapp")
 
         val examples = arrayOf(
             ExampleActivityDetails(

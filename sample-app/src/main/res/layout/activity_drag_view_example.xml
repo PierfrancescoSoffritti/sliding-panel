@@ -32,7 +32,7 @@
             android:layout_height="150dp"
             android:gravity="center"
             android:text="non sliding view"
-            android:background="#64B5F6"
+            android:background="@color/colorPrimaryDark"
             tools:ignore="HardcodedText" />
 
         <LinearLayout
@@ -47,7 +47,7 @@
                 android:layout_height="100dp"
                 android:gravity="center"
                 android:text="drag view"
-                android:background="#1976D2"
+                android:background="@color/colorAccent"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -56,7 +56,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="placeholder view"
-                android:background="#01579B"
+                android:background="@color/colorPrimary"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>

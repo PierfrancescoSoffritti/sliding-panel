@@ -31,7 +31,7 @@
             android:layout_height="150dp"
             android:gravity="center"
             android:text="non sliding view"
-            android:background="#64B5F6"
+            android:background="@color/colorPrimaryDark"
             tools:ignore="HardcodedText" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="sliding view"
-            android:background="#1976D2"
+            android:background="@color/colorPrimary"
             tools:ignore="HardcodedText" />
 
     </com.psoffritti.slidingpanel.SlidingPanel>

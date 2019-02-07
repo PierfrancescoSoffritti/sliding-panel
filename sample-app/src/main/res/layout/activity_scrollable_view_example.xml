@@ -33,7 +33,7 @@
             android:layout_height="150dp"
             android:gravity="center"
             android:text="non sliding view"
-            android:background="#64B5F6"
+            android:background="@color/colorPrimaryDark"
             tools:ignore="HardcodedText" />
 
         <RelativeLayout
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="#fff">
+            android:background="@android:color/white">
 
             <TextView
                 android:id="@+id/drag_view"
@@ -49,7 +49,7 @@
                 android:layout_height="100dp"
                 android:gravity="center"
                 android:text="drag view"
-                android:background="#1976D2"
+                android:background="@color/colorAccent"
                 tools:ignore="HardcodedText"
 
                 android:layout_alignParentTop="true"

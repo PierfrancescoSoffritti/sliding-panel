@@ -33,7 +33,7 @@
             android:layout_height="150dp"
             android:gravity="center"
             android:text="non sliding view"
-            android:background="#64B5F6"
+            android:background="@color/colorPrimaryDark"
             tools:ignore="HardcodedText" />
 
         <LinearLayout
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="#E57373">
+            android:background="@color/github_black">
 
             <TextView
                 android:id="@+id/drag_view"
@@ -49,7 +49,7 @@
                 android:layout_height="100dp"
                 android:gravity="center"
                 android:text="drag view"
-                android:background="#1976D2"
+                android:background="@color/colorAccent"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -58,8 +58,8 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:text="this text is visible when the panel is collapsed only because this view is passed to app:fitToScreenView"
-                android:textColor="#fff"
-                android:background="#01579B"
+                android:textColor="@android:color/white"
+                android:background="@color/colorPrimary"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
