@@ -1,0 +1,65 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/panel_state_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:gravity="center"
+        android:text="Sliding view COLLAPSED"
+        android:background="@android:color/white"
+        tools:ignore="HardcodedText" />
+
+    <com.psoffritti.slidingpanel.SlidingPanel
+        android:id="@+id/sliding_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        app:orientation="vertical"
+        app:nonSlidingView="@id/non_sliding_view"
+        app:slidingView="@id/sliding_view"
+        app:dragView="@id/drag_view"
+        app:elevation="4dp" >
+
+        <TextView
+            android:id="@+id/non_sliding_view"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="center"
+            android:text="non sliding view"
+            android:background="#64B5F6"
+            tools:ignore="HardcodedText" />
+
+        <LinearLayout
+            android:id="@+id/sliding_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/drag_view"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:text="drag view"
+                android:background="#1976D2"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/placeholder_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="placeholder view"
+                android:background="#01579B"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+    </com.psoffritti.slidingpanel.SlidingPanel>
+</LinearLayout>

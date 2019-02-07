@@ -7,7 +7,9 @@ import com.psoffritti.librarysampleapptemplate.core.Constants
 import com.psoffritti.librarysampleapptemplate.core.SampleAppTemplateActivity
 import com.psoffritti.librarysampleapptemplate.core.utils.ExampleActivityDetails
 import com.psoffritti.slidingpanel.sampleapp.examples.advanced.AdvancedExampleActivity
-import com.psoffritti.slidingpanel.sampleapp.examples.basic.BasicExampleActivity
+import com.psoffritti.slidingpanel.sampleapp.examples.basic.BasicExampleHorizontalActivity
+import com.psoffritti.slidingpanel.sampleapp.examples.basic.BasicExampleVerticalActivity
+import com.psoffritti.slidingpanel.sampleapp.examples.dragview.DragViewExampleActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,9 +23,19 @@ class MainActivity : AppCompatActivity() {
 
         val examples = arrayOf(
             ExampleActivityDetails(
-                R.string.basic_example_activity,
+                R.string.basic_example_vertical,
                 null,
-                BasicExampleActivity::class.java
+                BasicExampleVerticalActivity::class.java
+            ),
+            ExampleActivityDetails(
+                R.string.basic_example_horizontal,
+                null,
+                BasicExampleHorizontalActivity::class.java
+            ),
+            ExampleActivityDetails(
+                R.string.drag_view_example,
+                null,
+                DragViewExampleActivity::class.java
             ),
             ExampleActivityDetails(
                 R.string.advanced_example_activity,
@@ -35,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(Constants.EXAMPLES.name, examples)
 
         startActivity(intent)
-
         finish()
     }
 }

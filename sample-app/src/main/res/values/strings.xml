@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">sliding-panel</string>
-    <string name="basic_example_activity">Basic Example</string>
+    <string name="basic_example_horizontal">Basic Example Horizontal</string>
+    <string name="basic_example_vertical">Basic Example Vertical</string>
     <string name="advanced_example_activity">Advanced Example</string>
+    <string name="drag_view_example">DragView Example</string>
 </resources>
