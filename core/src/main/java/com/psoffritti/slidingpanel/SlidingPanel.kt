@@ -12,7 +12,6 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
-import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.annotation.IdRes
@@ -79,7 +78,6 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     @IdRes private val fittingViewId: Int
     @IdRes private var dragViewId: Int
 
-    private val fitSlidingViewContentToScreen: Boolean
     private var fitScreenApplied = false
 
     private val listeners = HashSet<OnSlideListener>()
@@ -103,9 +101,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             slidingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_slidingView, -1)
             nonSlidingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_nonSlidingView, -1)
             dragViewId = typedArray.getResourceId(R.styleable.SlidingPanel_dragView, -1)
-            fittingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_fitViewToScreen, -1)
+            fittingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_fitToScreenView, -1)
 
-            fitSlidingViewContentToScreen = typedArray.getBoolean(R.styleable.SlidingPanel_fitSlidingContentToScreen, true)
             orientation = if(typedArray.getInt(R.styleable.SlidingPanel_orientation, 0) == 0) Orientation.VERTICAL else Orientation.HORIZONTAL
             elevationShadowLength = typedArray.getDimensionPixelSize(R.styleable.SlidingPanel_elevation, 10)
         } finally {
@@ -116,11 +113,6 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             throw RuntimeException("SlidingPanel, app:slidingView attribute not set. You must set this attribute to the id of the view that you want to be sliding.")
         if (nonSlidingViewId == -1)
             throw RuntimeException("SlidingPanel, app:nonSlidingViewId attribute not set. You must set this attribute to the id of the view that you want to be static.")
-        if (fitSlidingViewContentToScreen && fittingViewId != -1)
-            throw RuntimeException(
-                    "SlidingPanel, app:fitSlidingViewContentToScreen is set to true and app:fitViewToScreen is used."
-                            +" This two attributes are mutually exclusive, you can use only one at a time."
-            )
     }
 
     override fun onAttachedToWindow() {
@@ -321,16 +313,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
         if (fitScreenApplied) return
 
         val side = if (isOrientationVertical()) Side.BOTTOM else Side.RIGHT
-        if (fitSlidingViewContentToScreen) {
-            if (slidingView is ViewGroup) {
-                for (i: Int in 0 until (slidingView as ViewGroup).childCount)
-                    ViewUtils.setMargin((slidingView as ViewGroup).getChildAt(i), maxSlide.toInt(), side)
-            } else {
-                ViewUtils.setPadding(slidingView, maxSlide.toInt(), side)
-            }
-        } else if (fittingView != null) {
+        if (fittingView != null)
             ViewUtils.setMargin(fittingView!!, maxSlide.toInt(), side)
-        }
 
         fitScreenApplied = true
     }
