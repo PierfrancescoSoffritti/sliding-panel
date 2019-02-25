@@ -3,7 +3,8 @@
 <img align="right" width="200px" src="./images/icon_512.png" title="logo" />
 
 [![Build Status](https://travis-ci.com/PierfrancescoSoffritti/sliding-panel.svg?branch=master)](https://travis-ci.com/PierfrancescoSoffritti/sliding-panel) 
-[![core](https://api.bintray.com/packages/pierfrancescosoffritti/maven/sliding-panel%3Acore/images/download.svg) ](https://bintray.com/pierfrancescosoffritti/maven/sliding-panel%3Acore/_latestVersion)
+[![core](https://api.bintray.com/packages/pierfrancescosoffritti/maven/sliding-panel%3Acore/images/download.svg) ](https://bintray.com/pierfrancescosoffritti/maven/sliding-panel%3Acore/_latestVersion) [![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-sliding--panel-green.svg?style=flat )]( https://android-arsenal.com/details/1/7532 )
+
 [![share on twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Custom%20View%20implementing%20a%20sliding%20panel%20that%20is%20part%20of%20the%20view%20hierarchy,%20not%20above%20it:&url=https://github.com/PierfrancescoSoffritti/sliding-panel&via=psoffritti&hashtags=opensource,slidingpanel,bottomsheet,androiddev)
 
 A ViewGroup that implements a sliding panel that is part of the view hierarchy, not above it.
