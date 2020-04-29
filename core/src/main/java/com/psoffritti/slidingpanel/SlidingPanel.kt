@@ -57,6 +57,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     var state = PanelState.COLLAPSED
         private set
 
+    private var previousState: PanelState ?= null
+
     // A value between 1.0 and 0.0 (0.0 = COLLAPSED, 1.0 = EXPANDED)
     private var currentSlide = 0.0f
 
@@ -379,7 +381,10 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             slidingView.x = currentSlideNonNormalized
 
         invalidate()
-        notifyListeners(currentSlide)
+        if (state != previousState || state == PanelState.SLIDING) {
+            notifyListeners(currentSlide)
+            previousState = state
+        }
     }
 
     /**
