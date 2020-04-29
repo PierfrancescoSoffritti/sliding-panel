@@ -72,6 +72,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     // touch coordinates of the first touch gesture (eg. at the beginning of a swipe gesture)
     private var coordOfFirstTouch = 0f
 
+    private var isTouchGoneOutside = false
+
     private var isSliding = false
 
     private val elevationShadow90Deg = ContextCompat.getDrawable(getContext(), R.drawable.sp_elevation_shadow_90_deg)!!
@@ -145,6 +147,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             MotionEvent.ACTION_DOWN -> {
                 coordOfFirstTouch = if (isOrientationVertical()) currentTouchEvent.y else currentTouchEvent.x
                 slidingViewPosAtFirstTouch = if (isOrientationVertical()) slidingView.y else slidingView.x
+                isTouchGoneOutside = false
                 return false
             }
             MotionEvent.ACTION_MOVE -> {
@@ -162,6 +165,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(touchEvent: MotionEvent): Boolean {
+        if (isTouchGoneOutside)
+            return false
         val currentTouchEvent = if (isOrientationVertical()) touchEvent.y else touchEvent.x
 
         when (touchEvent.action) {
@@ -169,14 +174,29 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
                 if (state == PanelState.SLIDING)
                     completeSlide(currentSlide, if (currentTouchEvent > coordOfFirstTouch) SlidingDirection.DOWN_OR_RIGHT else SlidingDirection.UP_OR_LEFT)
             MotionEvent.ACTION_MOVE -> {
-                if (!isSliding && !dragView.isMotionEventWithinBounds(touchEvent))
+                val isTouchGoneOutside = !dragView.isMotionEventWithinBounds(touchEvent)
+                if (!isSliding && isTouchGoneOutside) {
+                    if (isTouchGoneOutside) {
+                        val preventiveTouch = MotionEvent.obtain(touchEvent).apply {
+                            action = MotionEvent.ACTION_OUTSIDE
+                        }
+                        return dispatchTouchEvent(preventiveTouch)
+                    }
                     return false
+                }
 
                 val touchOffset: Float = coordOfFirstTouch - currentTouchEvent
                 var finalPosition: Float = slidingViewPosAtFirstTouch - touchOffset
 
                 finalPosition = Utils.clamp(finalPosition, minSlide, maxSlide)
                 updateState(Utils.normalizeScreenCoordinate(finalPosition, maxSlide))
+            }
+            MotionEvent.ACTION_OUTSIDE -> {
+                if (state == PanelState.SLIDING) {
+                    isTouchGoneOutside = true
+                    completeSlide(currentSlide, if (currentTouchEvent > coordOfFirstTouch) SlidingDirection.DOWN_OR_RIGHT else SlidingDirection.UP_OR_LEFT)
+                    return isTouchGoneOutside
+                }
             }
         }
         return true
