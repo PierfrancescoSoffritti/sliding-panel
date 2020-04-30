@@ -8,10 +8,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import androidx.core.content.ContextCompat
 import android.util.AttributeSet
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewConfiguration
+import android.view.*
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.annotation.IdRes
@@ -23,6 +20,7 @@ import com.psoffritti.slidingpanel.utils.Extensions.isMotionEventWithinBounds
 import java.lang.Float.isNaN
 
 import java.util.HashSet
+import kotlin.math.abs
 
 /**
  * Custom View implementing a sliding panel (bottom sheet pattern) that is part of the view hierarchy, not above it.
@@ -57,6 +55,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     var state = PanelState.COLLAPSED
         private set
 
+    private var previousState: PanelState ?= null
+
     // A value between 1.0 and 0.0 (0.0 = COLLAPSED, 1.0 = EXPANDED)
     private var currentSlide = 0.0f
 
@@ -69,6 +69,12 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     private var slidingViewPosAtFirstTouch = 0f
     // touch coordinates of the first touch gesture (eg. at the beginning of a swipe gesture)
     private var coordOfFirstTouch = 0f
+    // Helper for computing gesture direction
+    private var velocityTracker: VelocityTracker? = null
+    // Last saved direction to complete slide
+    private var lastDirection: SlidingDirection? = null
+
+    private var isTouchGoneOutside = false
 
     private var isSliding = false
 
@@ -143,6 +149,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             MotionEvent.ACTION_DOWN -> {
                 coordOfFirstTouch = if (isOrientationVertical()) currentTouchEvent.y else currentTouchEvent.x
                 slidingViewPosAtFirstTouch = if (isOrientationVertical()) slidingView.y else slidingView.x
+                isTouchGoneOutside = false
                 return false
             }
             MotionEvent.ACTION_MOVE -> {
@@ -158,17 +165,39 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "Recycle")
     override fun onTouchEvent(touchEvent: MotionEvent): Boolean {
+        if (isTouchGoneOutside)
+            return false
         val currentTouchEvent = if (isOrientationVertical()) touchEvent.y else touchEvent.x
 
         when (touchEvent.action) {
-            MotionEvent.ACTION_UP ->
-                if (state == PanelState.SLIDING)
-                    completeSlide(currentSlide, if (currentTouchEvent > coordOfFirstTouch) SlidingDirection.DOWN_OR_RIGHT else SlidingDirection.UP_OR_LEFT)
+            MotionEvent.ACTION_DOWN -> {
+                velocityTracker?.clear()
+                velocityTracker = velocityTracker ?: VelocityTracker.obtain()
+                velocityTracker?.addMovement(touchEvent)
+            }
             MotionEvent.ACTION_MOVE -> {
-                if (!isSliding && !dragView.isMotionEventWithinBounds(touchEvent))
+                velocityTracker?.run {
+                    val pointerId = touchEvent.getPointerId(touchEvent.actionIndex)
+                    addMovement(touchEvent)
+                    computeCurrentVelocity(1000)
+
+                    val xVelocity = getXVelocity(pointerId)
+                    val yVelocity = getYVelocity(pointerId)
+
+                    lastDirection = computeDirection(xVelocity, yVelocity)
+                }
+                val isTouchGoneOutside = !dragView.isMotionEventWithinBounds(touchEvent)
+                if (!isSliding && isTouchGoneOutside) {
+                    if (isTouchGoneOutside) {
+                        val preventiveTouch = MotionEvent.obtain(touchEvent).apply {
+                            action = MotionEvent.ACTION_OUTSIDE
+                        }
+                        return dispatchTouchEvent(preventiveTouch)
+                    }
                     return false
+                }
 
                 val touchOffset: Float = coordOfFirstTouch - currentTouchEvent
                 var finalPosition: Float = slidingViewPosAtFirstTouch - touchOffset
@@ -176,8 +205,32 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
                 finalPosition = Utils.clamp(finalPosition, minSlide, maxSlide)
                 updateState(Utils.normalizeScreenCoordinate(finalPosition, maxSlide))
             }
+            MotionEvent.ACTION_UP -> {
+                if (state == PanelState.SLIDING)
+                    completeSlide(currentSlide, lastDirection)
+                velocityTracker?.recycle()
+                velocityTracker = null
+            }
+            MotionEvent.ACTION_OUTSIDE -> {
+                isTouchGoneOutside = true
+                completeSlide(currentSlide, lastDirection)
+                return true
+            }
         }
         return true
+    }
+
+    private fun computeDirection(xVelocity: Float, yVelocity: Float): SlidingDirection {
+       return if (abs(xVelocity) > abs(yVelocity))
+            if (xVelocity > 0)
+                SlidingDirection.DOWN_OR_RIGHT // right
+            else
+                SlidingDirection.UP_OR_LEFT // left
+        else
+            if (yVelocity > 0)
+                SlidingDirection.DOWN_OR_RIGHT // down
+            else
+                SlidingDirection.UP_OR_LEFT // up
     }
 
     override fun performClick(): Boolean {
@@ -341,7 +394,7 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
         va.start()
     }
 
-    private fun completeSlide(currentSlide: Float, direction: SlidingDirection) {
+    private fun completeSlide(currentSlide: Float, direction: SlidingDirection?) {
         val targetSlide: Float = when (direction) {
             SlidingDirection.UP_OR_LEFT -> if (currentSlide > 0.1)
                 minSlide
@@ -379,7 +432,10 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             slidingView.x = currentSlideNonNormalized
 
         invalidate()
-        notifyListeners(currentSlide)
+        if (state != previousState || state == PanelState.SLIDING) {
+            notifyListeners(currentSlide)
+            previousState = state
+        }
     }
 
     /**
