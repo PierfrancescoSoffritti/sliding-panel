@@ -1,7 +1,7 @@
 package com.psoffritti.slidingpanel
 
 enum class PanelState {
-    EXPANDED, COLLAPSED, SLIDING
+    EXPANDED, COLLAPSED, SLIDING //TODO swap expanded/collapsed
 }
 
 internal enum class SlidingDirection {
