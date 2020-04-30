@@ -6,20 +6,18 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.*
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.annotation.IdRes
-
+import androidx.core.content.ContextCompat
+import com.psoffritti.slidingpanel.utils.Extensions.isMotionEventWithinBounds
+import com.psoffritti.slidingpanel.utils.Extensions.isOrientationVertical
 import com.psoffritti.slidingpanel.utils.Utils
 import com.psoffritti.slidingpanel.utils.ViewUtils
-import com.psoffritti.slidingpanel.utils.Extensions.isOrientationVertical
-import com.psoffritti.slidingpanel.utils.Extensions.isMotionEventWithinBounds
 import java.lang.Float.isNaN
-
-import java.util.HashSet
+import java.util.*
 import kotlin.math.abs
 
 /**
@@ -30,8 +28,8 @@ import kotlin.math.abs
 class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
 
     companion object {
-        const val  SLIDE_DURATION_SHORT = 300L
-        const val  SLIDE_DURATION_LONG = 600L
+        const val SLIDE_DURATION_SHORT = 300L
+        const val SLIDE_DURATION_LONG = 600L
 
         // the color of the shade that fades over the nonSlidingView view when the slidingView slides over it
         private const val SHADE_COLOR_WITH_ALPHA = -0x67000000
@@ -55,22 +53,26 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     var state = PanelState.COLLAPSED
         private set
 
-    private var previousState: PanelState ?= null
+    private var previousState: PanelState? = null
 
     // A value between 1.0 and 0.0 (0.0 = COLLAPSED, 1.0 = EXPANDED)
     private var currentSlide = 0.0f
 
     // the maximum amount the slidingView can slide. It corresponds to the height (width) of the nonSlidingView.
     private var maxSlide = 0f
+
     // the minimum coordinate the slidingView can slide to. It corresponds to the top (right) of the nonSlidingView.
     private var minSlide = 0f
 
     // position of the slidingView recorded when the user touches the screen for the first time (eg. at the beginning of a swipe gesture)
     private var slidingViewPosAtFirstTouch = 0f
+
     // touch coordinates of the first touch gesture (eg. at the beginning of a swipe gesture)
     private var coordOfFirstTouch = 0f
+
     // Helper for computing gesture direction
     private var velocityTracker: VelocityTracker? = null
+
     // Last saved direction to complete slide
     private var lastDirection: SlidingDirection? = null
 
@@ -78,13 +80,22 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
 
     private var isSliding = false
 
-    private val elevationShadow90Deg = ContextCompat.getDrawable(getContext(), R.drawable.sp_elevation_shadow_90_deg)!!
-    private val elevationShadow180Deg = ContextCompat.getDrawable(getContext(), R.drawable.sp_elevation_shadow_180_deg)!!
+    private val elevationShadow90Deg =
+        ContextCompat.getDrawable(getContext(), R.drawable.sp_elevation_shadow_90_deg)!!
+    private val elevationShadow180Deg =
+        ContextCompat.getDrawable(getContext(), R.drawable.sp_elevation_shadow_180_deg)!!
 
-    @IdRes private val slidingViewId: Int
-    @IdRes private val nonSlidingViewId: Int
-    @IdRes private val fittingViewId: Int
-    @IdRes private var dragViewId: Int
+    @IdRes
+    private val slidingViewId: Int
+
+    @IdRes
+    private val nonSlidingViewId: Int
+
+    @IdRes
+    private val fittingViewId: Int
+
+    @IdRes
+    private var dragViewId: Int
 
     private var fitScreenApplied = false
 
@@ -109,8 +120,13 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             dragViewId = typedArray.getResourceId(R.styleable.SlidingPanel_dragView, -1)
             fittingViewId = typedArray.getResourceId(R.styleable.SlidingPanel_fitToScreenView, -1)
 
-            orientation = if(typedArray.getInt(R.styleable.SlidingPanel_orientation, 0) == 0) Orientation.VERTICAL else Orientation.HORIZONTAL
-            slidingPanelShadowLengthPixels = typedArray.getDimensionPixelSize(R.styleable.SlidingPanel_elevation, resources.getDimensionPixelSize(R.dimen.sp_4dp))
+            orientation = if (typedArray.getInt(
+                    R.styleable.SlidingPanel_orientation, 0
+                ) == 0
+            ) Orientation.VERTICAL else Orientation.HORIZONTAL
+            slidingPanelShadowLengthPixels = typedArray.getDimensionPixelSize(
+                R.styleable.SlidingPanel_elevation, resources.getDimensionPixelSize(R.dimen.sp_4dp)
+            )
         } finally {
             typedArray.recycle()
         }
@@ -127,16 +143,18 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
         if (childCount != 2)
             throw IllegalStateException("SlidingPanel must have exactly 2 children. But has $childCount")
 
-        slidingView = findViewById(slidingViewId) ?: throw RuntimeException("SlidingPanel, slidingView is null.")
-        nonSlidingView = findViewById(nonSlidingViewId) ?: throw RuntimeException("SlidingPanel, nonSlidingView is null.")
+        slidingView = findViewById(slidingViewId)
+            ?: throw RuntimeException("SlidingPanel, slidingView is null.")
+        nonSlidingView = findViewById(nonSlidingViewId)
+            ?: throw RuntimeException("SlidingPanel, nonSlidingView is null.")
 
-        dragView = findViewById(dragViewId) ?:
-                if (dragViewId != -1) throw RuntimeException("SlidingPanel, can't find dragView.")
-                else slidingView
+        dragView = findViewById(dragViewId)
+            ?: if (dragViewId != -1) throw RuntimeException("SlidingPanel, can't find dragView.")
+            else slidingView
 
-        fittingView = findViewById(fittingViewId) ?:
-                if(fittingViewId != -1) throw RuntimeException("SlidingPanel, can't find fittingView.")
-                else null
+        fittingView = findViewById(fittingViewId)
+            ?: if (fittingViewId != -1) throw RuntimeException("SlidingPanel, can't find fittingView.")
+            else null
     }
 
     override fun onInterceptTouchEvent(currentTouchEvent: MotionEvent): Boolean {
@@ -147,13 +165,16 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
 
         when (currentTouchEvent.action) {
             MotionEvent.ACTION_DOWN -> {
-                coordOfFirstTouch = if (isOrientationVertical()) currentTouchEvent.y else currentTouchEvent.x
-                slidingViewPosAtFirstTouch = if (isOrientationVertical()) slidingView.y else slidingView.x
+                coordOfFirstTouch =
+                    if (isOrientationVertical()) currentTouchEvent.y else currentTouchEvent.x
+                slidingViewPosAtFirstTouch =
+                    if (isOrientationVertical()) slidingView.y else slidingView.x
                 isTouchGoneOutside = false
                 return false
             }
             MotionEvent.ACTION_MOVE -> {
-                val currentTouch: Float = if (isOrientationVertical()) currentTouchEvent.y else currentTouchEvent.x
+                val currentTouch: Float =
+                    if (isOrientationVertical()) currentTouchEvent.y else currentTouchEvent.x
                 val diff: Float = Math.abs(currentTouch - coordOfFirstTouch)
                 isSliding = diff > touchSlop / 4
                 return isSliding
@@ -211,17 +232,19 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
                 velocityTracker?.recycle()
                 velocityTracker = null
             }
+            MotionEvent.ACTION_CANCEL -> {
+                completeSlide(currentSlide, lastDirection)
+            }
             MotionEvent.ACTION_OUTSIDE -> {
                 isTouchGoneOutside = true
                 completeSlide(currentSlide, lastDirection)
-                return true
             }
         }
         return true
     }
 
     private fun computeDirection(xVelocity: Float, yVelocity: Float): SlidingDirection {
-       return if (abs(xVelocity) > abs(yVelocity))
+        return if (abs(xVelocity) > abs(yVelocity))
             if (xVelocity > 0)
                 SlidingDirection.DOWN_OR_RIGHT // right
             else
@@ -253,18 +276,29 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
 
             val layoutParams = child.layoutParams as FrameLayout.LayoutParams
 
-            slidingPanelWidth = Math.max(slidingPanelWidth, child.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin)
-            slidingPanelHeight = Math.max(slidingPanelHeight, child.measuredHeight + layoutParams.topMargin + layoutParams.bottomMargin)
+            slidingPanelWidth =
+                slidingPanelWidth.coerceAtLeast(child.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin)
+            slidingPanelHeight =
+                slidingPanelHeight.coerceAtLeast(child.measuredHeight + layoutParams.topMargin + layoutParams.bottomMargin)
 
-            childrenCombinedMeasuredStates = View.combineMeasuredStates(childrenCombinedMeasuredStates, child.measuredState)
+            childrenCombinedMeasuredStates =
+                View.combineMeasuredStates(childrenCombinedMeasuredStates, child.measuredState)
         }
 
-        slidingPanelHeight = Math.max(slidingPanelHeight, suggestedMinimumHeight)
-        slidingPanelWidth = Math.max(slidingPanelWidth, suggestedMinimumWidth)
+        slidingPanelHeight = slidingPanelHeight.coerceAtLeast(suggestedMinimumHeight)
+        slidingPanelWidth = slidingPanelWidth.coerceAtLeast(suggestedMinimumWidth)
 
         setMeasuredDimension(
-                View.resolveSizeAndState(slidingPanelWidth, widthMeasureSpec, childrenCombinedMeasuredStates),
-                View.resolveSizeAndState(slidingPanelHeight, heightMeasureSpec, childrenCombinedMeasuredStates)
+            View.resolveSizeAndState(
+                slidingPanelWidth,
+                widthMeasureSpec,
+                childrenCombinedMeasuredStates
+            ),
+            View.resolveSizeAndState(
+                slidingPanelHeight,
+                heightMeasureSpec,
+                childrenCombinedMeasuredStates
+            )
         )
     }
 
@@ -297,9 +331,20 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             else
                 currentLeft = onLayoutContainerRect.right
 
-            Gravity.apply(childLayoutParams.gravity, childWidth, childHeight, onLayoutContainerRect, onLayoutChildRect)
+            Gravity.apply(
+                childLayoutParams.gravity,
+                childWidth,
+                childHeight,
+                onLayoutContainerRect,
+                onLayoutChildRect
+            )
 
-            child.layout(onLayoutChildRect.left, onLayoutChildRect.top, onLayoutChildRect.right, onLayoutChildRect.bottom)
+            child.layout(
+                onLayoutChildRect.left,
+                onLayoutChildRect.top,
+                onLayoutChildRect.right,
+                onLayoutChildRect.bottom
+            )
         }
     }
 
@@ -342,7 +387,8 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             nonSlidingView -> {
                 maxSlide =
                     if (isOrientationVertical()) nonSlidingView.height.toFloat() else nonSlidingView.width.toFloat()
-                minSlide = if (isOrientationVertical()) nonSlidingView.top.toFloat() else nonSlidingView.left.toFloat()
+                minSlide =
+                    if (isOrientationVertical()) nonSlidingView.top.toFloat() else nonSlidingView.left.toFloat()
 
                 canvas.getClipBounds(drawChildChildTempRect)
                 result = super.drawChild(canvas, child, drawingTime)
@@ -473,7 +519,11 @@ class SlidingPanel(context: Context, attrs: AttributeSet? = null) : FrameLayout(
 
     fun addSlideListener(callback: (slidingPanel: SlidingPanel, state: PanelState, currentSlide: Float) -> Unit) {
         addSlideListener(object : OnSlideListener {
-            override fun onSlide(slidingPanel: SlidingPanel, state: PanelState, currentSlide: Float) = callback(slidingPanel, state, currentSlide)
+            override fun onSlide(
+                slidingPanel: SlidingPanel,
+                state: PanelState,
+                currentSlide: Float
+            ) = callback(slidingPanel, state, currentSlide)
         })
     }
 
