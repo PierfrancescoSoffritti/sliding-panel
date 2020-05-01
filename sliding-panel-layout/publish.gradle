@@ -1,5 +1,5 @@
 apply plugin: 'com.jfrog.bintray'
-//apply from: './bintray_creds_check.gradle'
+apply from: './bintray_check_credentials.gradle'
 
 group = 'com.akbolatss.workshop'
 version versions.publishVersion
@@ -14,10 +14,10 @@ project.ext {
 }
 
 
-//def (userId, apiKey) = getBintrayUserIdAndApiKey()
+def (userId, apiKey) = getBintrayUserIdAndApiKey()
 bintray {
-    user("")
-    key("")
+    user(userId)
+    key(apiKey)
     publications = ['mavenPublish']
     configurations = ['archives']
     override = true

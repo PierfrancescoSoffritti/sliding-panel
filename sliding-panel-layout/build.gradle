@@ -31,4 +31,4 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$versions.androidxCore"
 }
 
-//apply from: 'publish.gradle'
+apply from: 'publish.gradle'
