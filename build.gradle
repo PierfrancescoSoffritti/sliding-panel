@@ -1,17 +1,13 @@
-apply from: './dependencies.gradle'
-
 buildscript {
     apply from: './dependencies.gradle'
     repositories {
         google()
         jcenter()
-        
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$versions.gradlePlugin"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-
-        classpath "com.novoda:bintray-release:$versions.bintrayPlugin"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$versions.bintrayPlugin"
     }
 }
 
@@ -24,4 +20,8 @@ allprojects {
     tasks.withType(Javadoc).all {
         enabled = false
     }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/empty_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="100dp"
-            android:gravity="center"
-            android:text="Click me"
             android:background="@android:color/white"
+            android:gravity="center"
+            android:padding="100dp"
+            android:text="Click me"
             tools:ignore="HardcodedText" />
 
-        <com.psoffritti.slidingpanel.SlidingPanel
+        <com.akbolatss.workshop.slidingpanel.SlidingPanel
             android:id="@+id/sliding_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
 
-            app:nonSlidingView="@id/non_sliding_view"
-            app:slidingView="@id/sliding_view"
             app:dragView="@id/collapsed_view"
+            app:elevation="4dp"
             app:fitToScreenView="@id/collapsed_view"
-            app:elevation="4dp" >
+            app:nonSlidingView="@id/non_sliding_view"
+            app:slidingView="@id/sliding_view">
 
             <include
-                layout="@layout/placeholder_layout"
                 android:id="@+id/non_sliding_view"
+                layout="@layout/placeholder_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -43,7 +42,7 @@
                 android:id="@+id/sliding_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </com.psoffritti.slidingpanel.SlidingPanel>
+        </com.akbolatss.workshop.slidingpanel.SlidingPanel>
 
     </LinearLayout>
 
@@ -51,9 +50,9 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_shuffle_black_24dp"
-        android:tint="@android:color/white"
-        android:layout_gravity="center | bottom" />
+        android:tint="@android:color/white" />
 
 </FrameLayout>

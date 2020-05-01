@@ -1,1 +1,3 @@
-include ':sample-app', ':core'
+//rootProject.name = 'sliding-panel'
+include ':sample-app'
+include ':sliding-panel-layout'

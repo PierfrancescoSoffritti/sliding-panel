@@ -1,0 +1,27 @@
+if (!project.rootProject.file('local.properties').exists()) {
+    println "Not applying install.gradle"
+    return
+}
+
+def getBintrayUserIdAndApiKey() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    def user = properties.getProperty("bintray.user")
+    def key = properties.getProperty("bintray.apikey")
+
+    if (user == null || user.isEmpty() ||
+            key == null || key.isEmpty()) {
+        throw new IllegalStateException("Must specify Bintray user/API key in your local.properties.")
+    }
+
+    return [user, key]
+}
+
+if (versions == null || versions.publishVersion == null) {
+    throw new IllegalStateException("Unable to reference publishVersion")
+}
+
+ext {
+    getBintrayUserIdAndApiKey = this.&getBintrayUserIdAndApiKey
+}

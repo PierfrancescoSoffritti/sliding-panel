@@ -30,9 +30,9 @@ The sliding view can be **collapsed** or **expanded**.
 <img width="250px" src="./images/sliding_panel.gif" title="logo" />
 
 ## Sample app
-You can download the apk of the sample app [at this link](./sample-app/apk), or [on the PlayStore](https://play.google.com/store/apps/details?id=com.psoffritti.slidingpanel.sampleapp).
+You can download the apk of the sample app [at this link](./sample-app/apk), or [on the PlayStore](https://play.google.com/store/apps/details?id=com.akbolatss.workshop.slidingpanel.sampleapp).
 
-<a href='https://play.google.com/store/apps/details?id=com.psoffritti.slidingpanel.sampleapp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+<a href='https://play.google.com/store/apps/details?id=com.akbolatss.workshop.slidingpanel.sampleapp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
     <img width='200px' alt='Get it on Google Play'
          src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/>
 </a>
@@ -48,7 +48,7 @@ The minimum API level supported by this library is API 15.
 
 ```
 dependencies {
-  implementation 'com.psoffritti.slidingpanel:core:1.0.0'
+  implementation 'com.akbolatss.workshop.slidingpanel:core:1.0.0'
 }
 ```
 
@@ -56,7 +56,7 @@ dependencies {
 In order to start using the library you need to add a `SlidingPanel` to your layout.
 
 ```xml
-<com.psoffritti.slidingpanel.SlidingPanel
+<com.akbolatss.workshop.slidingpanel.SlidingPanel
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/sliding_panel"
@@ -84,7 +84,7 @@ In order to start using the library you need to add a `SlidingPanel` to your lay
     android:text="sliding view"
     android:background="#e57373" />
 
-</com.psoffritti.slidingpanel.SlidingPanel>
+</com.akbolatss.workshop.slidingpanel.SlidingPanel>
 ```
 
 `non_sliding_view` and `sliding_view` can be whatever View or ViewGroup you need.
@@ -127,12 +127,12 @@ sliding_panel.addSlideListener { slidingPanel, state, currentSlide ->
 This mandatory attribute is used to tell `SlidingPanel` which of its two children is the sliding view. If this attribute is not set `SlidingPanel` will throw an Excpetion.
 
 ```xml
-<com.psoffritti.slidingpanel.SlidingPanel
+<com.akbolatss.workshop.slidingpanel.SlidingPanel
   ...
   app:slidingView="@id/sliding_view" >
 
   ...
-</com.psoffritti.slidingpanel.SlidingPanel>
+</com.akbolatss.workshop.slidingpanel.SlidingPanel>
 ```
 
 ### nonSlidingView
@@ -141,12 +141,12 @@ This mandatory attribute is used to tell `SlidingPanel` which of its two childre
 This mandatory attribute is used to tell `SlidingPanel` which of its two children is the non sliding view. If this attribute is not set `SlidingPanel` will throw an Excpetion.
 
 ```xml
-<com.psoffritti.slidingpanel.SlidingPanel
+<com.akbolatss.workshop.slidingpanel.SlidingPanel
   ...
   app:nonSlidingView="@id/non_sliding_view" >
 
   ...
-</com.psoffritti.slidingpanel.SlidingPanel>
+</com.akbolatss.workshop.slidingpanel.SlidingPanel>
 ```
 
 ### dragView
@@ -157,12 +157,12 @@ This attribute is used to tell `SlidingPanel` which View should be used to drag 
 Note that if the whole panel is draggable it won't be possible to use scrollable views inside the sliding view.
 
 ```xml
-<com.psoffritti.slidingpanel.SlidingPanel
+<com.akbolatss.workshop.slidingpanel.SlidingPanel
   ...
   app:dragView="@id/drag_view" >
 
   ...
-</com.psoffritti.slidingpanel.SlidingPanel>
+</com.akbolatss.workshop.slidingpanel.SlidingPanel>
 ```
 
 ### fitToScreenView
@@ -181,12 +181,12 @@ Notice the white text at the bottom of the screen. It is not visible in the seco
 The sample app has [an example specific for this attribute](./sample-app/src/main/java/com/psoffritti/slidingpanel/sampleapp/examplesfittoscreenview/FitToScreenViewExampleActivity.kt).
 
 ```xml
-<com.psoffritti.slidingpanel.SlidingPanel
+<com.akbolatss.workshop.slidingpanel.SlidingPanel
   ...
   app:fitToScreenView="@id/fit_to_screen_view" >
 
   ...
-</com.psoffritti.slidingpanel.SlidingPanel>
+</com.akbolatss.workshop.slidingpanel.SlidingPanel>
 ```
 
 ### orientation
@@ -195,12 +195,12 @@ The sample app has [an example specific for this attribute](./sample-app/src/mai
 This attribute is used to set the orientation of `SlidingPanel` in the same way that it is used for a `LinearLayout`. By default it is set to `vertical`.
 
 ```xml
-<com.psoffritti.slidingpanel.SlidingPanel
+<com.akbolatss.workshop.slidingpanel.SlidingPanel
   ...
   app:orientation="horizontal" >
 
   ...
-</com.psoffritti.slidingpanel.SlidingPanel>
+</com.akbolatss.workshop.slidingpanel.SlidingPanel>
 ```
 
 ### elevation
@@ -209,12 +209,12 @@ This attribute is used to set the orientation of `SlidingPanel` in the same way 
 This attribute is used to set the length of the shadow drawn to the top (or left) side of the sliding view.
 
 ```xml
-<com.psoffritti.slidingpanel.SlidingPanel
+<com.akbolatss.workshop.slidingpanel.SlidingPanel
   ...
   app:elevation="10dp" >
 
   ...
-</com.psoffritti.slidingpanel.SlidingPanel>
+</com.akbolatss.workshop.slidingpanel.SlidingPanel>
 ```
 
 ## API

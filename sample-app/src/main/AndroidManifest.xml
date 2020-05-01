@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.psoffritti.slidingpanel.sampleapp">
+    package="com.akbolatss.workshop.slidingpanel.sampleapp">
 
     <application
         android:allowBackup="true"
@@ -9,19 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.akbolatss.workshop.slidingpanel.sampleapp.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".examples.advanced.AdvancedExampleActivity" android:theme="@style/AppTheme_Actionbar" />
-        <activity android:name=".examples.scrollableview.ScrollableViewExampleActivity" />
-        <activity android:name=".examples.fittoscreenview.FitToScreenViewExampleActivity" />
-        <activity android:name=".examples.dragview.DragViewExampleActivity" />
-        <activity android:name=".examples.basic.BasicExampleVerticalActivity" />
-        <activity android:name=".examples.basic.BasicExampleHorizontalActivity" />
+        <activity android:name="com.akbolatss.workshop.slidingpanel.sampleapp.examples.advanced.AdvancedExampleActivity" android:theme="@style/AppTheme_Actionbar" />
+        <activity android:name="com.akbolatss.workshop.slidingpanel.sampleapp.examples.scrollableview.ScrollableViewExampleActivity" />
+        <activity android:name="com.akbolatss.workshop.slidingpanel.sampleapp.examples.fittoscreenview.FitToScreenViewExampleActivity" />
+        <activity android:name="com.akbolatss.workshop.slidingpanel.sampleapp.examples.dragview.DragViewExampleActivity" />
+        <activity android:name="com.akbolatss.workshop.slidingpanel.sampleapp.examples.basic.BasicExampleVerticalActivity" />
+        <activity android:name="com.akbolatss.workshop.slidingpanel.sampleapp.examples.basic.BasicExampleHorizontalActivity" />
         <activity android:name="com.psoffritti.librarysampleapptemplate.core.SampleAppTemplateActivity" />
     </application>
 
