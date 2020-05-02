@@ -180,7 +180,7 @@ The sample app has [an example specific for this attribute](./sample-app/src/mai
 ```
 
 ### slidingState
-**Mandatory: no       -- Value: `expanded` | `collapsed`  -- Default: `expanded`**
+**Mandatory: no       -- Value: `expanded` | `collapsed`  -- Default: `collapsed`**
 
 This attribute is used to set initial state of `SlidingPanelLayout`. By default it is set to `expanded`.
 
