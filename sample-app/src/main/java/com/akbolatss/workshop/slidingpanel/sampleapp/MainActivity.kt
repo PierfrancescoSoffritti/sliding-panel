@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, SampleAppTemplateActivity::class.java)
 
         intent.putExtra(Constants.TITLE.name, getString(R.string.app_name))
-        intent.putExtra(Constants.GITHUB_URL.name, "https://github.com/PierfrancescoSoffritti/sliding-panel")
-        intent.putExtra(Constants.HOMEPAGE_URL.name, "https://github.com/PierfrancescoSoffritti/sliding-panel/blob/master/README.md")
+        intent.putExtra(Constants.GITHUB_URL.name, "https://github.com/iRYO400/sliding-panel")
+        intent.putExtra(Constants.HOMEPAGE_URL.name, "https://github.com/iRYO400/sliding-panel/blob/master/README.md")
         intent.putExtra(Constants.PLAYSTORE_PACKAGE_NAME.name, "com.akbolatss.workshop.slidingpanel.sampleapp")
 
         val examples = arrayOf(
