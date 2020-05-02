@@ -13,7 +13,7 @@ class AdvancedExampleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_advanced_example)
 
         empty_view.setOnClickListener {
-            if (sliding_panel.state == PanelState.COLLAPSED)
+            if (sliding_panel.state == PanelState.EXPANDED)
                 supportActionBar?.hide()
             else
                 supportActionBar?.show()
@@ -39,8 +39,8 @@ class AdvancedExampleActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(sliding_panel.state == PanelState.EXPANDED)
-            sliding_panel.slideTo(PanelState.COLLAPSED)
+        if(sliding_panel.state == PanelState.COLLAPSED)
+            sliding_panel.slideTo(PanelState.EXPANDED)
         else
             super.onBackPressed()
     }

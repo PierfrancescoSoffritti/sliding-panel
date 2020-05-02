@@ -1,7 +1,7 @@
 package com.akbolatss.workshop.slidingpanel
 
 enum class PanelState {
-    EXPANDED, COLLAPSED, SLIDING //TODO swap expanded/collapsed
+    COLLAPSED, EXPANDED, SLIDING
 }
 
 internal enum class SlidingDirection {

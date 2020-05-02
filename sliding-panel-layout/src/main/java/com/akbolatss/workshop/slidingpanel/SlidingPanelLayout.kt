@@ -52,7 +52,7 @@ class SlidingPanelLayout(
 
     internal val orientation: Orientation
 
-    var state = PanelState.COLLAPSED
+    var state = PanelState.EXPANDED
         private set
 
     private var previousState: PanelState? = null
@@ -303,7 +303,7 @@ class SlidingPanelLayout(
 
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
 
-            val layoutParams = child.layoutParams as FrameLayout.LayoutParams
+            val layoutParams = child.layoutParams as LayoutParams
 
             slidingPanelWidth =
                 slidingPanelWidth.coerceAtLeast(child.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin)
@@ -344,7 +344,7 @@ class SlidingPanelLayout(
             if (child.visibility == View.GONE)
                 continue
 
-            val childLayoutParams = child.layoutParams as FrameLayout.LayoutParams
+            val childLayoutParams = child.layoutParams as LayoutParams
 
             val childWidth = child.measuredWidth
             val childHeight = child.measuredHeight
@@ -376,9 +376,9 @@ class SlidingPanelLayout(
             )
         }
 
-        if (state == PanelState.EXPANDED) {
+        if (state == PanelState.COLLAPSED) {
             updateState(1f)
-        } else if (state == PanelState.COLLAPSED) {
+        } else if (state == PanelState.EXPANDED) {
             updateState(0f)
         }
     }
@@ -490,8 +490,8 @@ class SlidingPanelLayout(
 
         currentSlide = newSlideRatio
         state = when (currentSlide) {
-            1f -> PanelState.EXPANDED
-            0f -> PanelState.COLLAPSED
+            1f -> PanelState.COLLAPSED
+            0f -> PanelState.EXPANDED
             else -> PanelState.SLIDING
         }
 
@@ -524,17 +524,17 @@ class SlidingPanelLayout(
             return
 
         when (state) {
-            PanelState.EXPANDED -> slideTo(1f)
-            PanelState.COLLAPSED -> slideTo(0f)
+            PanelState.COLLAPSED -> slideTo(1f)
+            PanelState.EXPANDED -> slideTo(0f)
             PanelState.SLIDING -> throw IllegalArgumentException("You are not allowed to set the state to SLIDING. Please use EXPANDED or COLLAPSED")
         }
     }
 
     /**
-     * Toogles the state of the panel, between [PanelState.COLLAPSED] and [PanelState.EXPANDED]
+     * Toogles the state of the panel, between [PanelState.EXPANDED] and [PanelState.COLLAPSED]
      */
     fun toggle() {
-        if (state === PanelState.EXPANDED) slideTo(PanelState.COLLAPSED) else slideTo(PanelState.EXPANDED)
+        if (state === PanelState.COLLAPSED) slideTo(PanelState.EXPANDED) else slideTo(PanelState.COLLAPSED)
     }
 
     fun addSlideListener(listener: OnSlideListener) {
@@ -568,7 +568,7 @@ class SlidingPanelLayout(
          * This function is called every time the panel slides.
          * @param slidingPanel a reference to the panel that is being observed.
          * @param state the state of the panel. One of the states defined in [PanelState].
-         * @param currentSlide the current slide value. It is a value between 0 ([PanelState.COLLAPSED]) and 1 ([PanelState.EXPANDED]).
+         * @param currentSlide the current slide value. It is a value between 0 ([PanelState.EXPANDED]) and 1 ([PanelState.COLLAPSED]).
          */
         fun onSlide(slidingPanel: SlidingPanelLayout, state: PanelState, currentSlide: Float)
     }
