@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="SlidingPanel">
+    <declare-styleable name="SlidingPanelLayout">
         <attr name="slidingView" format="reference" />
         <attr name="nonSlidingView" format="reference" />
         <attr name="dragView" format="reference" />

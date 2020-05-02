@@ -9,13 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.akbolatss.workshop.slidingpanel.PanelState
-import com.akbolatss.workshop.slidingpanel.SlidingPanel
+import com.akbolatss.workshop.slidingpanel.SlidingPanelLayout
 import com.akbolatss.workshop.slidingpanel.sampleapp.R
 import com.akbolatss.workshop.slidingpanel.sampleapp.utils.adapters.ViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_sliding_view.*
 import kotlinx.android.synthetic.main.fragment_sliding_view.view.*
 
-class SlidingViewFragment : Fragment(), SlidingPanel.OnSlideListener {
+class SlidingViewFragment : Fragment(), SlidingPanelLayout.OnSlideListener {
 
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
@@ -60,7 +60,7 @@ class SlidingViewFragment : Fragment(), SlidingPanel.OnSlideListener {
         tab_layout.setupWithViewPager(view_pager)
     }
 
-    override fun onSlide(slidingPanel: SlidingPanel, state: PanelState, currentSlide: Float) {
+    override fun onSlide(slidingPanel: SlidingPanelLayout, state: PanelState, currentSlide: Float) {
         expanded_view.alpha = currentSlide
 
         when (currentSlide) {

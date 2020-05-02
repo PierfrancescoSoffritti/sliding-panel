@@ -15,7 +15,7 @@
         android:background="@android:color/white"
         tools:ignore="HardcodedText" />
 
-    <com.akbolatss.workshop.slidingpanel.SlidingPanel
+    <com.akbolatss.workshop.slidingpanel.SlidingPanelLayout
         android:id="@+id/sliding_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,5 +43,5 @@
             android:background="@color/colorPrimary"
             tools:ignore="HardcodedText" />
 
-    </com.akbolatss.workshop.slidingpanel.SlidingPanel>
+    </com.akbolatss.workshop.slidingpanel.SlidingPanelLayout>
 </LinearLayout>

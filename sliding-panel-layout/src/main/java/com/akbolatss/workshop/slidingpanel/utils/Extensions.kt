@@ -2,11 +2,11 @@ package com.akbolatss.workshop.slidingpanel.utils
 
 import android.view.MotionEvent
 import android.view.View
-import com.akbolatss.workshop.slidingpanel.SlidingPanel
+import com.akbolatss.workshop.slidingpanel.SlidingPanelLayout
 import com.akbolatss.workshop.slidingpanel.Orientation
 
 internal object Extensions {
-    fun SlidingPanel.isOrientationVertical(): Boolean {
+    fun SlidingPanelLayout.isOrientationVertical(): Boolean {
         return orientation == Orientation.VERTICAL
     }
 
