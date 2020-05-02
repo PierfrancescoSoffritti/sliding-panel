@@ -40,3 +40,6 @@ jobs:
 
     - name: Run debug
       run: ./gradlew assembleDebug
+    env:
+      BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+      BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
