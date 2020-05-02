@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SlidingPanelLayout">
+        <attr name="slidingView" format="reference" />
+        <attr name="nonSlidingView" format="reference" />
+        <attr name="dragView" format="reference" />
+
+        <attr name="fitToScreenView" format="reference" />
+
+        <attr name="slidingState" format="enum">
+            <enum name="collapsed" value="0" />
+            <enum name="expanded" value="1" />
+        </attr>
+
+        <attr name="elevation" format="dimension" />
+
+        <attr name="orientation" format="enum">
+            <enum name="vertical" value="0" />
+            <enum name="horizontal" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>

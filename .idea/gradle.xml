@@ -10,8 +10,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/sample-app" />
+            <option value="$PROJECT_DIR$/sliding-panel-layout" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,0 +1,41 @@
+apply plugin: 'com.jfrog.bintray'
+apply from: './bintray_check_credentials.gradle'
+
+group = 'com.akbolatss.workshop'
+version versions.publishVersion
+
+project.ext {
+    mavProjectName = 'Sliding Panel Layout'
+    mavPublishToMavenLocal = true
+    mavLibraryLicenses = ["Apache-2.0": 'http://www.apache.org/licenses/LICENSE-2.0.txt']
+    mavLibraryDescription = "Android sliding panel layout that is part of the view hierarchy, not above it."
+    mavGitUrl = 'https://github.com/iRYO400/sliding-panel.git'
+    mavSiteUrl = 'https://github.com/iRYO400/sliding-panel'
+}
+
+
+def (userId, apiKey) = getBintrayUserIdAndApiKey()
+bintray {
+    user(userId)
+    key(apiKey)
+    publications = ['mavenPublish']
+    configurations = ['archives']
+    override = true
+    pkg {
+        repo = 'workshop'
+        name = 'sliding-panel-layout'
+        description = 'Android sliding panel layout that is part of the view hierarchy, not above it.'
+        publicDownloadNumbers = true
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/iRYO400/sliding-panel.git'
+        version {
+            name = versions.publishVersion
+            desc = "Version ${versions.publishVersion}"
+            released = new Date()
+            vcsTag = versions.publishVersion
+        }
+    }
+}
+
+
+apply from: 'https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle'

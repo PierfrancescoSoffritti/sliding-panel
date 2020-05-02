@@ -1,47 +1,47 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/panel_state_text_view"
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:background="@android:color/white"
         android:gravity="center"
         android:text="Sliding view COLLAPSED"
-        android:background="@android:color/white"
         tools:ignore="HardcodedText" />
 
-    <com.psoffritti.slidingpanel.SlidingPanel
+    <com.akbolatss.workshop.slidingpanel.SlidingPanelLayout
         android:id="@+id/sliding_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        app:orientation="vertical"
+        app:elevation="4dp"
         app:nonSlidingView="@id/non_sliding_view"
-        app:slidingView="@id/sliding_view"
-        app:elevation="4dp" >
+        app:orientation="vertical"
+        app:slidingState="collapsed"
+        app:slidingView="@id/sliding_view">
 
         <TextView
             android:id="@+id/non_sliding_view"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="non sliding view"
-            android:background="@color/colorPrimaryDark"
             tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/sliding_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
             android:gravity="center"
             android:text="sliding view"
-            android:background="@color/colorPrimary"
             tools:ignore="HardcodedText" />
 
-    </com.psoffritti.slidingpanel.SlidingPanel>
+    </com.akbolatss.workshop.slidingpanel.SlidingPanelLayout>
 </LinearLayout>
