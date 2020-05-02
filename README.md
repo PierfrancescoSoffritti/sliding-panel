@@ -36,7 +36,7 @@ The minimum API level supported by this library is API 15.
 
 ```
 dependencies {
-  implementation 'com.akbolatss.workshop:sliding-panel-layout:1.1.0'
+  implementation 'com.akbolatss.workshop:sliding-panel-layout:$latestVersion'
 }
 ```
 
