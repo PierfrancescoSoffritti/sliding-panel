@@ -2,7 +2,7 @@ ext.versions = [
         // Project
         minSdk                  : 15,
         compileSdk              : 29,
-        publishVersion          : '1.1.1',
+        publishVersion          : '1.2.0',
         publishVersionCode      : 3,
 
         // Plugins
