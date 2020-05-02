@@ -2,7 +2,7 @@
 
 <img align="right" width="200px" src="./images/icon_512.png" title="logo" />
 
-[ ![Download](https://api.bintray.com/packages/iryo400/workshop/sliding-panel-layout/images/download.svg?version=1.1.0) ](https://bintray.com/iryo400/workshop/sliding-panel-layout/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/iryo400/workshop/sliding-panel-layout/images/download.svg) ](https://bintray.com/iryo400/workshop/sliding-panel-layout/_latestVersion)
 
 A ViewGroup that implements a sliding panel that is part of the view hierarchy, not above it.
 
