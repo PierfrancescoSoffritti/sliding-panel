@@ -5,6 +5,5 @@
     <color name="colorAccent">#ffa4a2</color>
 
     <color name="github_black">#24292E</color>
-
-    <color name="lightGray">#E0E0E0</color>
+    <color name="ic_launcher_background">#FFAB91</color>
 </resources>

@@ -26,7 +26,8 @@ import kotlin.math.abs
  * Read [detailed documentation here](https://github.com/iRYO400/sliding-panel)
  */
 class SlidingPanelLayout(
-    context: Context, attrs: AttributeSet? = null
+    context: Context,
+    attrs: AttributeSet? = null
 ) : FrameLayout(context, attrs) {
 
     companion object {
@@ -108,7 +109,6 @@ class SlidingPanelLayout(
      * The duration of the slide in millisecond, when executed with an animation instead of a gesture
      */
     private var slideDuration = SLIDE_DURATION_SHORT
-
 
     private var slidingPanelShadowLengthPixels: Int = 0
 
@@ -258,8 +258,7 @@ class SlidingPanelLayout(
                 SlidingDirection.DOWN_OR_RIGHT // right
             else
                 SlidingDirection.UP_OR_LEFT // left
-        else
-            if (yVelocity > 0)
+        else if (yVelocity > 0)
                 SlidingDirection.DOWN_OR_RIGHT // down
             else
                 SlidingDirection.UP_OR_LEFT // up

@@ -31,7 +31,7 @@ class AdvancedExampleActivity : AppCompatActivity() {
         }
 
         sliding_panel.addSlideListener(fragment)
-        sliding_panel.addSlideListener{ _, _, currentSlide ->
+        sliding_panel.addSlideListener { _, _, currentSlide ->
             if (currentSlide == 0f)
             fab.show()
         else
@@ -39,7 +39,7 @@ class AdvancedExampleActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(sliding_panel.state == PanelState.COLLAPSED)
+        if (sliding_panel.state == PanelState.COLLAPSED)
             sliding_panel.slideTo(PanelState.EXPANDED)
         else
             super.onBackPressed()

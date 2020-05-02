@@ -7,9 +7,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.akbolatss.workshop.slidingpanel.sampleapp.R
-import com.akbolatss.workshop.slidingpanel.sampleapp.utils.DummyListItems
+import com.akbolatss.workshop.slidingpanel.sampleapp.utils.DummyListItem
 
-class RecyclerViewAdapter(private val items: List<DummyListItems.DummyItem>) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class RecyclerViewAdapter(private val items: List<DummyListItem.DummyItem>) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -32,7 +32,6 @@ class RecyclerViewAdapter(private val items: List<DummyListItems.DummyItem>) : R
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val view: TextView = view as TextView
-        var item: DummyListItems.DummyItem? = null
-
+        var item: DummyListItem.DummyItem? = null
     }
 }

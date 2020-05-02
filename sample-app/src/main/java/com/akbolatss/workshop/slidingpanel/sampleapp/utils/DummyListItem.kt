@@ -2,7 +2,7 @@ package com.akbolatss.workshop.slidingpanel.sampleapp.utils
 
 import java.util.ArrayList
 
-object DummyListItems {
+object DummyListItem {
 
     private const val COUNT = 25
     val ITEMS: MutableList<DummyItem> = ArrayList()

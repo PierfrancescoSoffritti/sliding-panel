@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
 import com.akbolatss.workshop.slidingpanel.PanelState
 import com.akbolatss.workshop.slidingpanel.SlidingPanelLayout
 import com.akbolatss.workshop.slidingpanel.sampleapp.R
 import com.akbolatss.workshop.slidingpanel.sampleapp.utils.adapters.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_sliding_view.*
 import kotlinx.android.synthetic.main.fragment_sliding_view.view.*
 

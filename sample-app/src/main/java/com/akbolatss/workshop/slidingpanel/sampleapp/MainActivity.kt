@@ -1,17 +1,17 @@
 package com.akbolatss.workshop.slidingpanel.sampleapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.psoffritti.librarysampleapptemplate.core.Constants
-import com.psoffritti.librarysampleapptemplate.core.SampleAppTemplateActivity
-import com.psoffritti.librarysampleapptemplate.core.utils.ExampleActivityDetails
+import androidx.appcompat.app.AppCompatActivity
 import com.akbolatss.workshop.slidingpanel.sampleapp.examples.advanced.AdvancedExampleActivity
 import com.akbolatss.workshop.slidingpanel.sampleapp.examples.basic.BasicExampleHorizontalActivity
 import com.akbolatss.workshop.slidingpanel.sampleapp.examples.basic.BasicExampleVerticalActivity
 import com.akbolatss.workshop.slidingpanel.sampleapp.examples.dragview.DragViewExampleActivity
 import com.akbolatss.workshop.slidingpanel.sampleapp.examples.fittoscreenview.FitToScreenViewExampleActivity
 import com.akbolatss.workshop.slidingpanel.sampleapp.examples.scrollableview.ScrollableViewExampleActivity
+import com.psoffritti.librarysampleapptemplate.core.Constants
+import com.psoffritti.librarysampleapptemplate.core.SampleAppTemplateActivity
+import com.psoffritti.librarysampleapptemplate.core.utils.ExampleActivityDetails
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,8 +22,14 @@ class MainActivity : AppCompatActivity() {
 
         intent.putExtra(Constants.TITLE.name, getString(R.string.app_name))
         intent.putExtra(Constants.GITHUB_URL.name, "https://github.com/iRYO400/sliding-panel")
-        intent.putExtra(Constants.HOMEPAGE_URL.name, "https://github.com/iRYO400/sliding-panel/blob/master/README.md")
-        intent.putExtra(Constants.PLAYSTORE_PACKAGE_NAME.name, "com.akbolatss.workshop.slidingpanel.sampleapp")
+        intent.putExtra(
+            Constants.HOMEPAGE_URL.name,
+            "https://github.com/iRYO400/sliding-panel/blob/master/README.md"
+        )
+        intent.putExtra(
+            Constants.PLAYSTORE_PACKAGE_NAME.name,
+            "com.akbolatss.workshop.slidingpanel.sampleapp"
+        )
 
         val examples = arrayOf(
             ExampleActivityDetails(

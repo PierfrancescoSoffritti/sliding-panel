@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.akbolatss.workshop.slidingpanel.sampleapp.R
-import com.akbolatss.workshop.slidingpanel.sampleapp.utils.DummyListItems
+import com.akbolatss.workshop.slidingpanel.sampleapp.utils.DummyListItem
 import com.akbolatss.workshop.slidingpanel.sampleapp.utils.adapters.RecyclerViewAdapter
 
 class ListFragment : Fragment() {
@@ -39,7 +39,7 @@ class ListFragment : Fragment() {
         else
             GridLayoutManager(context, columnCount)
 
-        recyclerView.adapter = RecyclerViewAdapter(DummyListItems.ITEMS)
+        recyclerView.adapter = RecyclerViewAdapter(DummyListItem.ITEMS)
 
         return recyclerView
     }

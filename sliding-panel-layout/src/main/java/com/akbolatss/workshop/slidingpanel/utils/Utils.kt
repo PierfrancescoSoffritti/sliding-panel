@@ -2,7 +2,6 @@ package com.akbolatss.workshop.slidingpanel.utils
 
 import kotlin.math.abs
 
-
 internal object Utils {
 
     /**

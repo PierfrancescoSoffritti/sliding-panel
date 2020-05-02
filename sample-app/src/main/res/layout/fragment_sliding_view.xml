@@ -1,17 +1,16 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white" >
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/collapsed_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="sliding view"
         android:gravity="center"
+        android:text="sliding view"
         tools:ignore="HardcodedText" />
 
     <LinearLayout
@@ -19,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="invisible" >
+        android:visibility="invisible">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -27,10 +26,10 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
 
+            app:tabIndicatorColor="@color/colorPrimaryDark"
             app:tabMode="fixed"
-            app:tabTextColor="@android:color/white"
             app:tabSelectedTextColor="@android:color/white"
-            app:tabIndicatorColor="@color/colorPrimaryDark" />
+            app:tabTextColor="@android:color/white" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
