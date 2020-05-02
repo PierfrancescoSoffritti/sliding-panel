@@ -8,8 +8,8 @@
         <attr name="fitToScreenView" format="reference" />
 
         <attr name="slidingState" format="enum">
-            <enum name="expanded" value="0" />
-            <enum name="collapsed" value="1" />
+            <enum name="collapsed" value="0" />
+            <enum name="expanded" value="1" />
         </attr>
 
         <attr name="elevation" format="dimension" />

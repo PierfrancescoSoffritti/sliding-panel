@@ -52,12 +52,13 @@ class SlidingPanelLayout(
 
     internal val orientation: Orientation
 
-    var state = PanelState.EXPANDED
+    var state: PanelState
         private set
+    private var isInitialStateSet = false
 
     private var previousState: PanelState? = null
 
-    // A value between 1.0 and 0.0 (0.0 = COLLAPSED, 1.0 = EXPANDED)
+    // A value between 1.0 and 0.0 (0.0 = EXPANDED, 1.0 = COLLAPSED)
     private var currentSlide = 0.0f
 
     // the maximum amount the slidingView can slide. It corresponds to the height (width) of the nonSlidingView.
@@ -141,28 +142,28 @@ class SlidingPanelLayout(
         }
 
         if (slidingViewId == -1)
-            throw RuntimeException("SlidingPanel, app:slidingView attribute not set. You must set this attribute to the id of the view that you want to be sliding.")
+            throw RuntimeException("SlidingPanelLayout, app:slidingView attribute not set. You must set this attribute to the id of the view that you want to be sliding.")
         if (nonSlidingViewId == -1)
-            throw RuntimeException("SlidingPanel, app:nonSlidingView attribute not set. You must set this attribute to the id of the view that you want to be static.")
+            throw RuntimeException("SlidingPanelLayout, app:nonSlidingView attribute not set. You must set this attribute to the id of the view that you want to be static.")
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         if (childCount != 2)
-            throw IllegalStateException("SlidingPanel must have exactly 2 children. But has $childCount")
+            throw IllegalStateException("SlidingPanelLayout must have exactly 2 children. But has $childCount")
 
         slidingView = findViewById(slidingViewId)
-            ?: throw RuntimeException("SlidingPanel, slidingView is null.")
+            ?: throw RuntimeException("SlidingPanelLayout, slidingView is null.")
         nonSlidingView = findViewById(nonSlidingViewId)
-            ?: throw RuntimeException("SlidingPanel, nonSlidingView is null.")
+            ?: throw RuntimeException("SlidingPanelLayout, nonSlidingView is null.")
 
         dragView = findViewById(dragViewId)
-            ?: if (dragViewId != -1) throw RuntimeException("SlidingPanel, can't find dragView.")
+            ?: if (dragViewId != -1) throw RuntimeException("SlidingPanelLayout, can't find dragView.")
             else slidingView
 
         fittingView = findViewById(fittingViewId)
-            ?: if (fittingViewId != -1) throw RuntimeException("SlidingPanel, can't find fittingView.")
+            ?: if (fittingViewId != -1) throw RuntimeException("SlidingPanelLayout, can't find fittingView.")
             else null
     }
 
@@ -375,12 +376,6 @@ class SlidingPanelLayout(
                 onLayoutChildRect.bottom
             )
         }
-
-        if (state == PanelState.COLLAPSED) {
-            updateState(1f)
-        } else if (state == PanelState.EXPANDED) {
-            updateState(0f)
-        }
     }
 
     override fun draw(canvas: Canvas) {
@@ -389,6 +384,8 @@ class SlidingPanelLayout(
             drawElevationShadow90(canvas)
         else
             drawElevationShadow180(canvas)
+        if (isInitialStateSet.not())
+            initInitialState()
     }
 
     private fun drawElevationShadow90(canvas: Canvas) {
@@ -409,6 +406,13 @@ class SlidingPanelLayout(
 
         elevationShadow180Deg.setBounds(left, top, right, bottom)
         elevationShadow180Deg.draw(canvas)
+    }
+
+    private fun initInitialState() {
+        if (state == PanelState.SLIDING)
+            throw RuntimeException("SLIDING state cannot be used as initial")
+        updateState(state.value)
+        isInitialStateSet = true
     }
 
     private val drawChildChildTempRect = Rect()
